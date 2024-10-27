@@ -9,4 +9,4 @@ catch(error){
     console.log(`${error}`.bgRed)
 }
 }
-module.exports=connectDb
+module.exports=connectDb;

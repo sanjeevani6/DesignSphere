@@ -6,6 +6,7 @@
 
 .content{
   height:80vh;
+ 
 }
 
 
@@ -14,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color:#c8d6dd;
   border-bottom: 2px solid #ddd;
   padding: 0.5rem 1rem;
   font-family: Arial, sans-serif;

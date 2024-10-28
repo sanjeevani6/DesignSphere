@@ -1,23 +1,45 @@
-import React  from 'react';
+import React,{useEffect,useState} from 'react'
+import {Link,useNavigate} from "react-router-dom";
+import { message } from 'antd';
 const Header=()=>{
+
+  const[loginUser,setLoginUser]=useState('');
+  const Navigate=useNavigate();
+  useEffect(()=>{
+    const user=JSON.parse(localStorage.getItem('user'))
+      if(user){
+        setLoginUser(user)
+      }
+  },[]);
+  const logoutHandler=()=>{
+
+    localStorage.removeItem("user");
+     message.success('logout successfully');
+    Navigate('/login');
+  }
     return(
         <>
-           <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">USER</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link" href="#">Templates</a>
-        <a class="nav-link" href="#">Design</a>
-        <a class="nav-link disabled" aria-disabled="true">Logout</a>
-      </div>
-    </div>
-  </div>
-</nav>
+          
+          <ul className="nav nav-underline">
+  <li className="nav-item  ">
+    <Link  className="nav-link active" aria-current="page" to="/">DesignSphere</Link>
+  </li>
+  <li className="nav-item simp">
+   {loginUser&& loginUser.name}
+  </li>
+  <li className="nav-item  ">
+    <Link  className="nav-link active" aria-current="page" to="#">Design</Link>
+  </li>
+  <li className="nav-item  ">
+    <Link  className="nav-link active" aria-current="page" to="#">Templates</Link>
+  </li>
+ 
+  <li className="simp2">
+   <button className='bt' onClick={logoutHandler}>Logout</button>
+  </li>
+  
+  
+</ul>
         </>
     )
 }

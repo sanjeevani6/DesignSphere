@@ -7,3 +7,58 @@
 .content{
   height:80vh;
 }
+
+
+/* General Navigation Styling */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-bottom: 2px solid #ddd;
+  padding: 0.5rem 1rem;
+  font-family: Arial, sans-serif;
+}
+
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #007bff;
+}
+
+.nav-item {
+  list-style: none;
+}
+
+.simp {
+  margin-left: auto;
+  color: #333;
+  font-weight: bold;
+}
+
+.simp2 {
+  margin-left: 1rem;
+}
+
+.bt {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bt:hover {
+  background-color: #ff7875;
+}
+
+

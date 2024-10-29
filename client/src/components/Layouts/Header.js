@@ -28,7 +28,7 @@ const Header=()=>{
    {loginUser&& loginUser.name}
   </li>
   <li className="nav-item  ">
-    <Link  className="nav-link active" aria-current="page" to="#">Design</Link>
+    <Link  className="nav-link active" aria-current="page" to="/design">Design</Link>
   </li>
   <li className="nav-item  ">
     <Link  className="nav-link active" aria-current="page" to="#">Templates</Link>

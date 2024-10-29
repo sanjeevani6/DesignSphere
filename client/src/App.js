@@ -2,6 +2,7 @@ import {Routes,Route, Navigate} from 'react-router-dom'
 import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Design from './pages/Design';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 
 <Homepage/>
 </ProtectedRoutes>}/>
+      <Route path='/design' element={<Design/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
      </Routes>

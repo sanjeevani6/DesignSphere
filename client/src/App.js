@@ -3,6 +3,7 @@ import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Design from './pages/Design';
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
@@ -10,7 +11,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <Routes>
-        {/* Protecting the homepage route */}
+        {/* Protected route for homepage */}
         <Route 
           path="/" 
           element={
@@ -19,6 +20,8 @@ function App() {
             </ProtectedRoutes>
           } 
         />
+        {/* Route for the Design page */}
+        <Route path="/design" element={<Design />} />
         {/* Public routes for login and register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -29,7 +29,7 @@ const Header = () => {
           {loginUser && loginUser.name}
         </li>
         <li className="nav-item">
-          <Link className="nav-link active" to="#">Design</Link>
+          <Link className="nav-link active" to="/design">Design</Link>
         </li>
         <li className="nav-item">
           <Link className="nav-link active" to="#">Templates</Link>

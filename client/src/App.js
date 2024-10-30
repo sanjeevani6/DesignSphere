@@ -1,7 +1,8 @@
 import {Routes,Route, Navigate} from 'react-router-dom'
 import Homepage from './pages/HomePage';
-import Register from './pages/Register';
+import Register from './pages/Register.js';
 import Login from './pages/Login';
+import Templates from './components/Templates';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 
 <Homepage/>
 </ProtectedRoutes>}/>
+      <Route path="/templates" element={<Templates />} />
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
      </Routes>

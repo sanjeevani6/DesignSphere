@@ -31,7 +31,7 @@ const Header=()=>{
     <Link  className="nav-link active" aria-current="page" to="#">Design</Link>
   </li>
   <li className="nav-item  ">
-    <Link  className="nav-link active" aria-current="page" to="#">Templates</Link>
+    <Link  className="nav-link active" aria-current="page" to="templates">Templates</Link>
   </li>
  
   <li className="simp2">

@@ -4,7 +4,7 @@ import { useDrop, useDrag } from 'react-dnd';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-const CanvasItem = ({ item, onDropItem }) => {
+const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
     const [text, setText] = useState(item.name);
 
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -76,21 +76,34 @@ const CanvasItem = ({ item, onDropItem }) => {
                 opacity: isDragging ? 0.5 : 1,
                 cursor: 'move',
             }}
+            onClick={(e) => {
+                e.stopPropagation();
+                onSelectItem();
+            }}
         >
             {renderContent()}
         </div>
     );
 };
 
-const CanvasArea = () => {
-    const [canvasItems, setCanvasItems] = useState([]);
+const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties }) => {
+    const [canvasItems, setCanvasItems] = useState(elements);
     const canvasRef = useRef(null);
+ 
+useEffect(() => {
+    setElements(canvasItems); // Sync elements with updated canvasItems
+}, [canvasItems]);
+
+const handleSelectItem = (id) => {
+    setSelectedItem(canvasItems.find((item) => item.id === id)); // Use canvasItems to find the selected item
+};
+
 
     const [{ isOver }, drop] = useDrop(() => ({
-        accept: ['ELEMENT', 'CANVAS_ITEM'],
+        accept: 'ELEMENT',
         drop: (item, monitor) => {
             const offset = monitor.getClientOffset();
-            if (!offset) return;
+            if (!offset || !canvasRef.current) return;
 
             const canvasRect = canvasRef.current.getBoundingClientRect();
             const left = offset.x - canvasRect.left;
@@ -124,11 +137,8 @@ const CanvasArea = () => {
         }),
     }));
 
-    useEffect(() => {
-        if (canvasRef.current) {
-            drop(canvasRef);
-        }
-    }, [drop]);
+    
+    drop(canvasRef);
 
     const handleDropItem = (id, offset) => {
         const canvasRect = canvasRef.current.getBoundingClientRect();
@@ -150,10 +160,7 @@ const CanvasArea = () => {
 
     return (
         <div
-            ref={(node) => {
-                canvasRef.current = node;
-                drop(node);
-            }}
+            ref={canvasRef}
             style={{
                 width: '100%',
                 height: '500px',
@@ -162,10 +169,16 @@ const CanvasArea = () => {
                 backgroundColor: isOver ? '#f0f8ff' : '#fff',
             }}
         >
-            {canvasItems.map((item) => (
-                <CanvasItem key={item.id} item={item} onDropItem={handleDropItem} />
+                  {canvasItems.map((item) => (
+                <CanvasItem
+                    key={item.id}
+                    item={item}
+                    onSelectItem={() => handleSelectItem(item.id)}
+                    updateItemProperties={updateItemProperties}
+                    onDropItem={handleDropItem}
+                />
             ))}
-        </div>
+        </div> 
     );
 };
 

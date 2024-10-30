@@ -4,17 +4,29 @@ import { useDrag } from 'react-dnd';
 
 const SidebarItem = ({ item }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'CANVAS_ITEM',
+        type: 'ELEMENT',
         item,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
     }));
 
-    // Styles for shapes
+    // Dynamic styles based on item properties
+    const baseStyle = {
+        opacity: isDragging ? 0.5 : 1,
+        padding: '8px',
+        margin: '4px 0',
+        backgroundColor: '#ddd',
+        borderRadius: '4px',
+        cursor: 'grab',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100px',
+    };
+
     const shapeStyle = {
-        width: '40px',
-        height: '40px',
+        width: `${item.size.width || 40}px`,
+        height: `${item.size.height || 40}px`,
         backgroundColor: item.color,
         marginRight: '8px',
     };
@@ -27,9 +39,10 @@ const SidebarItem = ({ item }) => {
                 return {
                     width: '0px',
                     height: '0px',
-                    borderLeft: '15px solid transparent',
-                    borderRight: '15px solid transparent',
-                    borderBottom: `30px solid ${item.color}`,
+                    borderLeft: `${(item.size.width || 40) / 2}px solid transparent`,
+                    borderRight: `${(item.size.width || 40) / 2}px solid transparent`,
+                    borderBottom: `${item.size.height || 40}px solid ${item.color}`,
+                    marginRight: '8px',
                 };
             case 'square':
             default:
@@ -38,28 +51,36 @@ const SidebarItem = ({ item }) => {
     };
 
     return (
-        <div
-            ref={drag}
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-                padding: '8px',
-                margin: '4px 0',
-                backgroundColor: '#ddd',
-                borderRadius: '4px',
-                cursor: 'grab',
-                display: 'flex',
-                alignItems: 'center',
-                width:'100px',
-            }}
-        >
+        <div ref={drag} style={baseStyle}>
             {item.type === 'image' ? (
-                <img src={item.imageUrl} alt={item.name} style={{ width: '70px', height: '60px', marginRight: '8px' }}/>
+                <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    style={{
+                        width: `${item.size.width}px`,
+                        height: `${item.size.height}px`,
+                        marginRight: '8px',
+                    }}
+                />
             ) : item.type === 'shape' ? (
                 <div style={renderShape()} />
             ) : (
-                <div style={{ width: '80px', height: '30px', backgroundColor: '#f4f4f4', marginRight: '8px' }}></div> // Placeholder for text box
+                <div
+                    style={{
+                        width: `${item.size.width || 80}px`,
+                        height: `${item.size.height || 30}px`,
+                        color: item.color,
+                        backgroundColor: item.backgroundColor || '#f4f4f4',
+                        marginRight: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '14px',
+                    }}
+                >
+                 
+                </div>
             )}
-            
         </div>
     );
 };

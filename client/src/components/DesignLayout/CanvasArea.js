@@ -4,12 +4,10 @@ import { useDrop, useDrag } from 'react-dnd';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
-    const [text, setText] = useState(item.name);
-
+const CanvasItem = ({ item, onSelectItem, updateItemProperties, onDropItem }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',
-        item: { id: item.id, name: text, type: item.type },
+        item: { id: item.id, type: item.type },
         end: (droppedItem, monitor) => {
             if (monitor.didDrop()) {
                 const offset = monitor.getClientOffset();
@@ -29,9 +27,14 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
                 return (
                     <input
                         type="text"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
+                        value={item.name||""}
+                        onChange={(e) => updateItemProperties(item.id, { name: e.target.value })}
                         style={{
+                            fontSize: item.fontSize || 16,
+                            width: item.size?.width || 'auto', // Set width
+                            height: item.size?.height || 'auto', 
+                            color: item.color || '#000',
+                            backgroundColor: item.backgroundColor || '#fff',
                             border: '1px solid #ddd',
                             padding: '4px',
                             borderRadius: '4px',
@@ -40,8 +43,8 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
                 );
             case 'shape':
                 const shapeStyle = {
-                    width: '50px',
-                    height: '50px',
+                    width: item.size?.width || 50,
+                    height: item.size?.height || 50,
                     backgroundColor: item.color,
                 };
                 if (item.shapeType === 'circle') shapeStyle.borderRadius = '50%';
@@ -51,20 +54,30 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
                             style={{
                                 width: '0px',
                                 height: '0px',
-                                borderLeft: '25px solid transparent',
-                                borderRight: '25px solid transparent',
-                                borderBottom: `50px solid ${item.color}`,
+                                borderLeft: `${item.size?.width / 2 || 25}px solid transparent`,
+                                borderRight: `${item.size?.width / 2 || 25}px solid transparent`,
+                                borderBottom: `${item.size?.height || 50}px solid ${item.color}`,
                             }}
                         />
                     );
                 }
                 return <div style={shapeStyle} />;
             case 'image':
-                return <img src={item.imageUrl} alt={item.name} style={{ width: '50px', height: '50px' }} />;
+                return (
+                    <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        style={{
+                            width: item.size?.width || 50,
+                            height: item.size?.height || 50,
+                        }}
+                    />
+                );
             default:
                 return null;
         }
     };
+    
 
     return (
         <div
@@ -86,18 +99,13 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties,onDropItem}) => {
     );
 };
 
+
 const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties }) => {
-    const [canvasItems, setCanvasItems] = useState(elements);
     const canvasRef = useRef(null);
- 
-useEffect(() => {
-    setElements(canvasItems); // Sync elements with updated canvasItems
-}, [canvasItems]);
 
-const handleSelectItem = (id) => {
-    setSelectedItem(canvasItems.find((item) => item.id === id)); // Use canvasItems to find the selected item
-};
-
+    const handleSelectItem = (id) => {
+        setSelectedItem(elements.find((item) => item.id === id)); // Find the selected item in elements
+    };
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'ELEMENT',
@@ -109,10 +117,10 @@ const handleSelectItem = (id) => {
             const left = offset.x - canvasRect.left;
             const top = offset.y - canvasRect.top;
 
-            const existingItemIndex = canvasItems.findIndex((canvasItem) => canvasItem.id === item.id);
+            const existingItemIndex = elements.findIndex((el) => el.id === item.id);
 
             if (existingItemIndex > -1) {
-                setCanvasItems((prevItems) => {
+                setElements((prevItems) => {
                     const updatedItems = [...prevItems];
                     updatedItems[existingItemIndex] = {
                         ...updatedItems[existingItemIndex],
@@ -129,7 +137,7 @@ const handleSelectItem = (id) => {
                     id: item.id || generateId(),
                 };
 
-                setCanvasItems((prevItems) => [...prevItems, newItem]);
+                setElements((prevItems) => [...prevItems, newItem]);
             }
         },
         collect: (monitor) => ({
@@ -137,7 +145,6 @@ const handleSelectItem = (id) => {
         }),
     }));
 
-    
     drop(canvasRef);
 
     const handleDropItem = (id, offset) => {
@@ -145,8 +152,8 @@ const handleSelectItem = (id) => {
         const left = offset.x - canvasRect.left;
         const top = offset.y - canvasRect.top;
 
-        setCanvasItems((prevItems) => {
-            return prevItems.map((item) =>
+        setElements((prevItems) =>
+            prevItems.map((item) =>
                 item.id === id
                     ? {
                           ...item,
@@ -154,8 +161,8 @@ const handleSelectItem = (id) => {
                           top: Math.min(Math.max(0, top), canvasRect.height - 50),
                       }
                     : item
-            );
-        });
+            )
+        );
     };
 
     return (
@@ -169,7 +176,7 @@ const handleSelectItem = (id) => {
                 backgroundColor: isOver ? '#f0f8ff' : '#fff',
             }}
         >
-                  {canvasItems.map((item) => (
+            {elements.map((item) => (
                 <CanvasItem
                     key={item.id}
                     item={item}
@@ -178,7 +185,7 @@ const handleSelectItem = (id) => {
                     onDropItem={handleDropItem}
                 />
             ))}
-        </div> 
+        </div>
     );
 };
 

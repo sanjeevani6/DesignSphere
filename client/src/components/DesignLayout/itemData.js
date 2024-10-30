@@ -7,7 +7,8 @@ export const sidebarItems = [
         category: 'text',
         size: { width: 100, height: 30 },
         color: '#000000',               // Text color
-        backgroundColor: '#ffffff'       // Background color for text box
+        backgroundColor: '#ffffff' ,      // Background color for text box
+        fontSize: 16  
     },
     {
         id: 2,

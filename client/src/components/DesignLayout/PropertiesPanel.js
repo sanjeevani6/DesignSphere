@@ -15,7 +15,12 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties }) => {
             updateItemProperties(selectedItem.id, {
                 size: { ...selectedItem.size, [name]: parseInt(value) }
             });
-        } else {
+        } 
+        else if (name === 'fontSize') {
+            // Update fontSize property directly
+            updateItemProperties(selectedItem.id, { fontSize: parseInt(value) });
+        }
+        else {
             // Update other properties
             updateItemProperties(selectedItem.id, { [name]: value });
         }

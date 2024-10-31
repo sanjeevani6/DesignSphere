@@ -1,9 +1,27 @@
 // Sidebar.js
-import React from 'react';
+import React ,{useState,useEffect}from 'react';
 import SidebarItem from './SidebarItem';
-import { sidebarItems } from './itemData';
+//import { sidebarItems } from './itemData';
 
 const Sidebar = () => {
+    const [sidebarItems, setSidebarItems] = useState([]);
+
+    // Fetch sidebar items from the backend API
+    useEffect(() => {
+        const fetchSidebarItems = async () => {
+            try {
+                const response = await fetch('/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
+                const data = await response.json();
+                setSidebarItems(data);
+            } catch (error) {
+                console.error('Error fetching sidebar items:', error);
+            }
+        };
+
+        fetchSidebarItems();
+    }, []);
+
+    // Separate items by category
     const textItems = sidebarItems.filter(item => item.category === 'text');
     const shapeItems = sidebarItems.filter(item => item.category === 'shape');
     const imageItems = sidebarItems.filter(item => item.category === 'image');

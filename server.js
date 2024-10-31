@@ -4,6 +4,7 @@ const morgan=require('morgan')
 const dotenv= require('dotenv')
 const colors=require('colors')
 const connectDb = require('./config/connectDb')
+const sidebarItemsRoutes = require('./routes/sidebarRoutes');
 //config dot env file
 dotenv.config();
 //database call
@@ -18,7 +19,11 @@ app.use(express.json())
 app.use(cors())
 
 //routes
+
+//for user 
 app.use('/api/v1/users',require('./routes/userRoute'))
+//for sidebaritems in design page
+app.use('/api/v1/designpage', sidebarItemsRoutes);
 
 //port
 const PORT=8080||process.env.PORT

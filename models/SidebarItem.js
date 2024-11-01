@@ -36,6 +36,10 @@ const sidebarItemSchema = new mongoose.Schema({
     fontSize: {
         type: Number, // for text items
     },
+    fontType: {
+    type: String, // e.g., 'Arial', 'Times New Roman'
+},
+
 }, { timestamps: true });
 
 const SidebarItem = mongoose.model('SidebarItem', sidebarItemSchema);

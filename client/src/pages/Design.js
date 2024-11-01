@@ -11,15 +11,33 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 const Design = () => {
     const [elements, setElements] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
-
-
+    const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
+   
     const saveDesign = async () => {
-      /*  try {
-            await axios.post('/api/designs/save', { elements });
-        } catch (error) {
-            console.error('Failed to save design', error);
+        const title = prompt("Please enter a title for your design:");
+    
+      /*  // Check if the user provided a title
+        if (title) {
+            try {
+                // Sending the title, elements, and background color to the server
+                await axios.post('/api/designs/save', {
+                    title,
+                    elements,
+                    backgroundColor
+                });
+                
+            } catch (error) {
+                console.error('Failed to save design', error);
+            }
+        } else {
+            alert("Design not saved. Please provide a title.");
         }*/
-       console.log('Design saved:', elements);
+        console.log('Design saved:', { title, elements, backgroundColor });
+    };
+    
+    const deleteItem = (id) => {
+        setElements((prevItems) => prevItems.filter(item => item.id !== id));
+        setSelectedItem(null); // Optionally clear the selected item
     };
     const updateItemProperties = (id, updatedProperties) => {
         setElements((prevElements) =>
@@ -30,6 +48,9 @@ const Design = () => {
         if (selectedItem && selectedItem.id === id) {
             setSelectedItem((prev) => ({ ...prev, ...updatedProperties }));
         }
+    };
+    const handleBackgroundColorChange = (color) => {
+        setBackgroundColor(color);
     };
 
     return (
@@ -42,6 +63,8 @@ const Design = () => {
        <div  className="properties-panel" ><PropertiesPanel 
                                selectedItem={selectedItem}
                                updateItemProperties={updateItemProperties}
+                               onBackgroundColorChange={handleBackgroundColorChange}
+                               deleteItem={deleteItem}
        />
 
        </div> 
@@ -52,6 +75,8 @@ const Design = () => {
                         selectedItem={selectedItem}
                         setSelectedItem={setSelectedItem}
                         updateItemProperties={updateItemProperties}
+                        backgroundColor={backgroundColor}
+                       
                         className="canvas-area" />
         </div>
     </div>

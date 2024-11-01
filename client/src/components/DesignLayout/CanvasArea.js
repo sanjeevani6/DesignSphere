@@ -5,6 +5,7 @@ import { useDrop, useDrag } from 'react-dnd';
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
+    const [isEditing, setIsEditing] = useState(false);
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',
         item: { id: item.id, type: item.type },
@@ -13,26 +14,56 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
         }),
     }));
 
+    const handleTextClick = () => {
+        setIsEditing(true); // Switch to edit mode
+    };
+
+    const handleBlur = () => {
+        setIsEditing(false); // Exit edit mode when input loses focus
+    };
+
+  
     const renderContent = () => {
         switch (item.type) {
             case 'text':
-                return (
+                return isEditing ? (
                     <input
                         type="text"
                         value={item.name || ""}
                         onChange={(e) => updateItemProperties(item.id, { name: e.target.value })}
+                        onBlur={handleBlur} // Exit edit mode on blur
+                        autoFocus
                         style={{
                             fontSize: item.fontSize || 16,
+                            fontFamily: item.fontType || 'Arial',
                             width: item.size?.width || 'auto',
                             height: item.size?.height || 'auto',
                             color: item.color || '#000',
-                            backgroundColor: item.backgroundColor || '#fff',
-                            border: '1px solid #ddd',
+                            backgroundColor:' transparent',
+                            border: 'none',
                             padding: '4px',
                             borderRadius: '4px',
+                           // outline: 'none', // Remove the outline for a clean look
                         }}
                     />
+                ):(
+                    <span
+                        onClick={handleTextClick}
+                        style={{
+                            fontSize: item.fontSize || 16,
+                            backgroundColor: item.backgroundColor || '#fff', // Background color
+                            color: item.color || '#000',
+                            fontFamily: item.fontType || 'Arial',
+                            cursor: 'text',
+                            padding: '4px',
+                            display: 'inline-block', // Ensures width adjusts based on content
+                        }}
+                    >
+                        {item.name}
+                    </span>
                 );
+            
+
             case 'shape':
                 const shapeStyle = {
                     width: item.size?.width || 50,
@@ -90,7 +121,7 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
     );
 };
 
-const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties }) => {
+const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties, backgroundColor }) => {
     const canvasRef = useRef(null);
 
     const handleSelectItem = (id) => {
@@ -131,9 +162,9 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
                 }
             });
         },
-        collect: (monitor) => ({
+       /* collect: (monitor) => ({
             isOver: !!monitor.isOver(),
-        }),
+        }),*/
     }));
 
     drop(canvasRef);
@@ -146,7 +177,7 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
                 height: '500px',
                 border: '2px dashed #ccc',
                 position: 'relative',
-                backgroundColor: isOver ? '#f0f8ff' : '#fff',
+                backgroundColor: backgroundColor || '#fff', // Use the passed background color
             }}
         >
             {elements.map((item) => (

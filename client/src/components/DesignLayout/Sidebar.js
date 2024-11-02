@@ -1,10 +1,33 @@
 // Sidebar.js
-import React ,{useState,useEffect}from 'react';
+import React, { useState, useEffect } from 'react';
 import SidebarItem from './SidebarItem';
 //import { sidebarItems } from './itemData';
+// Function to generate a unique ID
+const generateId = () => Math.random().toString(36).substr(2, 9);
 
-const Sidebar = () => {
+
+const Sidebar = ({ onImageUpload }) => {
     const [sidebarItems, setSidebarItems] = useState([]);
+
+    //handle image upload:
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            console.log(imageUrl); // Check this in the console
+
+            const newImageItem = {
+                id: generateId(),
+                type: 'image',
+                imageUrl:imageUrl,
+                size: { width: 100, height: 100 }, // default size
+                top: 50,
+                left: 50,
+            };
+            onImageUpload(newImageItem); // Call the handler to add the image to the canvas
+        }
+    };
+
 
     // Fetch sidebar items from the backend API
     useEffect(() => {
@@ -51,6 +74,12 @@ const Sidebar = () => {
                     <SidebarItem key={item.id} item={item} />
                 ))}
             </div>
+             {/* Image upload section*/}
+            <div>
+                <h3>Upload Image</h3>
+                <input type="file" accept="image/*" onChange={handleImageUpload} />
+            </div>
+
         </div>
     );
 };

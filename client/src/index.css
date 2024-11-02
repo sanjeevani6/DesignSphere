@@ -126,3 +126,9 @@
   cursor: pointer;
   z-index: 1; /* Ensures the button stays above the canvas content */
 }
+
+/* for resizing*/
+.react-resizable {
+  position: relative;
+  display: inline-block;
+}

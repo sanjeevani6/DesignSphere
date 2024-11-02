@@ -1,7 +1,7 @@
 // SidebarItem.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
-
+ 
 const SidebarItem = ({ item }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',
@@ -55,7 +55,7 @@ const SidebarItem = ({ item }) => {
             {item.type === 'image' ? (
                 <img
                     src={item.imageUrl}
-                    alt={item.name}
+                    alt={item.name||'uploaded image'}
                     style={{
                         width: `${item.size.width}px`,
                         height: `${item.size.height}px`,

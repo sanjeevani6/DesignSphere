@@ -3,7 +3,21 @@ import React from 'react';
 const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
     const handleColorChange = (e) => {
         onBackgroundColorChange(e.target.value);
+    }; 
+    const handleChangeWidth = (e) => {
+        const newWidth = parseInt(e.target.value, 10);
+        if (selectedItem) {
+            updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, width: newWidth } });
+        }
     };
+
+    const handleChangeHeight = (e) => {
+        const newHeight = parseInt(e.target.value, 10);
+        if (selectedItem) {
+            updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, height: newHeight } });
+        }
+    };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -87,6 +101,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 name="fontSize"
                                 value={selectedItem.fontSize || 16}
                                 onChange={handleChange}
+                                min={1}
                             />
                             <label>Text Color:</label>
                             <input
@@ -120,6 +135,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 name="width"
                                 value={selectedItem.size?.width || 50}
                                 onChange={handleChange}
+                                min={1}
                             />
                             <label>Height:</label>
                             <input
@@ -127,6 +143,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 name="height"
                                 value={selectedItem.size?.height || 50}
                                 onChange={handleChange}
+                                min={1}
                             />
                         </div>
                     )}
@@ -145,19 +162,31 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 type="number"
                                 name="width"
                                 value={selectedItem.size?.width || 50}
-                                onChange={handleChange}
+                                onChange={handleChangeWidth}
+                                min={1}
                             />
                             <label>Height:</label>
                             <input
                                 type="number"
                                 name="height"
                                 value={selectedItem.size?.height || 50}
-                                onChange={handleChange}
+                                onChange={handleChangeHeight}
+                                min={1}
                             />
                         </div>
                     )}
                       {/* Delete button for the selected item */}
-            <button onClick={() => deleteItem(selectedItem.id)}>Delete Item</button>
+            <button onClick={() => deleteItem(selectedItem.id)} 
+                        style={{
+                            backgroundColor: 'red',
+                            color: 'white',
+                            marginTop: '10px',
+                            padding: '5px',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                       >Delete Item</button>
                 </>
             ) : (
                 <div className="empty-properties-panel">Select an item to view properties</div>

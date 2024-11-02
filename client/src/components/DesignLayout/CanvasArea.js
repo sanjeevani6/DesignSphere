@@ -1,17 +1,21 @@
 import React, { useState, useRef } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
-
+import { Resizable } from 'react-resizable';
+ 
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',
         item: { id: item.id, type: item.type },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
+        canDrag: () => !isResizing, // Prevent dragging when resizing
     }));
 
     const handleTextClick = () => {
@@ -22,6 +26,21 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
         setIsEditing(false); // Exit edit mode when input loses focus
     };
 
+    const handleResizeStart = (event) => {
+        setIsResizing(true);
+    event.stopPropagation(); // Prevent event from bubbling up
+    };
+
+    const handleResizeStop = () => {
+        setIsResizing(false);
+    };
+    
+   
+    const handleResize = (event, { size }) => {
+        console.log('Resizing to:', size);
+        updateItemProperties(item.id, { size });
+
+    };
   
     const renderContent = () => {
         switch (item.type) {
@@ -87,14 +106,34 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
                 return <div style={shapeStyle} />;
             case 'image':
                 return (
-                    <img
-                        src={item.imageUrl}
-                        alt={item.name}
-                        style={{
-                            width: item.size?.width || 50,
-                            height: item.size?.height || 50,
-                        }}
-                    />
+                    <Resizable
+                    width={item.size?.width || 100}
+                    height={item.size?.height || 100}
+                    onResizeStart={handleResizeStart} // Prevent default on resize start
+                    onResize={handleResize}
+                    onResizeStop={handleResizeStop}
+                    resizeHandles={['se']}
+                    minConstraints={[50, 50]} // Add minimum constraints if necessary
+                    handle={
+                            <span className="resize-handle" style={{ backgroundColor: 'transparent', cursor: 'se-resize', position: 'absolute', right: 0, bottom: 0, width: '20px', height: '20px' }}>
+                                +
+                            </span>
+                        }
+                >
+                    <div style={{ width: '100%', height: '100%' }}>
+                        <img
+                            src={item.imageUrl}
+                            alt={item.name || 'Uploaded Image'}
+                            style={{
+                                width: item.size?.width || 'auto',
+                                height: item.size?.height || 'auto',
+                               
+                                objectFit: 'cover',  // Keeps the image aspect ratio intact
+                            }}
+                        />
+                    </div>
+                </Resizable>
+                
                 );
             default:
                 return null;
@@ -110,6 +149,7 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
                 left: item.left,
                 opacity: isDragging ? 0.5 : 1,
                 cursor: 'move',
+                border: isResizing ? '2px dashed #000' : 'none', // Optional visual indicator for resizing
             }}
             onClick={(e) => {
                 e.stopPropagation();
@@ -178,6 +218,7 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
                 border: '2px dashed #ccc',
                 position: 'relative',
                 backgroundColor: backgroundColor || '#fff', // Use the passed background color
+                overflow:'hidden',
             }}
         >
             {elements.map((item) => (

@@ -1,5 +1,5 @@
 // Design.js
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import Sidebar from '../components/DesignLayout/Sidebar';
 import CanvasArea from '../components/DesignLayout/CanvasArea';
 import PropertiesPanel from '../components/DesignLayout/PropertiesPanel';
@@ -7,32 +7,39 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { UserContext } from '../context/UserContext'; 
  
 const Design = () => {
     const [elements, setElements] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
+    const { currentUser } = useContext(UserContext); // Get current user from context
+    console.log('Current User:', currentUser);
+    //const currentUserId = currentUser ? currentUser.id : null; 
    
     const saveDesign = async () => {
         const title = prompt("Please enter a title for your design:");
     
-      /*  // Check if the user provided a title
+        // Check if the user provided a title
         if (title) {
             try {
+                
+
                 // Sending the title, elements, and background color to the server
-                await axios.post('/api/designs/save', {
+                await axios.post('designs/save', {
+                    userId: currentUser?._id, 
                     title,
                     elements,
                     backgroundColor
                 });
-                
+                console.log('Design saved:', { title, elements, backgroundColor });
             } catch (error) {
                 console.error('Failed to save design', error);
             }
         } else {
-            alert("Design not saved. Please provide a title.");
-        }*/
-        console.log('Design saved:', { title, elements, backgroundColor });
+            alert("Design not saved. Please provide a title");
+        }
+       
     };
     
     const deleteItem = (id) => {
@@ -64,7 +71,7 @@ const Design = () => {
         <>
             <Header/>
             <div className="editor-container">
-   <div className="sidebar"> <Sidebar onImageUpload={handleImageUpload} /></div>
+   <div className="sidebar"> <Sidebar setElements={setElements} /></div>
     <div className="main-content">
        <div  className="properties-panel" ><PropertiesPanel 
                                selectedItem={selectedItem}

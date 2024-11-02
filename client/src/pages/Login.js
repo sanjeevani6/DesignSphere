@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import { Form, Input, message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import {jwtDecode }from 'jwt-decode';
+import { UserContext } from '../context/UserContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useContext(UserContext); // Access the login function from context
 
   const onGoogleLoginSuccess = (res) => {
     const decoded = jwtDecode(res.credential);
     localStorage.setItem('user', JSON.stringify(decoded));
+    login({ ...decoded, _id: decoded.sub});
     message.success('Google login successful');
     navigate('/');
   };
@@ -28,7 +31,10 @@ const Login = () => {
     try {
       const { data } = await axios.post('/users/login', values);
       message.success('Login successful');
+      const user = { ...data.user, password: '' }; 
       localStorage.setItem('user', JSON.stringify({ ...data.user, password: '' }));
+      login(user);
+      console.log('Logged in user:', user);
       navigate('/');
     } catch (error) {
       message.error('Something went wrong');

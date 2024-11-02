@@ -4,12 +4,14 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
+import { UserProvider } from './context/UserContext'; 
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
+    <UserProvider>
       <Routes>
         {/* Protected route for homepage */}
         <Route 
@@ -21,11 +23,14 @@ function App() {
           } 
         />
         {/* Route for the Design page */}
+        
         <Route path="/design" element={<Design />} />
+        
         {/* Public routes for login and register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
+      </UserProvider>
     </GoogleOAuthProvider>
   );
 }

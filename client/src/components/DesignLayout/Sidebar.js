@@ -1,30 +1,53 @@
 // Sidebar.js
 import React, { useState, useEffect } from 'react';
 import SidebarItem from './SidebarItem';
+import axios from 'axios';
+
 //import { sidebarItems } from './itemData';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 
-const Sidebar = ({ onImageUpload }) => {
+const Sidebar = ({ setElements }) => {
     const [sidebarItems, setSidebarItems] = useState([]);
 
     //handle image upload:
-    const handleImageUpload = (event) => {
+    const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            console.log(imageUrl); // Check this in the console
+            //const imageUrl = URL.createObjectURL(file);
+           // console.log(imageUrl); // Check this in the console
+            const formData = new FormData();
+            formData.append('image', file);
+    
+            try {
+                // Upload the image to the server and get the URL
+                const response = await axios.post('/designpage/upload-image', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+    
+                const imageUrl = response.data.url; // Adjust according to your response structure
+                const newImageItem = {
+                    name:'uploaded image',
+                    id: generateId(),
+                    type: 'image',
+                    category: 'image', 
+                    imageUrl: imageUrl, // Use the permanent URL
+                    size: { width: 100, height: 100 }, // Default size
+                    top: 50,
+                    left: 50,
+                };
+                // Instead of adding to sidebar, add directly to canvas
+                setElements((prevItems) => [...prevItems, newImageItem]); // Add to canvas directly
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
 
-            const newImageItem = {
-                id: generateId(),
-                type: 'image',
-                imageUrl:imageUrl,
-                size: { width: 100, height: 100 }, // default size
-                top: 50,
-                left: 50,
-            };
-            onImageUpload(newImageItem); // Call the handler to add the image to the canvas
+
+          
+           // onImageUpload(newImageItem); // Call the handler to add the image to the canvas
         }
     };
 

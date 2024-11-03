@@ -132,3 +132,70 @@
   position: relative;
   display: inline-block;
 }
+
+
+/* index.css */
+
+.homepage-container {
+  display: flex;
+  height:100%
+  
+}
+
+.options {
+  width: 15%;
+  background-color: #dfdbd1; 
+  padding: 20px;
+  color: #333; /* Dark text color */
+  height:100%
+}
+
+.mainarea {
+  width: 85%;
+  background-color: whitesmoke;
+  padding: 20px;
+  color: #333;
+  height:100%;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+
+.mainarea h2 {
+  text-align: center; /* Center align the title */
+  color: #333; /* Dark text color */
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.design-cards {
+  display: flex; /* Use flexbox for card layout */
+  flex-wrap: wrap; /* Allow cards to wrap onto the next line */
+  justify-content: center; /* Center align the cards */
+  gap: 15px; /* Space between cards */
+}
+
+.design-card {
+  background-color:#f9f9f2; /* White background for cards */
+  border: 1px solid #ddd; /* Light border for cards */
+  border-radius: 8px; /* Rounded corners for cards */
+  padding: 15px; /* Internal padding for content */
+  width: 200px; /* Fixed width for cards */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transitions for hover effects */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+.design-card:hover {
+  transform: translateY(-5px); /* Slightly raise the card on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Increase shadow on hover */
+}
+
+.design-card h3 {
+  font-size: 1.2em; /* Slightly larger font for title */
+  color: #007bff; /* Primary color for the title */
+  margin-bottom: 10px; /* Space below title */
+}
+
+.design-card p {
+  color: #666; /* Grey color for the date text */
+  font-size: 0.9em; /* Slightly smaller font for the date */
+}

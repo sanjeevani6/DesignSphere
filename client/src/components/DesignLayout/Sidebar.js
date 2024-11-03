@@ -27,8 +27,9 @@ const Sidebar = ({ setElements }) => {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-    
-                const imageUrl = response.data.url; // Adjust according to your response structure
+                console.log("URL",response.data.url);
+               const imageUrl = response.data.url; // Adjust according to your response structure
+               
                 const newImageItem = {
                     name:'uploaded image',
                     id: generateId(),

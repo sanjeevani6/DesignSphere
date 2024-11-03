@@ -13,15 +13,17 @@ const getSidebarItems = async (req, res) => {
 };
 
 const imageupload=(req,res)=>{
+    console.log(req.file)
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
         // Get file path and set up a public URL
-        const filePath = path.join('uploads', req.file.filename); // Adjust path as needed
+        const filePath = path.join('uploads','images', req.file.filename); // Adjust path as needed
+        
         // Here you may want to save the file path or move it to a permanent location
-
+        console.log(filePath)
         res.status(200).json({ url: filePath });
     } catch (error) {
         res.status(500).json({ error: 'Failed to upload image' });

@@ -36,7 +36,7 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 //design page
 
 // Serve static files from the 'uploads' directory
-app.use('/api/v1/uploads', express.static('uploads'));
+app.use('/api/v1/uploads/images', express.static('uploads/images'));
 
 //sidebaritems and fileupload (images)
 app.use('/api/v1/designpage', sidebarItemsRoutes);

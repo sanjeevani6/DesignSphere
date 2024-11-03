@@ -8,7 +8,7 @@ const multer = require('multer');
 // Configure multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Set the folder where you want to store the files
+        cb(null, 'uploads/images'); // Set the folder where you want to store the files
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname); // Set the filename

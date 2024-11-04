@@ -11,10 +11,7 @@ const savedesignRoutes = require('./routes/savedesignRoutes');
 dotenv.config();
 //database call
 connectDb();
-//set up multer for file uploads
 
- // Folder to store images
-const upload = multer({ dest: 'uploads/' });
 //rest object
 const app=express()
 

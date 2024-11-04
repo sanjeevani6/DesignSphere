@@ -25,7 +25,8 @@ function App() {
         {/* Route for the Design page */}
         
         <Route path="/design" element={<Design />} />
-        
+        <Route path="/design/:designId" element={<Design />} />
+
         {/* Public routes for login and register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

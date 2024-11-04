@@ -18,7 +18,7 @@ const userId = user ? user._id : null; // Replace 'id' with the actual key for u
     useEffect(() => {
         const fetchDesigns = async () => {
             try {
-                const response = await axios.get(`/designs/${userId}`);
+                const response = await axios.get(`/designs/user/${userId}`);
                 setDesigns(response.data);
             } catch (error) {
                 console.error('Error fetching designs:', error);
@@ -34,7 +34,7 @@ const userId = user ? user._id : null; // Replace 'id' with the actual key for u
   
     const handleDesignClick = (designId) => {
       // Navigate to the canvas area with the design ID
-      navigate(`/canvas/${designId}`); // Use navigate instead of history.push
+      navigate(`/design/${designId}`); 
     };
   
     return (

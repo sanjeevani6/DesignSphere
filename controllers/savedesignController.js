@@ -1,7 +1,23 @@
 // controllers/savedesignController.js
 const Design = require('../models/Design'); 
 
-exports.saveDesign = async (req, res) => {
+const updateDesign = async (req, res) => {
+    try {
+       const { designId } = req.params;
+       const { title, elements, backgroundColor } = req.body;
+ 
+       const updatedDesign = await Design.findByIdAndUpdate(
+          designId,
+          { title, elements, backgroundColor },
+          { new: true }
+       );
+       res.status(200).json(updatedDesign);
+    } catch (error) {
+       res.status(500).json({ message: 'Failed to update design', error });
+    }
+ };
+
+const saveDesign = async (req, res) => {
     console.log('Received data:', req.body); // Log the incoming request body
     const { userId,title, elements, backgroundColor } = req.body;
 
@@ -30,3 +46,4 @@ exports.saveDesign = async (req, res) => {
         res.status(500).json({ error: 'Failed to save design' });
     }
 };
+module.exports={saveDesign,updateDesign};

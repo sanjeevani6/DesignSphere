@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import SidebarItem from './SidebarItem';
 import axios from 'axios';
-
+ 
 //import { sidebarItems } from './itemData';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -28,8 +28,8 @@ const Sidebar = ({ setElements }) => {
                     }
                 });
                 console.log("URL",response.data.url);
-               const imageUrl = response.data.url; // Adjust according to your response structure
-               
+               const imageUrl = '/' + (response.data.url).replace(/\\/g, '/');// Adjust according to your response structure
+               console.log("URL updated",imageUrl);
                 const newImageItem = {
                     name:'uploaded image',
                     id: generateId(),

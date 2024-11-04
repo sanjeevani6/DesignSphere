@@ -23,7 +23,7 @@ const imageupload=(req,res)=>{
         const filePath = path.join('uploads','images', req.file.filename); // Adjust path as needed
         
         // Here you may want to save the file path or move it to a permanent location
-        console.log(filePath)
+        console.log("filepath",filePath)
         res.status(200).json({ url: filePath });
     } catch (error) {
         res.status(500).json({ error: 'Failed to upload image' });

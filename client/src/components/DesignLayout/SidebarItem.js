@@ -1,7 +1,7 @@
 // SidebarItem.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
- 
+  
 const SidebarItem = ({ item }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',

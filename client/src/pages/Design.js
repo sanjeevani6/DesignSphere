@@ -9,7 +9,7 @@ import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { UserContext } from '../context/UserContext'; 
- 
+  
 const Design = () => {
     const { designId } = useParams();
     const [elements, setElements] = useState([]);

@@ -26,13 +26,29 @@ const Design = () => {
               try {
                 console.log("Fetching design with ID:", designId);
                  const response = await axios.get(`/designs/${designId}`);
-
-                 console.log("response",response);
-                 const imageUrl = `/api/v1/uploads/images/${response.data.imageFileName}`; // Use this for your image URL
-                 console.log("Image URL for fetching:", imageUrl);
+                  console.log('information:');
+                 console.log("response",response.data);
                  const { title, elements, backgroundColor } = response.data;
+                 console.log('oldelements',elements)
+                 const updatedElements = elements.map(element => {
+                    // Only modify imageUrl if it exists and the element is an image
+                    const updatedImageUrl = element.imageUrl 
+                        ? `${element.imageUrl.replace(/\\/g, '/')}`  // Ensure leading slash and replace backslashes
+                        : undefined;  // Keep as undefined if not an image element
+                
+                    return {
+                        ...element,
+                        imageUrl: updatedImageUrl  // This will only update for elements with an imageUrl
+                    };
+                });
+                
+              
+                
+                
+                console.log("updated elements",updatedElements);
+
                  setTitle(title);
-                 setElements(elements);
+                 setElements(updatedElements);
                  setBackgroundColor(backgroundColor);
               } catch (error) {
                  console.error('Error loading design:', error);
@@ -42,11 +58,11 @@ const Design = () => {
         fetchDesign();
      }, [designId]);
     const saveDesign = async () => {
-        if (!title) {
-            const inputTitle = prompt("Please enter a title for your design:");
+        
+            const inputTitle = prompt("Please enter a title for your design:",title?title:' ');
             if (!inputTitle) return alert("Design not saved. Title is required.");
-            setTitle(inputTitle);
-         }
+       
+         
          try {
             if (!currentUser) {
                 return alert("User must be logged in to save a design.");
@@ -54,7 +70,7 @@ const Design = () => {
             console.log('Current title before saving:', title);
             const payload = {
                userId: currentUser?._id,
-               title,
+               title: inputTitle,
                elements,
                backgroundColor,
             };
@@ -67,9 +83,10 @@ const Design = () => {
                await axios.post('/designs/save', payload);
                console.log('New design saved:', payload);
             }
+            setTitle(inputTitle);
          } catch (error) {
             console.error('Failed to save design:', error);
-         }
+         } 
         };
     
     const deleteItem = (id) => {

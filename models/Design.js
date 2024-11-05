@@ -59,6 +59,7 @@ const designSchema = new mongoose.Schema({
     title: { type: String, required: true },
     elements: [elementSchema], // Array of elements in the design
     backgroundColor:{ type:String,default:'#fff'},
+    backgroundImage:{ type:String,default:''},//url for bacckground 
     createdAt: { type: Date, default: Date.now },
 });
 

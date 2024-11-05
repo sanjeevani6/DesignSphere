@@ -1,6 +1,6 @@
 // Design.js
 import React, { useState,useEffect,useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useLocation } from 'react-router-dom';
 import Sidebar from '../components/DesignLayout/Sidebar';
 import CanvasArea from '../components/DesignLayout/CanvasArea';
 import PropertiesPanel from '../components/DesignLayout/PropertiesPanel';
@@ -15,11 +15,23 @@ const Design = () => {
     const [elements, setElements] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
+    const [backgroundImage, setBackgroundImage] = useState(''); 
     const [title, setTitle] = useState('');
     const { currentUser } = useContext(UserContext); // Get current user from context
     console.log('Current User:', currentUser);
     //const currentUserId = currentUser ? currentUser.id : null; 
    
+    const location = useLocation();
+    const templateUrl = location.state?.templateUrl || ''; 
+
+
+    useEffect(() => {
+        if (templateUrl) {
+            console.log('templateurl',templateUrl);
+            setBackgroundImage(templateUrl);
+        }
+    }, [templateUrl]);
+
     useEffect(() => {
         const fetchDesign = async () => {
            if (designId) { // Load design for editing if ID exists
@@ -28,7 +40,7 @@ const Design = () => {
                  const response = await axios.get(`/designs/${designId}`);
                   console.log('information:');
                  console.log("response",response.data);
-                 const { title, elements, backgroundColor } = response.data;
+                 const { title, elements, backgroundColor, backgroundImage} = response.data;
                  console.log('oldelements',elements)
                  const updatedElements = elements.map(element => {
                     // Only modify imageUrl if it exists and the element is an image
@@ -50,6 +62,7 @@ const Design = () => {
                  setTitle(title);
                  setElements(updatedElements);
                  setBackgroundColor(backgroundColor);
+                 setBackgroundImage(backgroundImage); 
               } catch (error) {
                  console.error('Error loading design:', error);
               }
@@ -73,6 +86,7 @@ const Design = () => {
                title: inputTitle,
                elements,
                backgroundColor,
+               backgroundImage: backgroundImage,            
             };
             console.log(elements)
             console.log('Payload to be sent:', payload)
@@ -133,7 +147,7 @@ const Design = () => {
                         setSelectedItem={setSelectedItem}
                         updateItemProperties={updateItemProperties}
                         backgroundColor={backgroundColor}
-                       
+                        backgroundImage={backgroundImage} 
                         className="canvas-area" />
         </div>
     </div>

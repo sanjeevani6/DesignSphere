@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect,useState, useRef } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import { Resizable } from 'react-resizable';
  
@@ -161,8 +161,9 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
     );
 };
 
-const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties, backgroundColor }) => {
+const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties, backgroundColor,backgroundImage}) => {
     const canvasRef = useRef(null);
+  
 
     const handleSelectItem = (id) => {
         setSelectedItem(elements.find((item) => item.id === id));
@@ -215,6 +216,9 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
             style={{
                 width: '100%',
                 height: '500px',
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
                 border: '2px dashed #ccc',
                 position: 'relative',
                 backgroundColor: backgroundColor || '#fff', // Use the passed background color

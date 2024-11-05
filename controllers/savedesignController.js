@@ -4,11 +4,11 @@ const Design = require('../models/Design');
 const updateDesign = async (req, res) => {
     try {
        const { designId } = req.params;
-       const { title, elements, backgroundColor } = req.body;
+       const { title, elements, backgroundColor,backgroundImage } = req.body;
  
        const updatedDesign = await Design.findByIdAndUpdate(
           designId,
-          { title, elements, backgroundColor },
+          { title, elements, backgroundColor,backgroundImage },
           { new: true }
        );
        res.status(200).json(updatedDesign);
@@ -19,7 +19,7 @@ const updateDesign = async (req, res) => {
 
 const saveDesign = async (req, res) => {
     console.log('Received data:', req.body); // Log the incoming request body
-    const { userId,title, elements, backgroundColor } = req.body;
+    const { userId,title, elements, backgroundColor,backgroundImage } = req.body;
 
     if (!title || !elements) {
         return res.status(400).json({ error: 'Title and elements are required' });
@@ -37,6 +37,7 @@ const saveDesign = async (req, res) => {
             title,
             elements,
             backgroundColor,
+            backgroundImage
         });
 
         await newDesign.save();

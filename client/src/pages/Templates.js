@@ -20,7 +20,7 @@ const Templates = () => {
 
     const handleTemplateClick = (templateUrl) => {
         // Navigate to the canvas area with template URL in state
-        navigate('/design', { state: { backgroundUrl: templateUrl } });
+        navigate('/design', { state:{templateUrl}  } );
     };
 
     return (

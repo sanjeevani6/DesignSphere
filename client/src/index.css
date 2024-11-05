@@ -199,3 +199,55 @@
   color: #666; /* Grey color for the date text */
   font-size: 0.9em; /* Slightly smaller font for the date */
 }
+
+/* src/styles/TemplatesPage.css */
+.templates-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  margin: 20px;
+  padding: 0;
+}
+
+.template-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  width: 250px; /* Fixed width for smaller size */
+  height: 250px; /* Fixed height for consistency */
+}
+
+.template-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.template-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.template-info {
+  padding: 10px;
+}
+
+.template-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.template-info p {
+  margin: 5px 0 0;
+  color: #555;
+  font-size: 0.9rem;
+}

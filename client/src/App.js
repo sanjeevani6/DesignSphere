@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
 import { UserProvider } from './context/UserContext'; 
+import Templates from './pages/Templates';
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
@@ -26,6 +27,7 @@ function App() {
         
         <Route path="/design" element={<Design />} />
         <Route path="/design/:designId" element={<Design />} />
+        <Route path="/templates" element={<Templates/>} />
 
         {/* Public routes for login and register */}
         <Route path="/login" element={<Login />} />

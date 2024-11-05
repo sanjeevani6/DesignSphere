@@ -7,6 +7,7 @@ const multer = require('multer');
 const connectDb = require('./config/connectDb')
 const sidebarItemsRoutes = require('./routes/sidebarRoutes');
 const savedesignRoutes = require('./routes/savedesignRoutes');
+const templatesRoutes = require('./routes/templatesRoutes');
 //config dot env file
 dotenv.config();
 //database call
@@ -34,10 +35,13 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 
 // Serve static files from the 'uploads' directory
 app.use('/api/v1/uploads/images', express.static('uploads/images'));
+app.use('/api/v1/uploads/templates', express.static('uploads/templates'));
+
 
 //sidebaritems and fileupload (images)
 app.use('/api/v1/designpage', sidebarItemsRoutes);
-
+//get templates
+app.use('/api/v1/templates', templatesRoutes);
 
 //save design
 app.use('/api/v1/designs',savedesignRoutes);

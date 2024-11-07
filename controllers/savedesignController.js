@@ -4,21 +4,15 @@ const Design = require('../models/Design');
 // Update an existing design
 const updateDesign = async (req, res) => {
     try {
-        const { designId } = req.params;  // Get the design ID from the request parameters
-        const { title, elements, backgroundColor } = req.body;  // Destructure data from request body
-
-        // Find the design by ID and update it
-        const updatedDesign = await Design.findByIdAndUpdate(
-            designId,
-            { title, elements, backgroundColor },
-            { new: true, runValidators: true }  // Return the new version and run validators
-        );
-
-        // Check if the design was found and updated
-        if (!updatedDesign) {
-            return res.status(404).json({ message: 'Design not found' });
-        }
-        res.status(200).json(updatedDesign);  // Return the updated design
+       const { designId } = req.params;
+       const { title, elements, backgroundColor,backgroundImage } = req.body;
+ 
+       const updatedDesign = await Design.findByIdAndUpdate(
+          designId,
+          { title, elements, backgroundColor,backgroundImage },
+          { new: true }
+       );
+       res.status(200).json(updatedDesign);
     } catch (error) {
         console.error('Error updating design:', error);
         res.status(500).json({ message: 'Failed to update design', error });
@@ -27,8 +21,8 @@ const updateDesign = async (req, res) => {
 
 // Save a new design
 const saveDesign = async (req, res) => {
-    console.log('Received data:', req.body);  // Log the incoming request body
-    const { userId, title, elements, backgroundColor } = req.body;  // Destructure data
+    console.log('Received data:', req.body); // Log the incoming request body
+    const { userId,title, elements, backgroundColor,backgroundImage } = req.body;
 
     // Validate required fields
     if (!title || !elements) {
@@ -48,6 +42,7 @@ const saveDesign = async (req, res) => {
             title,
             elements,
             backgroundColor,
+            backgroundImage
         });
 
         // Save the design to the database

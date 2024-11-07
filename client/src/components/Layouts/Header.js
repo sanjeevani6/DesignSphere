@@ -32,7 +32,7 @@ const Header = () => {
           <Link className="nav-link active" to="/design">Design</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link active" to="#">Templates</Link>
+          <Link className="nav-link active" to="/templates">Templates</Link>
         </li>
         <li className="simp2">
           <button className="bt" onClick={logoutHandler}>Logout</button>

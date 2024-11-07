@@ -40,12 +40,12 @@ const Homepage = () => {
         if (!selectedDesignId) return;
         try {
             const response = await axios.get(`/designs/${selectedDesignId}`);
-            const { elements, backgroundColor } = response.data;
+            const { elements, backgroundColor, backgroundImage } = response.data;
 
             if (format === 'pdf') {
-                exportToPDF(elements, backgroundColor);
+                exportToPDF(elements, backgroundColor, backgroundImage);  // Pass the background image
             } else if (format === 'image') {
-                exportToImage(elements, backgroundColor);
+                exportToImage(elements, backgroundColor, backgroundImage);  // Pass the background image
             }
         } catch (error) {
             console.error('Error fetching design data for download:', error);

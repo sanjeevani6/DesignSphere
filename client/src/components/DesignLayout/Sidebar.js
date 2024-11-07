@@ -76,30 +76,36 @@ const Sidebar = ({ setElements }) => {
     return (
         <div style={{ width: '200px', padding: '16px', backgroundColor: '#f4f4f4' }}>
             {/* Text Section */}
-            <div>
+            <div className="sidebar-section">
                 <h3>Add Text</h3>
+                <div className="sidebar-list">
                 {textItems.map((item) => (
                     <SidebarItem key={item.id} item={item} />
                 ))}
+                </div>
             </div>
 
             {/* Shapes Section */}
-            <div>
+            <div className="sidebar-section">
                 <h3>Shapes</h3>
+                <div className="sidebar-list">
                 {shapeItems.map((item) => (
                     <SidebarItem key={item.id} item={item} />
                 ))}
+                </div>
             </div>
 
             {/* Images Section */}
-            <div>
+            <div className="sidebar-section">
                 <h3>Images</h3>
+                <div className="sidebar-list">
                 {imageItems.map((item) => (
                     <SidebarItem key={item.id} item={item} />
                 ))}
+                </div>
             </div>
              {/* Image upload section*/}
-            <div>
+            <div className="sidebar-section">
                 <h3>Upload Image</h3>
                 <input type="file" accept="image/*" onChange={handleImageUpload} />
             </div>

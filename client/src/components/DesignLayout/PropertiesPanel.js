@@ -41,7 +41,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
         <div className='properties-pane'>
             <h3>Properties Panel</h3>
             {/* Background color option for canvas */}
-            <div>
+            <div className="canvas-background">
                 <label>
                     Canvas Background Color:
                     <input
@@ -56,7 +56,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
             {selectedItem ? (
                 <>
                     {selectedItem.type === 'text' && (
-                        <div>
+                        <div className="property-row">
                             <label>Text:</label>
                             <input
                                 type="text"
@@ -121,7 +121,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                     )}
 
                     {selectedItem.type === 'shape' && (
-                        <div>
+                        <div className="property-row">
                             <label>Color:</label>
                             <input
                                 type="color"
@@ -149,14 +149,8 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                     )}
 
                     {selectedItem.type === 'image' && (
-                        <div>
-                            <label>Image URL:</label>
-                            <input
-                                type="text"
-                                name="imageUrl"
-                                value={selectedItem.imageUrl}
-                                onChange={handleChange}
-                            />
+                        <div className="property-row">
+                          
                             <label>Width:</label>
                             <input
                                 type="number"
@@ -176,16 +170,8 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                         </div>
                     )}
                       {/* Delete button for the selected item */}
-            <button onClick={() => deleteItem(selectedItem.id)} 
-                        style={{
-                            backgroundColor: 'red',
-                            color: 'white',
-                            marginTop: '10px',
-                            padding: '5px',
-                            borderRadius: '4px',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
+            <button  lassName="delete-button" onClick={() => deleteItem(selectedItem.id)} 
+                       
                        >Delete Item</button>
                 </>
             ) : (

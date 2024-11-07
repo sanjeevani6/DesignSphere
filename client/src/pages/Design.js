@@ -8,7 +8,7 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { UserContext } from '../context/UserContext'; 
+
   
 const Design = () => {
     const { designId } = useParams();
@@ -17,14 +17,15 @@ const Design = () => {
     const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
     const [backgroundImage, setBackgroundImage] = useState(''); 
     const [title, setTitle] = useState('');
-    const { currentUser } = useContext(UserContext); // Get current user from context
-    console.log('Current User:', currentUser);
-    //const currentUserId = currentUser ? currentUser.id : null; 
+   
+    
+   
    
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
 
-
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+   
     useEffect(() => {
         if (templateUrl) {
             console.log('templateurl',templateUrl);

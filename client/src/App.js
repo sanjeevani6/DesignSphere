@@ -14,7 +14,7 @@ function App() {
     <GoogleOAuthProvider clientId={clientId}>
     <UserProvider>
       <Routes>
-        {/* Protected route for homepage */}
+       
         <Route 
           path="/" 
           element={
@@ -25,9 +25,20 @@ function App() {
         />
         {/* Route for the Design page */}
         
-        <Route path="/design" element={<Design />} />
-        <Route path="/design/:designId" element={<Design />} />
-        <Route path="/templates" element={<Templates/>} />
+        <Route path="/design" element={
+           <ProtectedRoutes>
+           <Design />
+           </ProtectedRoutes>
+          } />
+        <Route path="/design/:designId" element={
+           <ProtectedRoutes>
+           <Design />
+           </ProtectedRoutes>
+          } />
+        <Route path="/templates" element={ <ProtectedRoutes>
+           <Templates />
+           </ProtectedRoutes>
+          } />
 
         {/* Public routes for login and register */}
         <Route path="/login" element={<Login />} />

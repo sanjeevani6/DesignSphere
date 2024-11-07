@@ -4,11 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import {jwtDecode }from 'jwt-decode';
-import { UserContext } from '../context/UserContext';
+
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useContext(UserContext); // Access the login function from context
+
 
   
   const onGoogleLoginSuccess = async (res) => {
@@ -24,8 +24,9 @@ const Login = () => {
       const response = await axios.post('/users/google-login', userData);
   
       // Save user info in localStorage and context
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      login(response.data.user);
+      const user = { ...response.data.user, password: '' }; 
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log('Logged in user:', user);
       message.success('Google login successful');
       navigate('/');
     } catch (error) {
@@ -46,11 +47,11 @@ const Login = () => {
 
   const submitHandler = async (values) => {
     try {
-      const { data } = await axios.post('/users/login', values);
+      const response= await axios.post('/users/login', values);
       message.success('Login successful');
-      const user = { ...data.user, password: '' }; 
-      localStorage.setItem('user', JSON.stringify({ ...data.user, password: '' }));
-      login(user);
+      const user = { ...response.data.user, password: '' }; 
+      localStorage.setItem('user', JSON.stringify(user));
+   
       console.log('Logged in user:', user);
       navigate('/');
     } catch (error) {

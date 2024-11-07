@@ -1,9 +1,10 @@
+// src/pages/Homepage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
-import { exportToPDF, exportToImage } from '../utils/exportUtils'; // Import the export functions
-import { Button, Menu, MenuItem } from '@mui/material'; // Import Material UI components
+import { exportToPDF, exportToImage } from '../utils/exportUtils';
+import { Button, Menu, MenuItem } from '@mui/material';
 
 const Homepage = () => {
     const [designs, setDesigns] = useState([]);
@@ -31,7 +32,7 @@ const Homepage = () => {
 
     const handleDownloadClick = (event, designId) => {
         setAnchorEl(event.currentTarget);
-        setSelectedDesignId(designId); // Store the design ID for download
+        setSelectedDesignId(designId);
     };
 
     const handleClose = () => setAnchorEl(null);
@@ -43,14 +44,14 @@ const Homepage = () => {
             const { elements, backgroundColor, backgroundImage } = response.data;
 
             if (format === 'pdf') {
-                exportToPDF(elements, backgroundColor, backgroundImage);  // Pass the background image
+                exportToPDF(elements, backgroundColor, backgroundImage);
             } else if (format === 'image') {
-                exportToImage(elements, backgroundColor, backgroundImage);  // Pass the background image
+                exportToImage(elements, backgroundColor, backgroundImage);
             }
         } catch (error) {
             console.error('Error fetching design data for download:', error);
         }
-        handleClose(); // Close the menu after download
+        handleClose();
     };
 
     return (
@@ -71,8 +72,34 @@ const Homepage = () => {
                             >
                                 <h3>{design.title}</h3>
                                 <p>Created at: {new Date(design.createdAt).toLocaleDateString()}</p>
+                                
                                 <Button
                                     variant="contained"
+                                    style={{
+                                        backgroundColor: '#A5D6A7',
+                                        color: '#1B5E20',
+                                        fontSize: '0.8rem',
+                                        padding: '4px 10px',
+                                        marginBottom: '6px',
+                                        border: '1px solid #66BB6A'
+                                    }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/events/${design._id}`);
+                                    }}
+                                >
+                                    Eventify
+                                </Button>
+                                
+                                <Button
+                                    variant="contained"
+                                    style={{
+                                        backgroundColor: '#90CAF9',
+                                        color: '#0D47A1',
+                                        fontSize: '0.8rem',
+                                        padding: '4px 10px',
+                                        border: '1px solid #64B5F6'
+                                    }}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleDownloadClick(e, design._id);
@@ -84,7 +111,6 @@ const Homepage = () => {
                         ))}
                     </div>
                 </div>
-                {/* Dropdown menu for download options */}
                 <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}

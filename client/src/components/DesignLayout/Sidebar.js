@@ -48,7 +48,7 @@ const Sidebar = ({ setElements }) => {
 
 
           
-           // onImageUpload(newImageItem); // Call the handler to add the image to the canvas
+   
         }
     };
 
@@ -59,6 +59,7 @@ const Sidebar = ({ setElements }) => {
             try {
                 const response = await fetch('/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
                 const data = await response.json();
+                console.log('sidebar items',data)
                 setSidebarItems(data);
             } catch (error) {
                 console.error('Error fetching sidebar items:', error);
@@ -71,10 +72,23 @@ const Sidebar = ({ setElements }) => {
     // Separate items by category
     const textItems = sidebarItems.filter(item => item.category === 'text');
     const shapeItems = sidebarItems.filter(item => item.category === 'shape');
-    const imageItems = sidebarItems.filter(item => item.category === 'image');
+    const artelementsItems = sidebarItems.filter(item => item.category === 'campuselement');
+    const animatedTextItems = sidebarItems.filter(item => item.category === 'animatedText');
+    const stickerItems = sidebarItems.filter(item => item.category === 'sticker');
 
     return (
         <div style={{ width: '200px', padding: '16px', backgroundColor: '#f4f4f4' }}>
+
+         {/*  campus art element library Section */}
+         <div className="sidebar-section">
+                <h3>Campus Arts Element</h3>
+                <div className="sidebar-list">
+                {artelementsItems.map((item) => (
+                    <SidebarItem key={item.id} item={item} />
+                ))}
+                </div>
+            </div>
+
             {/* Text Section */}
             <div className="sidebar-section">
                 <h3>Add Text</h3>
@@ -95,15 +109,25 @@ const Sidebar = ({ setElements }) => {
                 </div>
             </div>
 
-            {/* Images Section */}
+         
+          { /*animated section*/}
             <div className="sidebar-section">
-                <h3>Images</h3>
-                <div className="sidebar-list">
-                {imageItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} />
-                ))}
-                </div>
+            <h3>Animated Text</h3>
+            <div className="sidebar-list">
+                
+                {animatedTextItems.map(item => <SidebarItem key={item.id} item={item} />)}
             </div>
+            </div>
+
+
+            <div className="sidebar-section">
+            <h3>Stickers</h3>
+            <div className="sidebar-list">
+               
+                {stickerItems.map(item => <SidebarItem key={item.id} item={item} />)}
+            </div>
+            </div>
+
              {/* Image upload section*/}
             <div className="sidebar-section">
                 <h3>Upload Image</h3>

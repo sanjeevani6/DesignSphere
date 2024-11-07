@@ -13,12 +13,12 @@ const elementSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image' , 'animatedText', 'sticker'],
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image' , 'animatedText', 'sticker'],
         required: true,
     },
     shapeType: {
@@ -28,8 +28,12 @@ const elementSchema = new mongoose.Schema({
         type: String, // color code, e.g., '#ff7f50'
     },
     imageUrl: {
-        type: String, // URL for images
+        type: String, // URL for images or stickers
     },
+    animationUrl: {
+        type: String, // URL for animated text or GIFs if animated
+    },
+   
     size: {
         width: { type: Number, default: 50 },
         height: { type: Number, default: 50 },

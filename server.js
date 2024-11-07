@@ -36,6 +36,10 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 // Serve static files from the 'uploads' directory
 app.use('/api/v1/uploads/images', express.static('uploads/images'));
 app.use('/api/v1/uploads/templates', express.static('uploads/templates'));
+app.use('/api/v1/uploads/stickers', express.static('uploads/stickers'));
+app.use('/api/v1/uploads/animations', express.static('uploads/animations'));
+app.use('/api/v1/uploads/artelements', express.static('uploads/artelements'));
+
 
 
 //sidebaritems and fileupload (images)

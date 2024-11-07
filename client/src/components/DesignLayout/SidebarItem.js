@@ -1,6 +1,7 @@
 // SidebarItem.js
-import React from 'react';
+import React ,{useEffect,useState}from 'react';
 import { useDrag } from 'react-dnd';
+import Lottie from 'lottie-react';
   
 const SidebarItem = ({ item }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -10,6 +11,20 @@ const SidebarItem = ({ item }) => {
             isDragging: !!monitor.isDragging(),
         }),
     }));
+
+    const [animationData, setAnimationData] = useState(null);
+
+    useEffect(() => {
+        if (item.type === 'animatedText') {
+            fetch(item.animationUrl)
+                .then((response) => response.json())
+                .then((data) => {setAnimationData(data)
+                    console.log('animation data url',data)
+                })
+                .catch((error) => console.error('Error loading animation:', error));
+          
+        }
+    }, [item.animationUrl, item.type]);
 
     // Dynamic styles based on item properties
     const baseStyle = {
@@ -31,6 +46,8 @@ const SidebarItem = ({ item }) => {
         marginRight: '8px',
     };
 
+   
+
     const renderShape = () => {
         switch (item.shapeType) {
             case 'circle':
@@ -49,10 +66,22 @@ const SidebarItem = ({ item }) => {
                 return shapeStyle;
         }
     };
-
+  
     return (
         <div ref={drag} style={baseStyle}>
-            {item.type === 'image' ? (
+
+               {item.type === 'animatedText' && animationData ? (
+                <Lottie
+                    animationData={animationData}
+                    style={{
+                        width: `${item.size.width}px`,
+                        height: `${item.size.height}px`,
+                    }}
+                    loop
+                    autoplay
+                />
+            ):
+                item.type === 'image' ? (
                 <img
                     src={item.imageUrl}
                     alt={item.name||'uploaded image'}
@@ -62,9 +91,37 @@ const SidebarItem = ({ item }) => {
                         marginRight: '8px',
                     }}
                 />
-            ) : item.type === 'shape' ? (
+            ) : 
+            item.type === 'campuselement' ? (
+                <img
+                    src={item.imageUrl}
+                    alt={item.name||'uploaded image'}
+                    style={{
+                        width: `${item.size.width}px`,
+                        height: `${item.size.height}px`,
+                        marginRight: '8px',
+                    }}
+                />
+            ):
+            item.type === 'shape' ? (
                 <div style={renderShape()} />
-            ) : (
+            ) : item.type === 'sticker' ? (
+                <img
+                    src={item.imageUrl}
+                    alt={item.name || 'sticker'}
+                    style={{
+                        width: `${item.size?.width || 100}px`,
+                        height: `${item.size?.height || 100}px`,
+                        marginRight: '8px',
+                        backgroundColor: 'transparent',
+                    }}
+                    
+                />
+               
+           
+     
+
+            ):(
                 <div
                     style={{
                         width: `${item.size.width || 80}px`,

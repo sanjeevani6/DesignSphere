@@ -10,13 +10,30 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(UserContext); // Access the login function from context
 
-  const onGoogleLoginSuccess = (res) => {
-    const decoded = jwtDecode(res.credential);
-    localStorage.setItem('user', JSON.stringify(decoded));
-    login({ ...decoded, _id: decoded.sub});
-    message.success('Google login successful');
-    navigate('/');
+  
+  const onGoogleLoginSuccess = async (res) => {
+    try {
+      const decoded = jwtDecode(res.credential);
+      const userData = {
+        name: decoded.name,
+        email: decoded.email,
+        googleId: decoded.sub,
+      };
+      
+      // Send the user data to the backend to be saved
+      const response = await axios.post('/users/google-login', userData);
+  
+      // Save user info in localStorage and context
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      login(response.data.user);
+      message.success('Google login successful');
+      navigate('/');
+    } catch (error) {
+      console.error('Error with Google login:', error);
+      message.error('Google login failed');
+    }
   };
+  
 
   const onGoogleLoginError = (res) => {
     console.log('Google login failed', res);

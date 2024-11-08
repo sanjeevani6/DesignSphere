@@ -103,6 +103,18 @@ const Homepage = () => {
             console.error('Error saving image URL:', error);
         }
     };
+    const handleDeleteClick = async (designId) => {
+        try {
+            // Send DELETE request to backend
+            await axios.delete(`/designs/delete/${designId}`);
+
+            // Update state to remove the deleted design from the list
+            setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
+        } catch (error) {
+            console.error("Failed to delete design:", error);
+        }
+    };
+
 
     return (
         <Layout>
@@ -157,6 +169,65 @@ const Homepage = () => {
                                 >
                                     Download
                                 </Button>
+                                <div className="button-group" style={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    gap: '6px'
+                                }}>
+                                    <Button
+                                        variant="contained"
+                                        style={{
+                                            backgroundColor: '#A5D6A7',
+                                            color: '#1B5E20',
+                                            fontSize: '0.7rem',
+                                            padding: '3px 8px',
+                                           
+                                            border: '1px solid #66BB6A',
+                                            flex: '1 1 48%'
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/events/${design._id}`);
+                                        }}
+                                    >
+                                        Eventify
+                                    </Button>
+
+                                    <Button
+                                        variant="contained"
+                                        style={{
+                                            backgroundColor: '#90CAF9',
+                                            color: '#0D47A1',
+                                            fontSize: '0.7rem',
+                                            padding: '3px 8px',
+                                            border: '1px solid #64B5F6',
+                                             flex: '1 1 48%'
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDownloadClick(e, design._id);
+                                        }}
+                                    >
+                                        Download
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        style={{
+                                            backgroundColor: '#EF9A9A',
+                                            color: '#B71C1C',
+                                            fontSize: '0.7rem',
+                                            padding: '3px 8px',
+                                            border: '1px solid #E57373',
+                                            flex: '1 1 48%'
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteClick(design._id); // Delete handler
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
                             </div>
                         ))}
                     </div>

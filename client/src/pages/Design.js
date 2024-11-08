@@ -10,6 +10,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { exportToImage, exportToShare } from '../utils/exportUtils';
 
+import { message } from 'antd';
 
   
 const Design = () => {
@@ -37,7 +38,7 @@ const Design = () => {
 
     useEffect(() => {
         const fetchDesign = async () => {
-           if (designId) { // Load design for editing if ID exists
+           if (designId) { // Loading design for editing if ID exists
               try {
                 console.log("Fetching design with ID:", designId);
                  const response = await axios.get(`/designs/${designId}`);
@@ -46,14 +47,14 @@ const Design = () => {
                  const { title, elements, backgroundColor, backgroundImage} = response.data;
                  console.log('oldelements',elements)
                  const updatedElements = elements.map(element => {
-                    // Only modify imageUrl if it exists and the element is an image
+                    //  modifying imageUrl if it exists and the element is an image
                     const updatedImageUrl = element.imageUrl 
-                        ? `${element.imageUrl.replace(/\\/g, '/')}`  // Ensure leading slash and replace backslashes
-                        : undefined;  // Keep as undefined if not an image element
+                        ? `${element.imageUrl.replace(/\\/g, '/')}`  // Ensuring leading slash and replace backslashes in url
+                        : undefined;  // Keeping as undefined if not an image element
                 
                     return {
                         ...element,
-                        imageUrl: updatedImageUrl  // This will only update for elements with an imageUrl
+                        imageUrl: updatedImageUrl  
                     };
                 });
                 
@@ -95,14 +96,17 @@ const Design = () => {
             console.log('Payload to be sent:', payload)
             if (designId) {
                await axios.put(`/designs/${designId}`, payload);
+               message.success('Design updated successfully');
                console.log('Design updated:', payload);
             } else {
                await axios.post('/designs/save', payload);
+               message.success('New design saved successfully');
                console.log('New design saved:', payload);
             }
             setTitle(inputTitle);
          } catch (error) {
             console.error('Failed to save design:', error);
+            message.error('Failed to save design');
          } 
             await exportToShare(elements, backgroundColor, backgroundImage);
         };

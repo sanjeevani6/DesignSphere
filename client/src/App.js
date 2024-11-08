@@ -9,7 +9,7 @@ import { UserProvider } from './context/UserContext';
 import Templates from './pages/Templates';
 
 function App() {
-  const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
+  const clientId = process.env.GOOGLE_CLIENT_ID;
 
   return (
     <GoogleOAuthProvider clientId={clientId}>

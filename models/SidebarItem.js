@@ -26,6 +26,9 @@ const sidebarItemSchema = new mongoose.Schema({
     color: {
         type: String, // color code, e.g., '#ff7f50'
     },
+    backgroundColor: {
+         type:String,
+    },
     imageUrl: {
         type: String, // URL for images and stickers
     },

@@ -19,7 +19,7 @@ router.post('/send', async (req, res) => {
         }
 
         // Construct the absolute path to the image file based on the retrieved URL
-        const designPath = path.join(__dirname, '..', 'uploads', designImage.imageUrl);
+        const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
         console.log('Design path:', designPath);
 
         // Check if the design file exists
@@ -52,7 +52,7 @@ router.post('/send', async (req, res) => {
             `,
             attachments: [
                 {
-                    filename: `${designId}.png`,
+                    filename: designImage.imageName ,
                     path: designPath,
                     contentType: 'image/png',
                 },

@@ -33,27 +33,7 @@ const PrintOrderPage = () => {
         setUserDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
     };
 
-    const handlePrint = () => {
-        if (designRef.current) {
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Design</title>
-                        <style>
-                            img { max-width: 100%; height: auto; }
-                        </style>
-                    </head>
-                    <body>
-                        ${designRef.current.outerHTML}
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-        }
-        
-    };
+   
 
     const handleSendToShop = async () => {
         try {
@@ -114,9 +94,7 @@ const PrintOrderPage = () => {
                         />
                     </Box>
                     <div style={{ marginTop: '20px' }}>
-                        <Button variant="contained" onClick={handlePrint} style={{ marginRight: '10px' }}>
-                            Print
-                        </Button>
+                        
                         <Button variant="contained" color="primary" onClick={handleSendToShop}>
                             Send to Shop
                         </Button>

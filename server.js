@@ -42,7 +42,6 @@ app.use('/api/v1/uploads/templates', express.static('uploads/templates'));
 app.use('/api/v1/uploads/stickers', express.static('uploads/stickers'));
 app.use('/api/v1/uploads/animations', express.static('uploads/animations'));
 app.use('/api/v1/uploads/artelements', express.static('uploads/artelements'));
-app.use('/api/v1/uploads/artelements', express.static('uploads/artelements'));
 app.use('/api/v1/uploads/designimage',express.static('uploads/designimage'));
 
 //sidebaritems and fileupload (images)

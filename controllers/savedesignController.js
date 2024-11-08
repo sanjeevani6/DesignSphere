@@ -1,6 +1,8 @@
 // controllers/savedesignController.js
 const Design = require('../models/Design'); 
-
+const fs = require('fs');
+const path = require('path');
+const DesignImage = require('../models/DesignImage');
 // Update an existing design
 const updateDesign = async (req, res) => {
     try {
@@ -46,8 +48,15 @@ const saveDesign = async (req, res) => {
         });
 
         // Save the design to the database
-        await newDesign.save();
-        res.status(201).json({ message: 'Design saved successfully', design: newDesign });  // Return success response
+         await newDesign.save();
+
+  
+
+        res.status(201).json({
+             message: 'Design saved successfully',
+              designId: newDesign._id,
+              design: newDesign
+             });  // Return success response
     } catch (error) {
         console.error('Failed to save design:', error);  // Log the error for debugging
         res.status(500).json({ error: 'Failed to save design' });  // Return error response

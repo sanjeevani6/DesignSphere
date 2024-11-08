@@ -1,5 +1,5 @@
 const path = require('path');
-const DesignImage = require('../models/designimage'); // Import DesignImage schema
+const DesignImage = require('../models/designImage'); // Import DesignImage schema
 
 // Handle image upload and return file path
 const uploadDesignImage = (req, res) => {

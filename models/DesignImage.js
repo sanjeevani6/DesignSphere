@@ -6,14 +6,9 @@ const designImageSchema = new mongoose.Schema({
         ref: 'Design',  // Reference to the Design model
         required: true 
     },
-    userId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'users',   // Reference to the User model
-        required: true 
-    },
-    title: {
+    imageName: {
         type: String,
-        required: true
+        required: true, // Name of the image (e.g., 'designId.png')
     },
     imageUrl: {
         type: String,   // Path to the saved image file
@@ -25,4 +20,4 @@ const designImageSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('designimage', designImageSchema);
+module.exports = mongoose.models.designimage || mongoose.model('designimage', designImageSchema);

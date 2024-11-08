@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import axios from 'axios'
-export const exportToShare = async (elements, backgroundColor, backgroundImage) => {
+export const exportToShare = async (elements, backgroundColor, backgroundImage,designId) => {
    
     try {
         const canvas = await generateCanvas(elements, backgroundColor, backgroundImage);
@@ -13,7 +13,7 @@ export const exportToShare = async (elements, backgroundColor, backgroundImage) 
 
         const formData = new FormData();
         formData.append('file', blob, 'design.png');
-
+        formData.append('designId', designId);
         // Send to backend
         await axios.post('/store/designimage', formData, {
             headers: {

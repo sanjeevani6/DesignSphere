@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const express = require('express');
+const DesignImage = require('../models/DesignImage');
 
 // Create a router instance
 const router = express.Router();
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
         //const dir ='uploads/designimage'
         const dir =  'uploads/designimage';
        // const dir = path.resolve(process.cwd(), 'uploads', 'designimage');
-       
+       console.log('file',file)
         console.log('directory:',dir);
         
         console.log('file name',file.originalname);
@@ -28,8 +29,37 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST route to save uploaded images
-router.post('/designimage', upload.single('file'), (req, res) => {
+router.post('/designimage', upload.single('file'), async(req, res) => {
     try {
+        const { designId } = req.body;
+        const filePath = req.file.path;
+        const fileName = req.file.filename;
+        console.log('File uploaded:', fileName, 'Path:', filePath);
+        const existingDesignImage = await DesignImage.findOne({ designId: designId });
+        if (existingDesignImage) {
+            await DesignImage.updateOne(
+                { designId: designId }, 
+                {
+                    $set: {
+                        imageName: fileName,  
+                        imageUrl: filePath    
+                    }
+                }
+            );
+            console.log('designimage updated');
+        }
+        else{
+        const designImage = new DesignImage({
+            designId: designId,
+            imageName: fileName,
+            imageUrl: filePath // Relative path to the uploaded image
+        });
+
+
+        // Save the image metadata
+        await designImage.save();
+    }
+
         res.status(200).json({ message: 'designImage saved successfully!', filePath: req.file.path });
     } catch (error) {
         res.status(500).json({ error: 'Failed to save designimage' });

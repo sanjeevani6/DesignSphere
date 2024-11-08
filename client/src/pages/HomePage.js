@@ -1,11 +1,9 @@
-// src/pages/Homepage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
 import { exportToPDF, exportToImage, exportToShare } from '../utils/exportUtils';
 import { Button, Menu, MenuItem } from '@mui/material';
-
 
 const Homepage = () => {
     const [designs, setDesigns] = useState([]);
@@ -57,21 +55,17 @@ const Homepage = () => {
 
     const handleEventifyClick = async (designId) => {
         try {
-            // Fetch the design data
             const response = await axios.get(`/designs/${designId}`);
             const { elements, backgroundColor, backgroundImage } = response.data;
 
-            // Generate the PNG data URL
             const imageDataUrl = await exportToShare(elements, backgroundColor, backgroundImage);
 
-            // Upload the image and save the URL
             await uploadImage(imageDataUrl, designId);
         } catch (error) {
             console.error('Error processing design for Eventify:', error);
         }
     };
 
-    // Function to upload the image to the server
     const uploadImage = async (imageDataUrl, designId) => {
         const formData = new FormData();
         const blob = await fetch(imageDataUrl).then(res => res.blob());
@@ -85,7 +79,6 @@ const Homepage = () => {
             const result = await response.json();
 
             if (result.success) {
-                // Save the relative URL in the database
                 const imageUrl = result.imageUrl;
                 await saveDesignImageUrl(imageUrl, designId);
             }
@@ -94,7 +87,6 @@ const Homepage = () => {
         }
     };
 
-    // Function to save the image URL in the database
     const saveDesignImageUrl = async (imageUrl, designId) => {
         try {
             await axios.put(`/designs/${designId}/updateImageUrl`, { imageUrl });
@@ -103,18 +95,15 @@ const Homepage = () => {
             console.error('Error saving image URL:', error);
         }
     };
+
     const handleDeleteClick = async (designId) => {
         try {
-            // Send DELETE request to backend
             await axios.delete(`/designs/delete/${designId}`);
-
-            // Update state to remove the deleted design from the list
             setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
         } catch (error) {
             console.error("Failed to delete design:", error);
         }
     };
-
 
     return (
         <Layout>
@@ -135,45 +124,7 @@ const Homepage = () => {
                                 <h3>{design.title}</h3>
                                 <p>Created at: {new Date(design.createdAt).toLocaleDateString()}</p>
 
-                                <Button
-                                    variant="contained"
-                                    style={{
-                                        backgroundColor: '#A5D6A7',
-                                        color: '#1B5E20',
-                                        fontSize: '0.8rem',
-                                        padding: '4px 10px',
-                                        marginBottom: '6px',
-                                        border: '1px solid #66BB6A'
-                                    }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEventifyClick(design._id);
-                                    }}
-                                >
-                                    Eventify
-                                </Button>
-
-                                <Button
-                                    variant="contained"
-                                    style={{
-                                        backgroundColor: '#90CAF9',
-                                        color: '#0D47A1',
-                                        fontSize: '0.8rem',
-                                        padding: '4px 10px',
-                                        border: '1px solid #64B5F6'
-                                    }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDownloadClick(e, design._id);
-                                    }}
-                                >
-                                    Download
-                                </Button>
-                                <div className="button-group" style={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: '6px'
-                                }}>
+                                <div className="button-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                     <Button
                                         variant="contained"
                                         style={{
@@ -181,13 +132,12 @@ const Homepage = () => {
                                             color: '#1B5E20',
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
-                                           
                                             border: '1px solid #66BB6A',
-                                            flex: '1 1 48%'
+                                            flex: '1 1 48%',
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            navigate(`/events/${design._id}`);
+                                            handleEventifyClick(design._id);
                                         }}
                                     >
                                         Eventify
@@ -201,7 +151,7 @@ const Homepage = () => {
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
                                             border: '1px solid #64B5F6',
-                                             flex: '1 1 48%'
+                                            flex: '1 1 48%',
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -210,6 +160,7 @@ const Homepage = () => {
                                     >
                                         Download
                                     </Button>
+
                                     <Button
                                         variant="contained"
                                         style={{
@@ -218,11 +169,11 @@ const Homepage = () => {
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
                                             border: '1px solid #E57373',
-                                            flex: '1 1 48%'
+                                            flex: '1 1 48%',
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDeleteClick(design._id); // Delete handler
+                                            handleDeleteClick(design._id);
                                         }}
                                     >
                                         Delete
@@ -232,11 +183,8 @@ const Homepage = () => {
                         ))}
                     </div>
                 </div>
-                <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
+
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                     <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
                     <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
                 </Menu>

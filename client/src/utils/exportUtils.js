@@ -1,5 +1,33 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import axios from 'axios'
+export const exportToShare = async (elements, backgroundColor, backgroundImage) => {
+   
+    try {
+        const canvas = await generateCanvas(elements, backgroundColor, backgroundImage);
+        const imgData = canvas.toDataURL('image/png');
+
+        // Convert to blob to send to server
+        const response = await fetch(imgData);
+        const blob = await response.blob();
+
+        const formData = new FormData();
+        formData.append('file', blob, 'design.png');
+
+        // Send to backend
+        await axios.post('/store/designimage', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+   
+    }
+    catch (error) {
+        console.error('Error exporting to Image:', error);
+    }
+};
+
 
 // Function to export design as PDF
 export const exportToPDF = async (elements, backgroundColor, backgroundImage) => {

@@ -1,9 +1,8 @@
-// src/pages/Homepage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
-import { exportToPDF, exportToImage } from '../utils/exportUtils';
+import { exportToPDF, exportToImage, exportToShare } from '../utils/exportUtils';
 import { Button, Menu, MenuItem } from '@mui/material';
 
 const Homepage = () => {
@@ -54,18 +53,57 @@ const Homepage = () => {
         handleClose();
     };
 
+    const handleEventifyClick = async (designId) => {
+        try {
+            const response = await axios.get(`/designs/${designId}`);
+            const { elements, backgroundColor, backgroundImage } = response.data;
+
+            const imageDataUrl = await exportToShare(elements, backgroundColor, backgroundImage);
+
+            await uploadImage(imageDataUrl, designId);
+        } catch (error) {
+            console.error('Error processing design for Eventify:', error);
+        }
+    };
+
+    const uploadImage = async (imageDataUrl, designId) => {
+        const formData = new FormData();
+        const blob = await fetch(imageDataUrl).then(res => res.blob());
+        formData.append('image', blob, 'design.png');
+
+        try {
+            const response = await fetch('/api/v1/uploads/designimage', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                const imageUrl = result.imageUrl;
+                await saveDesignImageUrl(imageUrl, designId);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
+
+    const saveDesignImageUrl = async (imageUrl, designId) => {
+        try {
+            await axios.put(`/designs/${designId}/updateImageUrl`, { imageUrl });
+            console.log('Image URL saved successfully');
+        } catch (error) {
+            console.error('Error saving image URL:', error);
+        }
+    };
+
     const handleDeleteClick = async (designId) => {
         try {
-            // Send DELETE request to backend
             await axios.delete(`/designs/delete/${designId}`);
-
-            // Update state to remove the deleted design from the list
             setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
         } catch (error) {
             console.error("Failed to delete design:", error);
         }
     };
-
 
     return (
         <Layout>
@@ -85,11 +123,8 @@ const Homepage = () => {
                             >
                                 <h3>{design.title}</h3>
                                 <p>Created at: {new Date(design.createdAt).toLocaleDateString()}</p>
-                                <div className="button-group" style={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: '6px'
-                                }}>
+
+                                <div className="button-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                     <Button
                                         variant="contained"
                                         style={{
@@ -97,13 +132,12 @@ const Homepage = () => {
                                             color: '#1B5E20',
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
-
                                             border: '1px solid #66BB6A',
-                                            flex: '1 1 48%'
+                                            flex: '1 1 48%',
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            navigate(`/events/${design._id}`);
+                                            handleEventifyClick(design._id);
                                         }}
                                     >
                                         Eventify
@@ -126,6 +160,7 @@ const Homepage = () => {
                                     >
                                         Download
                                     </Button>
+
                                     <Button
                                         variant="contained"
                                         style={{
@@ -152,11 +187,11 @@ const Homepage = () => {
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
                                             border: '1px solid #E57373',
-                                            flex: '1 1 48%'
+                                            flex: '1 1 48%',
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDeleteClick(design._id); // Delete handler
+                                            handleDeleteClick(design._id);
                                         }}
                                     >
                                         Delete
@@ -166,11 +201,8 @@ const Homepage = () => {
                         ))}
                     </div>
                 </div>
-                <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
+
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                     <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
                     <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
                 </Menu>

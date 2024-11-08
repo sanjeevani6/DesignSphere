@@ -7,6 +7,7 @@ import Design from './pages/Design';
 import EventPage from './pages/EventPage'; // Import EventPage
 import { UserProvider } from './context/UserContext'; 
 import Templates from './pages/Templates';
+import PrintOrderPage from './pages/PrintOrderPage';
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
@@ -35,6 +36,7 @@ function App() {
             } 
           />
           
+          <Route path="/print/:designId" element={<PrintOrderPage />} />
           {/* Route for the Design page */}
           <Route path="/design" element={<Design />} />
           <Route path="/design/:designId" element={<Design />} />

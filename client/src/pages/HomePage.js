@@ -97,7 +97,7 @@ const Homepage = () => {
                                             color: '#1B5E20',
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
-                                           
+
                                             border: '1px solid #66BB6A',
                                             flex: '1 1 48%'
                                         }}
@@ -117,7 +117,7 @@ const Homepage = () => {
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
                                             border: '1px solid #64B5F6',
-                                             flex: '1 1 48%'
+                                            flex: '1 1 48%'
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -126,6 +126,24 @@ const Homepage = () => {
                                     >
                                         Download
                                     </Button>
+                                    <Button
+                                        variant="contained"
+                                        style={{
+                                            backgroundColor: '#FFCC80',
+                                            color: '#E65100',
+                                            fontSize: '0.7rem',
+                                            padding: '3px 8px',
+                                            border: '1px solid #FFA726',
+                                            flex: '1 1 48%'
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/print/${design._id}`); // Navigate to print page with designId
+                                        }}
+                                    >
+                                        Print
+                                    </Button>
+
                                     <Button
                                         variant="contained"
                                         style={{

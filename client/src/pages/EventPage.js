@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Button, TextField, Container, Typography, IconButton } from '@mui/material';
+import { Button, TextField, Typography, IconButton, Box, Container } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
+import { exportToShare } from '../utils/exportUtils'; // Import export function
 
 const EventPage = () => {
     const { designId } = useParams();
     const [designTitle, setDesignTitle] = useState('');
-    const [designImage, setDesignImage] = useState(''); // Store design image URL
+    const [designImage, setDesignImage] = useState('');
     const [eventDetails, setEventDetails] = useState({
         title: '',
         description: '',
@@ -23,48 +24,17 @@ const EventPage = () => {
             try {
                 const response = await axios.get(`/designs/${designId}`);
                 setDesignTitle(response.data.title);
-                setDesignImage(response.data.imageUrl); // Assuming `imageUrl` is correct
+
+                // Fetch design elements and pass them to exportToImage
+                const elements = response.data.elements; // Assuming `elements` is part of response
+                const imageUrl = await exportToShare(elements, response.data.backgroundColor, response.data.imageUrl);
+                setDesignImage(imageUrl); // Set the generated image URL
             } catch (error) {
                 console.error('Error fetching design:', error);
             }
         };
         fetchDesignTitle();
     }, [designId]);
-
-    useEffect(() => {
-        if (designImage) {
-            const metaTags = [
-                // Open Graph Meta Tags for Facebook and LinkedIn
-                { property: 'og:title', content: eventDetails.title || 'Event Title' },
-                { property: 'og:description', content: eventDetails.description || 'Event Description' },
-                { property: 'og:image', content: designImage },
-                { property: 'og:url', content: `http://localhost:3000/events/${designId}` },
-                
-                // Twitter Card Meta Tags for Twitter
-                { name: 'twitter:title', content: eventDetails.title || 'Event Title' },
-                { name: 'twitter:description', content: eventDetails.description || 'Event Description' },
-                { name: 'twitter:image', content: designImage },
-                { name: 'twitter:card', content: 'summary_large_image' },
-
-                // Pinterest Meta Tags for Pinterest
-                { name: 'pinterest:title', content: eventDetails.title || 'Event Title' },
-                { name: 'pinterest:description', content: eventDetails.description || 'Event Description' },
-                { name: 'pinterest:image', content: designImage }
-            ];
-
-            metaTags.forEach(({ property, name, content }) => {
-                const metaTag = document.createElement('meta');
-                if (property) {
-                    metaTag.setAttribute('property', property);
-                }
-                if (name) {
-                    metaTag.setAttribute('name', name);
-                }
-                metaTag.setAttribute('content', content);
-                document.head.appendChild(metaTag);
-            });
-        }
-    }, [eventDetails, designImage, designId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -75,83 +45,133 @@ const EventPage = () => {
     const shareText = encodeURIComponent(`Check out this event: ${eventDetails.title}`);
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: '20px' }}>
-            <Typography variant="h5">Create Event for: {designTitle}</Typography>
-            <form>
-                <TextField
-                    label="Event Title"
-                    fullWidth
-                    margin="normal"
-                    name="title"
-                    value={eventDetails.title}
-                    onChange={handleChange}
-                />
-                <TextField
-                    label="Event Description"
-                    fullWidth
-                    margin="normal"
-                    name="description"
-                    multiline
-                    rows={4}
-                    value={eventDetails.description}
-                    onChange={handleChange}
-                />
-                <TextField
-                    label="Event Date"
-                    type="date"
-                    fullWidth
-                    margin="normal"
-                    name="date"
-                    InputLabelProps={{ shrink: true }}
-                    value={eventDetails.date}
-                    onChange={handleChange}
-                />
-                <TextField
-                    label="Location"
-                    fullWidth
-                    margin="normal"
-                    name="location"
-                    value={eventDetails.location}
-                    onChange={handleChange}
-                />
+        <Container maxWidth="lg" style={{ display: 'flex', height: '100vh', padding: '0' }}>
+            {/* Left Side: Design Image */}
+            <Box 
+                sx={{
+                    width: '66.66%',
+                    borderRight: '2px solid #ddd',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px'
+                }}
+            >
+                {designImage ? (
+                    <img
+                        src={designImage}
+                        alt="Design Preview"
+                        style={{
+                            width: '100%',
+                            maxHeight: '90%',
+                            objectFit: 'contain',
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+                        }}
+                    />
+                ) : (
+                    <Typography variant="h6" color="textSecondary">Loading design preview...</Typography>
+                )}
+            </Box>
 
-                <Typography variant="subtitle1" style={{ marginTop: '16px' }}>
-                    Share this event on:
-                </Typography>
+            {/* Right Side: Event Form */}
+            <Box
+                sx={{
+                    width: '33.33%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '20px',
+                    backgroundColor: '#f9f9f9'
+                }}
+            >
+                <Typography variant="h5" gutterBottom align="center">{designTitle}</Typography>
 
-                <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-                    <IconButton
-                        onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${eventPageUrl}`, '_blank')}
+                <form style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <TextField
+                        label="Event Title"
+                        fullWidth
+                        margin="normal"
+                        name="title"
+                        value={eventDetails.title}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        label="Event Description"
+                        fullWidth
+                        margin="normal"
+                        name="description"
+                        multiline
+                        rows={3}
+                        value={eventDetails.description}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        label="Event Date"
+                        type="date"
+                        fullWidth
+                        margin="normal"
+                        name="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={eventDetails.date}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        label="Location"
+                        fullWidth
+                        margin="normal"
+                        name="location"
+                        value={eventDetails.location}
+                        onChange={handleChange}
+                    />
+
+                    <Typography variant="subtitle1" align="center" style={{ marginTop: '20px' }}>
+                        Share this event:
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', margin: '15px 0' }}>
+                        <IconButton
+                            onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${eventPageUrl}`, '_blank')}
+                            sx={{ color: '#4267B2', fontSize: '30px' }}
+                        >
+                            <FacebookIcon fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => window.open(`https://www.linkedin.com/shareArticle?url=${eventPageUrl}&title=${shareText}&image=${encodeURIComponent(designImage)}`, '_blank')}
+                            sx={{ color: '#0A66C2', fontSize: '30px' }}
+                        >
+                            <LinkedInIcon fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => window.open(`https://twitter.com/share?url=${eventPageUrl}&text=${shareText}&image=${encodeURIComponent(designImage)}`, '_blank')}
+                            sx={{ color: '#1DA1F2', fontSize: '30px' }}
+                        >
+                            <TwitterIcon fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => window.open(`https://pinterest.com/pin/create/bookmarklet/?media=${encodeURIComponent(designImage)}&url=${encodeURIComponent(eventPageUrl)}&description=${shareText}`, '_blank')}
+                            sx={{ color: '#E60023', fontSize: '30px' }}
+                        >
+                            <PinterestIcon fontSize="inherit" />
+                        </IconButton>
+                    </Box>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{
+                            padding: '12px',
+                            fontSize: '16px',
+                            marginTop: '10px',
+                            backgroundColor: '#1976d2',
+                            '&:hover': { backgroundColor: '#1565c0' }
+                        }}
+                        onClick={() => alert('Event ready to share!')}
                     >
-                        <FacebookIcon style={{ color: '#4267B2' }} />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => window.open(`https://www.linkedin.com/shareArticle?url=${eventPageUrl}&title=${shareText}`, '_blank')}
-                    >
-                        <LinkedInIcon style={{ color: '#0A66C2' }} />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => window.open(`https://twitter.com/share?url=${eventPageUrl}&text=${shareText}`, '_blank')}
-                    >
-                        <TwitterIcon style={{ color: '#1DA1F2' }} />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => window.open(`https://pinterest.com/pin/create/bookmarklet/?media=${encodeURIComponent(designImage)}&url=${encodeURIComponent(eventPageUrl)}&is_video=[]&description=${encodeURIComponent(shareText)}`, '_blank')}
-                    >
-                        <PinterestIcon style={{ color: '#E60023' }} />
-                    </IconButton>
-                </div>
-                
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: '16px' }}
-                    onClick={() => alert('Event ready to share!')}
-                >
-                    Save Event
-                </Button>
-            </form>
+                        Save Event
+                    </Button>
+                </form>
+            </Box>
         </Container>
     );
 };

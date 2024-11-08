@@ -8,6 +8,8 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { exportToImage, exportToShare } from '../utils/exportUtils';
+
 
   
 const Design = () => {
@@ -102,6 +104,7 @@ const Design = () => {
          } catch (error) {
             console.error('Failed to save design:', error);
          } 
+            await exportToShare(elements, backgroundColor, backgroundImage);
         };
     
     const deleteItem = (id) => {

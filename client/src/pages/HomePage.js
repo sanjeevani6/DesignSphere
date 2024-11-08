@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
-import { exportToPDF, exportToImage } from '../utils/exportUtils';
+import { exportToPDF, exportToImage, exportToShare } from '../utils/exportUtils';
 import { Button, Menu, MenuItem } from '@mui/material';
+
 
 const Homepage = () => {
     const [designs, setDesigns] = useState([]);
@@ -54,6 +55,55 @@ const Homepage = () => {
         handleClose();
     };
 
+    const handleEventifyClick = async (designId) => {
+        try {
+            // Fetch the design data
+            const response = await axios.get(`/designs/${designId}`);
+            const { elements, backgroundColor, backgroundImage } = response.data;
+
+            // Generate the PNG data URL
+            const imageDataUrl = await exportToShare(elements, backgroundColor, backgroundImage);
+
+            // Upload the image and save the URL
+            await uploadImage(imageDataUrl, designId);
+        } catch (error) {
+            console.error('Error processing design for Eventify:', error);
+        }
+    };
+
+    // Function to upload the image to the server
+    const uploadImage = async (imageDataUrl, designId) => {
+        const formData = new FormData();
+        const blob = await fetch(imageDataUrl).then(res => res.blob());
+        formData.append('image', blob, 'design.png');
+
+        try {
+            const response = await fetch('/api/v1/uploads/designimage', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                // Save the relative URL in the database
+                const imageUrl = result.imageUrl;
+                await saveDesignImageUrl(imageUrl, designId);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
+
+    // Function to save the image URL in the database
+    const saveDesignImageUrl = async (imageUrl, designId) => {
+        try {
+            await axios.put(`/designs/${designId}/updateImageUrl`, { imageUrl });
+            console.log('Image URL saved successfully');
+        } catch (error) {
+            console.error('Error saving image URL:', error);
+        }
+    };
+
     return (
         <Layout>
             <div className="homepage-container">
@@ -72,7 +122,7 @@ const Homepage = () => {
                             >
                                 <h3>{design.title}</h3>
                                 <p>Created at: {new Date(design.createdAt).toLocaleDateString()}</p>
-                                
+
                                 <Button
                                     variant="contained"
                                     style={{
@@ -85,12 +135,12 @@ const Homepage = () => {
                                     }}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        navigate(`/events/${design._id}`);
+                                        handleEventifyClick(design._id);
                                     }}
                                 >
                                     Eventify
                                 </Button>
-                                
+
                                 <Button
                                     variant="contained"
                                     style={{

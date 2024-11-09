@@ -6,12 +6,11 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
-import { exportToShare } from '../utils/exportUtils'; // Import export function
 
 const EventPage = () => {
     const { designId } = useParams();
-    const [designTitle, setDesignTitle] = useState('');
     const [designImage, setDesignImage] = useState('');
+    const [absdesignImage, setabsDesignImage] = useState('');
     const [eventDetails, setEventDetails] = useState({
         title: '',
         description: '',
@@ -20,20 +19,18 @@ const EventPage = () => {
     });
 
     useEffect(() => {
-        const fetchDesignTitle = async () => {
+        const fetchDesignDetails = async () => {
             try {
-                const response = await axios.get(`/designs/${designId}`);
-                setDesignTitle(response.data.title);
-
-                // Fetch design elements and pass them to exportToImage
-                const elements = response.data.elements; // Assuming `elements` is part of response
-                const imageUrl = await exportToShare(elements, response.data.backgroundColor, response.data.imageUrl);
-                setDesignImage(imageUrl); // Set the generated image URL
+                const response = await axios.get(`/shop/events/${designId}`);
+                console.log('Response', response.data.imageUrl);
+                console.log('Response', response.data.relimageUrl);
+                setDesignImage(response.data.relimageUrl);  // Relative image URL
+                setabsDesignImage(response.data.imageUrl);   // Absolute image URL
             } catch (error) {
                 console.error('Error fetching design:', error);
             }
         };
-        fetchDesignTitle();
+        fetchDesignDetails();
     }, [designId]);
 
     const handleChange = (e) => {
@@ -41,13 +38,9 @@ const EventPage = () => {
         setEventDetails((prev) => ({ ...prev, [name]: value }));
     };
 
-    const eventPageUrl = `http://localhost:3000/events/${designId}`;
-    const shareText = encodeURIComponent(`Check out this event: ${eventDetails.title}`);
-
     return (
         <Container maxWidth="lg" style={{ display: 'flex', height: '100vh', padding: '0' }}>
-            {/* Left Side: Design Image */}
-            <Box 
+            <Box
                 sx={{
                     width: '66.66%',
                     borderRight: '2px solid #ddd',
@@ -74,7 +67,6 @@ const EventPage = () => {
                 )}
             </Box>
 
-            {/* Right Side: Event Form */}
             <Box
                 sx={{
                     width: '33.33%',
@@ -84,7 +76,7 @@ const EventPage = () => {
                     backgroundColor: '#f9f9f9'
                 }}
             >
-                <Typography variant="h5" gutterBottom align="center">{designTitle}</Typography>
+                <Typography variant="h5" gutterBottom align="center">Design Title</Typography>
 
                 <form style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <TextField
@@ -127,28 +119,27 @@ const EventPage = () => {
                     <Typography variant="subtitle1" align="center" style={{ marginTop: '20px' }}>
                         Share this event:
                     </Typography>
-
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', margin: '15px 0' }}>
                         <IconButton
-                            onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${eventPageUrl}`, '_blank')}
+                            onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absdesignImage)}`, '_blank')}
                             sx={{ color: '#4267B2', fontSize: '30px' }}
                         >
                             <FacebookIcon fontSize="inherit" />
                         </IconButton>
                         <IconButton
-                            onClick={() => window.open(`https://www.linkedin.com/shareArticle?url=${eventPageUrl}&title=${shareText}&image=${encodeURIComponent(designImage)}`, '_blank')}
+                            onClick={() => window.open(`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(absdesignImage)}&title=${encodeURIComponent(eventDetails.title)}`, '_blank')}
                             sx={{ color: '#0A66C2', fontSize: '30px' }}
                         >
                             <LinkedInIcon fontSize="inherit" />
                         </IconButton>
                         <IconButton
-                            onClick={() => window.open(`https://twitter.com/share?url=${eventPageUrl}&text=${shareText}&image=${encodeURIComponent(designImage)}`, '_blank')}
+                            onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(absdesignImage)}&text=${encodeURIComponent(eventDetails.title)}`, '_blank')}
                             sx={{ color: '#1DA1F2', fontSize: '30px' }}
                         >
                             <TwitterIcon fontSize="inherit" />
                         </IconButton>
                         <IconButton
-                            onClick={() => window.open(`https://pinterest.com/pin/create/bookmarklet/?media=${encodeURIComponent(designImage)}&url=${encodeURIComponent(eventPageUrl)}&description=${shareText}`, '_blank')}
+                            onClick={() => window.open(`https://pinterest.com/pin/create/bookmarklet/?media=${encodeURIComponent(absdesignImage)}&url=${encodeURIComponent(absdesignImage)}&description=${encodeURIComponent(eventDetails.title)}`, '_blank')}
                             sx={{ color: '#E60023', fontSize: '30px' }}
                         >
                             <PinterestIcon fontSize="inherit" />

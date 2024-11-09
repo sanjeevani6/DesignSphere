@@ -1,6 +1,129 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import axios from 'axios'
+import GIF from 'gif.js.optimized';
+
+
+
+export const designHasAnimatedText = (elements) => {
+    return elements.some(element => element.type === 'animatedText');
+};
+
+export const exportToGIF = async (elements, backgroundColor, backgroundImage, animationIntervals = 200, totalDuration = 2000) => {
+    console.log("Starting exportToGIF function...");
+    
+    // Log the elements to check if they are passed correctly
+    console.log("Elements passed to exportToGIF:", elements);
+
+    const gif = new GIF({
+        workers: 2,
+        workerScript: '/gif.worker.js', 
+        quality: 10,
+    });
+
+    // Calculate the total number of frames
+    const framesCount = Math.ceil(totalDuration / animationIntervals);
+
+    // Create a temporary div to hold your design for each frame
+    const designContainer = document.createElement('div');
+    designContainer.style.position = 'relative';
+    designContainer.style.width = '800px';  // Adjust to your design's dimensions
+    designContainer.style.height = '600px'; // Adjust to your design's dimensions
+    designContainer.style.backgroundColor = backgroundColor;
+    if (backgroundImage) {
+        designContainer.style.backgroundImage = `url(${backgroundImage})`;
+        designContainer.style.backgroundSize = 'cover';
+    }
+
+    // Log the container before elements are added
+    console.log("Design container before elements are added:", designContainer);
+
+    // Append elements to the design container
+    elements.forEach((element, index) => {
+        // Log each element to check if it has the expected properties
+        console.log(`Element ${index}:`, element);
+
+        const el = document.createElement('div');
+        el.style.position = 'absolute';
+        el.style.top = `${element.top}px`;
+        el.style.left = `${element.left}px`;
+        el.style.width = `${element.width}px`;
+        el.style.height = `${element.height}px`;
+        el.style.color = element.color;
+        el.style.fontSize = `${element.fontSize}px`;
+        el.style.fontFamily = element.fontType;
+        el.innerText = element.text || '';  // Ensure text is added to the element
+        
+        // Log each element after it is added to the container
+        console.log("Element added to design container:", el);
+        
+        designContainer.appendChild(el);
+    });
+
+    // Log the entire design container after elements are added
+    console.log("Design container after elements are added:", designContainer);
+
+    // Append the container to the body to capture frames, then remove after capture
+    document.body.appendChild(designContainer);
+
+    // Log the design container before starting the frame capture
+    console.log("Starting frame capture...");
+
+    // Wait briefly to ensure everything is rendered properly before capturing the frame
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    for (let i = 0; i < framesCount; i++) {
+        // Update text animation for each frame if needed
+        updateTextAnimationFrame(i, elements);
+
+        // Capture each frame of the design
+        const canvas = await html2canvas(designContainer);
+
+        // Log the captured canvas size and details
+        console.log("Captured canvas:", canvas);
+
+        gif.addFrame(canvas, { delay: animationIntervals });
+
+        // Add a small delay before capturing the next frame
+        await new Promise(resolve => setTimeout(resolve, animationIntervals));
+    }
+
+    console.log("All frames added to GIF");
+
+    gif.on('finished', (blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'animated_design.gif';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    gif.render();
+    document.body.removeChild(designContainer);
+};
+
+// Helper function to update text animations
+function updateTextAnimationFrame(frameIndex, elements) {
+    // Example: Change text color or size for animation; customize this for your needs
+    elements.forEach((element) => {
+        if (element.animate) {
+            element.fontSize += 1;  // Example of animation effect
+            element.color = frameIndex % 2 === 0 ? 'blue' : 'red'; // Alternate colors
+        }
+    });
+}
+
+export const exportToEvent = async (elements, backgroundColor, backgroundImage) => {
+    try {
+        const canvas = await generateCanvas(elements, backgroundColor, backgroundImage);
+        const imgData = canvas.toDataURL('image/png'); // Generate data URL for the image
+        return imgData; // Return the image data URL instead of downloading
+    } catch (error) {
+        console.error('Error exporting to Image:', error);
+    }
+};
 export const exportToShare = async (elements, backgroundColor, backgroundImage,designId) => {
    
     try {

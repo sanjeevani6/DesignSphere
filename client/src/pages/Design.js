@@ -8,7 +8,7 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { exportToImage, exportToShare } from '../utils/exportUtils';
+import {  exportToShare } from '../utils/exportUtils';
 
 import { message } from 'antd';
 

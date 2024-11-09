@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
-import { exportToPDF, exportToImage, exportToShare } from '../utils/exportUtils';
+import { exportToPDF, exportToImage, exportToGIF,designHasAnimatedText } from '../utils/exportUtils';
 import { Button, Menu, MenuItem } from '@mui/material';
 
 const Homepage = () => {
     const [designs, setDesigns] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedDesignId, setSelectedDesignId] = useState(null);
+    const [hasAnimatedText, setHasAnimatedText] = useState(false);
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -29,9 +30,15 @@ const Homepage = () => {
 
     const handleDesignClick = (designId) => navigate(`/design/${designId}`);
 
-    const handleDownloadClick = (event, designId) => {
+    const handleDownloadClick = async(event, designId) => {
         setAnchorEl(event.currentTarget);
         setSelectedDesignId(designId);
+        try {
+            const response = await axios.get(`/designs/${designId}`);
+            setHasAnimatedText(designHasAnimatedText(response.data.elements));
+        } catch (error) {
+            console.error('Error checking for animated text:', error);
+        }
     };
 
     const handleClose = () => setAnchorEl(null);
@@ -46,6 +53,10 @@ const Homepage = () => {
                 exportToPDF(elements, backgroundColor, backgroundImage);
             } else if (format === 'image') {
                 exportToImage(elements, backgroundColor, backgroundImage);
+            }
+            else if (format === 'gif') {
+                // Check for animated text and handle GIF export
+                exportToGIF(elements, backgroundColor, backgroundImage,200,2000);
             }
         } catch (error) {
             console.error('Error fetching design data for download:', error);
@@ -167,6 +178,8 @@ const Homepage = () => {
                 <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                     <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
                     <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
+                    {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
+                  
                 </Menu>
             </div>
         </Layout>

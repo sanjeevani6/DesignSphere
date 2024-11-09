@@ -4,7 +4,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
-import EventPage from './pages/EventPage'; // Import EventPage
+import EventPage from './pages/EventPage'; 
 import { UserProvider } from './context/UserContext'; 
 import Templates from './pages/Templates';
 import PrintOrderPage from './pages/PrintOrderPage';
@@ -26,13 +26,13 @@ function App() {
             } 
           />
           
-          {/* Protected route for event page */}
+          
           <Route 
-            path="/events/:designId" 
+            path="/event/:designId" 
             element={
-              <ProtectedRoutes>
+              
                 <EventPage />
-              </ProtectedRoutes>
+              
             } 
           />
           

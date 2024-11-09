@@ -3,7 +3,6 @@ const cors=require('cors')
 const morgan=require('morgan')
 const dotenv= require('dotenv')
 const colors=require('colors')
-const multer = require('multer');
 const connectDb = require('./config/connectDb')
 const sidebarItemsRoutes = require('./routes/sidebarRoutes');
 const savedesignRoutes = require('./routes/savedesignRoutes');

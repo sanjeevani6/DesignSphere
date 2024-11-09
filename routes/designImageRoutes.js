@@ -11,9 +11,9 @@ const router = express.Router();
 // Configure storage for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        //const dir ='uploads/designimage'
+        
         const dir =  'uploads/designimage';
-       // const dir = path.resolve(process.cwd(), 'uploads', 'designimage');
+      
        console.log('file',file)
         console.log('directory:',dir);
         

@@ -288,7 +288,7 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
                 width: '100%',
                 height: '500px',
                 backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'contain', 
+                backgroundSize: 'cover', 
                 backgroundRepeat: 'no-repeat', // Prevents tiling
                 backgroundPosition: 'center center', 
                 backgroundPosition: 'center',

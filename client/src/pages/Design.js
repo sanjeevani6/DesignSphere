@@ -129,6 +129,7 @@ const Design = () => {
                 item.id === id ? { ...item, ...updatedProperties } : item
             )
         );
+        
         if (selectedItem && selectedItem.id === id) {
             setSelectedItem((prev) => ({ ...prev, ...updatedProperties }));
         }

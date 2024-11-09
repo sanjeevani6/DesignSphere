@@ -1,8 +1,10 @@
 // Sidebar.js
 import React, { useState, useEffect } from 'react';
+import {useParams} from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import axios from 'axios';
- 
+import socket from '../../socket'
+import {teamCode} from "../../pages/Design"
 //import { sidebarItems } from './itemData';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -10,6 +12,7 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const Sidebar = ({ setElements }) => {
     const [sidebarItems, setSidebarItems] = useState([]);
+    const teamCode=useParams()  ;  
 
     //handle image upload:
     const handleImageUpload = async (event) => {
@@ -42,6 +45,8 @@ const Sidebar = ({ setElements }) => {
                 };
                 // Instead of adding to sidebar, add directly to canvas
                 setElements((prevItems) => [...prevItems, newImageItem]); // Add to canvas directly
+                // Emit event to inform other clients
+                socket.emit('newSidebarItem', { teamCode, item: newImageItem });
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
@@ -66,7 +71,21 @@ const Sidebar = ({ setElements }) => {
         };
 
         fetchSidebarItems();
-    }, []);
+   
+     // Listen for new items added by other clients in the same team
+     socket.on('sidebarItemAdded', (newItem) => {
+        setElements((prevItems) => [...prevItems, newItem]); // Add new item to canvas
+        if (newItem.category === 'image') {
+            // Update sidebar if it's an image item
+            setSidebarItems((prevItems) => [...prevItems, newItem]);
+        }
+    });
+
+    // Clean up socket listener on component unmount
+    return () => {
+        socket.off('sidebarItemAdded');
+    };
+}, [setElements]);
 
     // Separate items by category
     const textItems = sidebarItems.filter(item => item.category === 'text');
@@ -79,7 +98,7 @@ const Sidebar = ({ setElements }) => {
             <div>
                 <h3>Add Text</h3>
                 {textItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} />
+                    <SidebarItem key={item.id} item={item} teamCode={teamCode} />
                 ))}
             </div>
 
@@ -87,7 +106,7 @@ const Sidebar = ({ setElements }) => {
             <div>
                 <h3>Shapes</h3>
                 {shapeItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} />
+                    <SidebarItem key={item.id} item={item} teamCode={teamCode} />
                 ))}
             </div>
 
@@ -95,7 +114,7 @@ const Sidebar = ({ setElements }) => {
             <div>
                 <h3>Images</h3>
                 {imageItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} />
+                    <SidebarItem key={item.id} item={item} teamCode={teamCode} />
                 ))}
             </div>
              {/* Image upload section*/}

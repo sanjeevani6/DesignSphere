@@ -1,4 +1,5 @@
 // Design.js
+// Design.js
 import React, { useState,useEffect,useContext } from 'react';
 import { useParams,useLocation } from 'react-router-dom';
 import Sidebar from '../components/DesignLayout/Sidebar';
@@ -9,22 +10,31 @@ import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { UserContext } from '../context/UserContext'; 
+//import { exportToImage, exportToShare } from '../utils/exportUtils';
+import socket from '../socket'
+import { message } from 'antd';
+import { Variants } from 'antd/es/config-provider';
+
   
 const Design = () => {
-    const { designId } = useParams();
+    const { designId,teamCode } = useParams();
     const [elements, setElements] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
     const [backgroundImage, setBackgroundImage] = useState(''); 
     const [title, setTitle] = useState('');
-    const { currentUser } = useContext(UserContext); // Get current user from context
-    console.log('Current User:', currentUser);
-    //const currentUserId = currentUser ? currentUser.id : null; 
+   
+    
+   
    
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
+    var { currentUser } = useContext(UserContext); 
 
+    if(! currentUser)
 
+    currentUser = JSON.parse(localStorage.getItem('user'));
+   
     useEffect(() => {
         if (templateUrl) {
             console.log('templateurl',templateUrl);
@@ -34,23 +44,36 @@ const Design = () => {
 
     useEffect(() => {
         const fetchDesign = async () => {
-           if (designId) { // Load design for editing if ID exists
+            // Loading design for editing if ID exists,Load individual or team design based on params
+            console.log(teamCode)
+            console.log(designId)
               try {
-                console.log("Fetching design with ID:", designId);
-                 const response = await axios.get(`/designs/${designId}`);
-                  console.log('information:');
+                let response;
+                if (teamCode) {
+                  response = await axios.get(`/designs/team-designs/${teamCode}`);
+                } else if (designId) {
+                    response = await axios.get(`/designs/${designId}`);
+                }
+                else {
+                    console.log("Neither teamCode nor designId is provided.");
+                    return;
+                }
+                console.log("Fetching design response:", response.data);
+                 
+                  
                  console.log("response",response.data);
+                 if(response){
                  const { title, elements, backgroundColor, backgroundImage} = response.data;
                  console.log('oldelements',elements)
                  const updatedElements = elements.map(element => {
-                    // Only modify imageUrl if it exists and the element is an image
+                    //  modifying imageUrl if it exists and the element is an image
                     const updatedImageUrl = element.imageUrl 
-                        ? `${element.imageUrl.replace(/\\/g, '/')}`  // Ensure leading slash and replace backslashes
-                        : undefined;  // Keep as undefined if not an image element
+                        ? `${element.imageUrl.replace(/\\/g, '/')}`  // Ensuring leading slash and replace backslashes in url
+                        : undefined;  // Keeping as undefined if not an image element
                 
                     return {
                         ...element,
-                        imageUrl: updatedImageUrl  // This will only update for elements with an imageUrl
+                        imageUrl: updatedImageUrl  
                     };
                 });
                 
@@ -63,13 +86,31 @@ const Design = () => {
                  setElements(updatedElements);
                  setBackgroundColor(backgroundColor);
                  setBackgroundImage(backgroundImage); 
+            }
               } catch (error) {
                  console.error('Error loading design:', error);
               }
-           }
-        };
+           };
+        
         fetchDesign();
-     }, [designId]);
+     }, [designId,teamCode]);
+     useEffect(() => {
+        if (teamCode) {
+            socket.emit('joinRoom', teamCode);
+
+            socket.on('receiveDesignUpdate', (updatedData) => {
+                setElements(updatedData.elements);
+                setBackgroundColor(updatedData.backgroundColor);
+                setBackgroundImage(updatedData.backgroundImage);
+            });
+        }
+        return () => {
+            if (teamCode) {
+                socket.emit('leaveRoom', teamCode);
+                socket.off('receiveDesignUpdate');
+            }
+        };
+    }, [teamCode]);
     const saveDesign = async () => {
         
             const inputTitle = prompt("Please enter a title for your design:",title?title:' ');
@@ -90,18 +131,27 @@ const Design = () => {
             };
             console.log(elements)
             console.log('Payload to be sent:', payload)
-            if (designId) {
-               await axios.put(`/designs/${designId}`, payload);
-               console.log('Design updated:', payload);
+            if (teamCode) {
+                await axios.put(`/designs/team-designs/${teamCode}`, payload);
+                socket.emit('sendDesignUpdate', { teamCode, ...payload });
+                message.success('Team design updated successfully');
             } else {
-               await axios.post('/designs/save', payload);
-               console.log('New design saved:', payload);
+                if (designId) {
+                    await axios.put(`/designs/${designId}`, payload);
+                    message.success('Design updated successfully');
+                    //await exportToShare(elements, backgroundColor, backgroundImage,teamCode);
+                } else {
+                    await axios.post('/designs/save', payload);
+                    message.success('New design saved successfully');
+                    //await exportToShare(elements, backgroundColor, backgroundImage,designId);
+                }
             }
             setTitle(inputTitle);
-         } catch (error) {
+        } catch (error) {
             console.error('Failed to save design:', error);
-         } 
-        };
+            message.error('Failed to save design');
+        }
+    };
     
     const deleteItem = (id) => {
         setElements((prevItems) => prevItems.filter(item => item.id !== id));
@@ -116,9 +166,27 @@ const Design = () => {
         if (selectedItem && selectedItem.id === id) {
             setSelectedItem((prev) => ({ ...prev, ...updatedProperties }));
         }
+        if (teamCode) {
+            socket.emit('sendDesignUpdate', {
+                teamCode,
+                elements,
+                backgroundColor,
+                backgroundImage,
+                title,
+            });
+        }
     };
     const handleBackgroundColorChange = (color) => {
         setBackgroundColor(color);
+        if (teamCode) {
+            socket.emit('sendDesignUpdate', {
+                teamCode,
+                elements,
+                backgroundColor: color,
+                backgroundImage,
+                title,
+            });
+        }
     };
 
  

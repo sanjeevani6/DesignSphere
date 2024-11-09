@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const sidebarItemSchema = new mongoose.Schema({
     id:{
-         type:Number,
+         type: String,
          required:true,
     },
     name: {

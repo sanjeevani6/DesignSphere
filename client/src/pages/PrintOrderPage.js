@@ -2,7 +2,8 @@
 import React, { useEffect, useState ,useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Button, TextField, Typography, Box } from '@mui/material';
+import { Button, TextField, Typography, Box ,Paper} from '@mui/material';
+import Header from '../components/Layouts/Header';
 
 const PrintOrderPage = () => {
     const { designId } = useParams();
@@ -53,56 +54,66 @@ const PrintOrderPage = () => {
     };
 
     return (
+        <>
+        <Header />
         <div className="print-order-container">
-            <h2>Print Order Page</h2>
-            {design && (
-                <div>
-                    
-                    <Box component="form" sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <Typography variant="h6">Enter Your Details for Print Order</Typography>
-                        <TextField
-                            label="Name"
-                            name="name"
-                            value={userDetails.name}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <TextField
-                            label="Email"
-                            name="email"
-                            type="email"
-                            value={userDetails.email}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <TextField
-                            label="Phone Number"
-                            name="phone"
-                            type="tel"
-                            value={userDetails.phone}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <TextField
-                            label="Address"
-                            name="address"
-                            value={userDetails.address}
-                            onChange={handleInputChange}
-                            multiline
-                            rows={4}
-                            required
-                        />
-                    </Box>
-                    <div style={{ marginTop: '20px' }}>
-                        
-                        <Button variant="contained" color="primary" onClick={handleSendToShop}>
+            <Paper className="print-order-card">
+                <Typography variant="h4" className="print-order-header">
+                    Print Order Page
+                </Typography>
+                {design && (
+                    <>
+                        <Box component="form" className="print-order-form">
+                            <Typography variant="h6">Enter Your Details for Print Order</Typography>
+                            <TextField
+                                label="Name"
+                                name="name"
+                                value={userDetails.name}
+                                onChange={handleInputChange}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={userDetails.email}
+                                onChange={handleInputChange}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="Phone Number"
+                                name="phone"
+                                type="tel"
+                                value={userDetails.phone}
+                                onChange={handleInputChange}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="Address"
+                                name="address"
+                                value={userDetails.address}
+                                onChange={handleInputChange}
+                                multiline
+                                rows={4}
+                                required
+                                fullWidth
+                            />
+                        </Box>
+                        <Button
+                            className="send-to-shop-button"
+                            onClick={handleSendToShop}
+                        >
                             Send to Shop
                         </Button>
-                    </div>
-                </div>
-            )}
+                    </>
+                )}
+            </Paper>
         </div>
-    );
+    </>
+        );
 };
 
 export default PrintOrderPage;

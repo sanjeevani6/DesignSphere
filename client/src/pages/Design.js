@@ -75,7 +75,8 @@ const Design = () => {
         fetchDesign();
      }, [designId]);
     const saveDesign = async () => {
-        
+        let  saveResponse;
+       
             const inputTitle = prompt("Please enter a title for your design:",title?title:' ');
             if (!inputTitle) return alert("Design not saved. Title is required.");
        
@@ -85,6 +86,7 @@ const Design = () => {
                 return alert("User must be logged in to save a design.");
             }
             console.log('Current title before saving:', title);
+            
             const payload = {
                userId: currentUser?._id,
                title: inputTitle,
@@ -98,17 +100,23 @@ const Design = () => {
                await axios.put(`/designs/${designId}`, payload);
                message.success('Design updated successfully');
                console.log('Design updated:', payload);
+               await exportToShare(elements, backgroundColor, backgroundImage,designId);
             } else {
-               await axios.post('/designs/save', payload);
+             saveResponse=  await axios.post('/designs/save', payload);
                message.success('New design saved successfully');
+             const designId = saveResponse.data.designId;
+               console.log("designid",designId )
                console.log('New design saved:', payload);
+               await exportToShare(elements, backgroundColor, backgroundImage,designId);
             }
             setTitle(inputTitle);
+         
+           
          } catch (error) {
             console.error('Failed to save design:', error);
             message.error('Failed to save design');
          } 
-            await exportToShare(elements, backgroundColor, backgroundImage);
+            
         };
     
     const deleteItem = (id) => {

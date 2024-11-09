@@ -8,6 +8,7 @@ const connectDb = require('./config/connectDb')
 const sidebarItemsRoutes = require('./routes/sidebarRoutes');
 const savedesignRoutes = require('./routes/savedesignRoutes');
 const templatesRoutes = require('./routes/templatesRoutes');
+const sendRoutes = require('./routes/sendRoutes');
 const designimageRoutes=require('./routes/designImageRoutes')
 
 //config dot env file
@@ -41,7 +42,6 @@ app.use('/api/v1/uploads/templates', express.static('uploads/templates'));
 app.use('/api/v1/uploads/stickers', express.static('uploads/stickers'));
 app.use('/api/v1/uploads/animations', express.static('uploads/animations'));
 app.use('/api/v1/uploads/artelements', express.static('uploads/artelements'));
-app.use('/api/v1/uploads/artelements', express.static('uploads/artelements'));
 app.use('/api/v1/uploads/designimage',express.static('uploads/designimage'));
 
 //sidebaritems and fileupload (images)
@@ -51,6 +51,8 @@ app.use('/api/v1/templates', templatesRoutes);
 
 //save design
 app.use('/api/v1/designs',savedesignRoutes);
+//print design 
+app.use('/api/v1/shop',sendRoutes);
 //upload design image in server
 app.use('/api/v1/store',designimageRoutes);
 //port

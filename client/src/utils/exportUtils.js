@@ -1,9 +1,8 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import axios from 'axios';
-
-// Function to export the design as an image and send it to the server
-export const exportToShare = async (elements, backgroundColor, backgroundImage) => {
+import axios from 'axios'
+export const exportToShare = async (elements, backgroundColor, backgroundImage,designId) => {
+   
     try {
         const canvas = await generateCanvas(elements, backgroundColor, backgroundImage);
         const imgData = canvas.toDataURL('image/png'); // Get the image data
@@ -14,8 +13,8 @@ export const exportToShare = async (elements, backgroundColor, backgroundImage) 
 
         const formData = new FormData();
         formData.append('file', blob, 'design.png');
-
-        // Send the image to the backend
+        formData.append('designId', designId);
+        // Send to backend
         await axios.post('/store/designimage', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'

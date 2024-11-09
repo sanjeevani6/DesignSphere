@@ -1,8 +1,8 @@
 // models/Design.js
+
 const mongoose = require('mongoose');
 
 const elementSchema = new mongoose.Schema({
-   
     id: {
         type: String,
         required: true,
@@ -13,12 +13,12 @@ const elementSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image' , 'animatedText', 'sticker'],
+        enum: ['text', 'shape', 'image', 'animatedText', 'sticker', 'campuselement'], // Added "campuselement"
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image' , 'animatedText', 'sticker'],
+        enum: ['text', 'shape', 'image', 'animatedText', 'sticker', 'campuselement'], // Added "campuselement"
         required: true,
     },
     shapeType: {
@@ -28,7 +28,7 @@ const elementSchema = new mongoose.Schema({
         type: String, // color code, e.g., '#ff7f50'
     },
     backgroundColor: {
-         type:String,
+        type: String,
     },
     imageUrl: {
         type: String, // URL for images or stickers
@@ -36,7 +36,6 @@ const elementSchema = new mongoose.Schema({
     animationUrl: {
         type: String, // URL for animated text or GIFs if animated
     },
-   
     size: {
         width: { type: Number, default: 50 },
         height: { type: Number, default: 50 },
@@ -65,8 +64,8 @@ const designSchema = new mongoose.Schema({
     },
     title: { type: String, required: true },
     elements: [elementSchema], // Array of elements in the design
-    backgroundColor:{ type:String,default:'#fff'},
-    backgroundImage:{ type:String,default:''},//url for bacckground 
+    backgroundColor: { type: String, default: '#fff' },
+    backgroundImage: { type: String, default: '' }, // URL for background
     createdAt: { type: Date, default: Date.now },
 });
 

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'; 
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -40,7 +40,7 @@ function App() {
           {/* Route for the Design page */}
           <Route path="/design" element={<Design />} />
           <Route path="/design/:designId" element={<Design />} />
-          <Route path="/templates" element={<Templates/>} />
+          <Route path="/templates" element={<Templates />} />
 
           {/* Public routes for login and register */}
           <Route path="/login" element={<Login />} />
@@ -51,12 +51,13 @@ function App() {
   );
 }
 
+// Protected Routes Component to check for user authentication
 export function ProtectedRoutes({ children }) {
   // Check if user is logged in by checking localStorage
   if (localStorage.getItem('user')) {
-    return children;
+    return children;  // If user is logged in, render the children (protected page)
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" />;  // If not logged in, redirect to login page
   }
 }
 

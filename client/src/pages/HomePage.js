@@ -53,47 +53,9 @@ const Homepage = () => {
         handleClose();
     };
 
-    const handleEventifyClick = async (designId) => {
-        try {
-            const response = await axios.get(`/designs/${designId}`);
-            const { elements, backgroundColor, backgroundImage } = response.data;
-
-            const imageDataUrl = await exportToShare(elements, backgroundColor, backgroundImage);
-
-            await uploadImage(imageDataUrl, designId);
-        } catch (error) {
-            console.error('Error processing design for Eventify:', error);
-        }
-    };
-
-    const uploadImage = async (imageDataUrl, designId) => {
-        const formData = new FormData();
-        const blob = await fetch(imageDataUrl).then(res => res.blob());
-        formData.append('image', blob, 'design.png');
-
-        try {
-            const response = await fetch('/api/v1/uploads/designimage', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-
-            if (result.success) {
-                const imageUrl = result.imageUrl;
-                await saveDesignImageUrl(imageUrl, designId);
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-        }
-    };
-
-    const saveDesignImageUrl = async (imageUrl, designId) => {
-        try {
-            await axios.put(`/designs/${designId}/updateImageUrl`, { imageUrl });
-            console.log('Image URL saved successfully');
-        } catch (error) {
-            console.error('Error saving image URL:', error);
-        }
+    const handleEventifyClick = (designId) => {
+        // Use navigate to go to the event page with the designId
+        navigate(`/event/${designId}`);
     };
 
     const handleDeleteClick = async (designId) => {
@@ -137,7 +99,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleEventifyClick(design._id);
+                                            handleEventifyClick(design._id); // Navigate to event page
                                         }}
                                     >
                                         Eventify

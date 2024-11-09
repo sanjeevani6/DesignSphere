@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color:#c8d6dd;
+  background-color:#a1c2d2;
   border-bottom: 2px solid #ddd;
   padding: 0.5rem 1rem;
   font-family: Arial, sans-serif;
@@ -388,55 +388,58 @@
 /***print page***/
 /* src/pages/PrintOrderPage.css */
 
+/* Container for the print order page */
 .print-order-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 20px;
+  min-height: calc(100vh - 60px);
+  background-color: #f4f6f8;
+  padding: 10px;
 }
 
-.design-preview-section {
+/* Style for the main paper card */
+.print-order-card {
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+/* Form styling */
+.print-order-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Typography for form header */
+.print-order-header {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #333;
   text-align: center;
 }
 
-.design-image {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.order-form {
+/* Button styling */
+.send-to-shop-button {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-title {
-  margin-bottom: 8px;
-  text-align: left;
-  font-weight: bold;
-}
-
-.form-field {
-  width: 100%;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  padding: 10px 0;
+  font-size: 0.9rem;
   margin-top: 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.print-button, .shop-button {
-  width: 48%;
+.send-to-shop-button:hover {
+  background-color: #1565c0;
 }
+
 

@@ -60,18 +60,27 @@ router.post('/send', async (req, res) => {
             return res.status(404).json({ message: 'Design image file not found.' });
         }
 
+        
+            let testAccount = await nodemailer.createTestAccount();
+            console.log('Ethereal Account:', testAccount);
+        
+        
+        
+
+
         // Set up Nodemailer to send the image and details to the shop
         const transporter = nodemailer.createTransport({
-            service: 'Gmail',
+            host: testAccount.smtp.host,
+            port: testAccount.smtp.port,
+            secure: testAccount.smtp.secure,
             auth: {
-                user: 'your-email@gmail.com', // Replace with your email
-                pass: 'your-email-password',  // Replace with your email password or an app-specific password
+               user: testAccount.user,
+               pass: testAccount.pass
             },
         });
-
         // Email options with image attachment and user details
         const mailOptions = {
-            from: 'your-email@gmail.com',   // Replace with your email
+            from: testAccount.user,   // Replace with your email
             to: 'shop-email@example.com',   // Replace with the local shop's email
             subject: 'New Print Order',
             text: `
@@ -93,7 +102,10 @@ router.post('/send', async (req, res) => {
         };
 
         // Send the email with the design and user details
-        await transporter.sendMail(mailOptions);
+       
+      const info=  await transporter.sendMail(mailOptions);
+      console.log('Preview URL:', nodemailer.getTestMessageUrl(info)); // Preview URL for testing
+       
         res.status(200).json({ message: 'Design and details sent to the shop successfully!' });
 
     } catch (error) {

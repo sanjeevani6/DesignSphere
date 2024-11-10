@@ -1,12 +1,13 @@
 import React, { useEffect,useState, useRef } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
+import socket from '../../socket';
 import { Resizable } from 'react-resizable';
 import Lottie from 'lottie-react'; 
  
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
+const CanvasItem = ({ teamCode,item, onSelectItem, updateItemProperties }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
     const [animationData, setAnimationData] = useState(null);
@@ -51,8 +52,12 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
     const handleResize = (event, { size }) => {
         console.log('Resizing to:', size);
         updateItemProperties(item.id, { size });
+         // Emit the resize change to the server
+         socket.emit('itemResize', { teamCode, itemId: item.id, size });
 
     };
+    
+    
   
     const renderContent = () => {
         switch (item.type) {
@@ -232,8 +237,39 @@ const CanvasItem = ({ item, onSelectItem, updateItemProperties }) => {
     );
 };
 
-const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, updateItemProperties, backgroundColor,backgroundImage}) => {
+const CanvasArea = ({ elements,teamCode, setElements, selectedItem, setSelectedItem, updateItemProperties, backgroundColor,backgroundImage}) => {
     const canvasRef = useRef(null);
+
+    useEffect(() => {
+        // Join a Socket.io room based on teamCode
+        if (teamCode) {
+            socket.emit('joinRoom', teamCode);
+        }
+
+        // Listen for item updates from the server
+        socket.on('updateItem', (updatedItem) => {
+            console.log("Received item", updatedItem)
+            setElements((prevElements) => {
+                return prevElements.map((item) =>
+                    item.id === updatedItem.id ? { ...item, ...updatedItem } : item
+                );
+            });
+        });
+
+        socket.on('itemResize', ({ itemId, size }) => {
+            setElements((prevElements) => {
+                return prevElements.map((item) =>
+                    item.id === itemId ? { ...item, size } : item
+                );
+            });
+        });
+
+        return () => {
+            socket.off('updateItem');
+            socket.off('itemResize');
+        };
+    }, [teamCode,setElements]);
+    // [teamCode,setElements]
   
 
     const handleSelectItem = (id) => {
@@ -243,24 +279,37 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'ELEMENT',
         drop: (item, monitor) => {
+            console.log("Drop function triggered");
             const offset = monitor.getClientOffset();
             if (!offset || !canvasRef.current) return;
 
             const canvasRect = canvasRef.current.getBoundingClientRect();
             const left = offset.x - canvasRect.left;
             const top = offset.y - canvasRect.top;
+            console.log("Client offset:", offset);
+            console.log("Canvas reference:", canvasRef.current);
 
+
+            // Minimal socket.emit with dummy data for testing
+        console.log("Emitting updateItem with minimal data");
+        socket.emit('updateItem', { teamCode, updatedItem: { id: item.id, left: 0, top: 0 } });
             setElements((prevItems) => {
                 const existingItemIndex = prevItems.findIndex((el) => el.id === item.id);
 
                 if (existingItemIndex > -1) {
                     // Update position if item already exists
                     const updatedItems = [...prevItems];
-                    updatedItems[existingItemIndex] = {
+                    const updatedItem = {
                         ...updatedItems[existingItemIndex],
                         left: Math.min(Math.max(0, left), canvasRect.width - 50),
                         top: Math.min(Math.max(0, top), canvasRect.height - 50),
                     };
+                    updatedItems[existingItemIndex] = updatedItem;
+                    // Emit item position update to other users
+                    socket.emit('updateItem', { teamCode, updatedItem });
+                    console.log("Emitted updateItem for existing item:", updatedItem);
+                    
+                    
                     return updatedItems;
                 } else {
                     // Add new item if it doesn't exist
@@ -270,13 +319,24 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
                         top: Math.min(Math.max(0, top), canvasRect.height - 50),
                         id: item.id || generateId(),
                     };
+                    socket.emit('updateItem', { teamCode, updatedItem: newItem });
+                    console.log("updated")
+                    console.log("Emitted updateItem for new item:", newItem);
                     return [...prevItems, newItem];
                 }
+               
+   
             });
+            
         },
-       /* collect: (monitor) => ({
+        collect: (monitor) => ({
             isOver: !!monitor.isOver(),
-        }),*/
+        }),
+        // drop: (item) => {
+        //     console.log("Emitting updateItem with minimal data");
+        //     socket.emit('updateItem', { teamCode, updatedItem: { id: item.id, left: 0, top: 0 } });
+        // },
+        
     }));
 
     drop(canvasRef);
@@ -300,10 +360,15 @@ const CanvasArea = ({ elements, setElements, selectedItem, setSelectedItem, upda
         >
             {elements.map((item) => (
                 <CanvasItem
+                    teamCode={teamCode}
                     key={item.id}
                     item={item}
                     onSelectItem={() => handleSelectItem(item.id)}
-                    updateItemProperties={updateItemProperties}
+                    updateItemProperties={(id, properties) => {
+                        updateItemProperties(id, properties);
+                        socket.emit('updateItem', { teamCode, updatedItem: { id, ...properties } });
+                    }}
+                   // teamCode={teamCode}
                 />
             ))}
         </div>

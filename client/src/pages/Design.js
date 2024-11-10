@@ -10,7 +10,7 @@ import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { UserContext } from '../context/UserContext'; 
-//import { exportToImage, exportToShare } from '../utils/exportUtils';
+import {  exportToShare } from '../utils/exportUtils';
 import socket from '../socket'
 import { message } from 'antd';
 import { Variants } from 'antd/es/config-provider';
@@ -44,9 +44,10 @@ const Design = () => {
 
     useEffect(() => {
         const fetchDesign = async () => {
-            // Loading design for editing if ID exists,Load individual or team design based on params
-            console.log(teamCode)
-            console.log(designId)
+             
+              console.log(teamCode)
+              console.log(designId)
+           if (designId) { // Loading design for editing if ID exists
               try {
                 let response;
                 if (teamCode) {
@@ -90,7 +91,8 @@ const Design = () => {
               } catch (error) {
                  console.error('Error loading design:', error);
               }
-           };
+           }
+        };
         
         fetchDesign();
      }, [designId,teamCode]);
@@ -112,7 +114,8 @@ const Design = () => {
         };
     }, [teamCode]);
     const saveDesign = async () => {
-        
+        let  saveResponse;
+       
             const inputTitle = prompt("Please enter a title for your design:",title?title:' ');
             if (!inputTitle) return alert("Design not saved. Title is required.");
        
@@ -122,6 +125,7 @@ const Design = () => {
                 return alert("User must be logged in to save a design.");
             }
             console.log('Current title before saving:', title);
+            
             const payload = {
                userId: currentUser?._id,
                title: inputTitle,
@@ -132,18 +136,23 @@ const Design = () => {
             console.log(elements)
             console.log('Payload to be sent:', payload)
             if (teamCode) {
+                console.log("saving")
                 await axios.put(`/designs/team-designs/${teamCode}`, payload);
                 socket.emit('sendDesignUpdate', { teamCode, ...payload });
                 message.success('Team design updated successfully');
+                console.log('New design saved:', payload);
             } else {
                 if (designId) {
                     await axios.put(`/designs/${designId}`, payload);
                     message.success('Design updated successfully');
-                    //await exportToShare(elements, backgroundColor, backgroundImage,teamCode);
+                    await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {
-                    await axios.post('/designs/save', payload);
+                    saveResponse=await axios.post('/designs/save', payload);
                     message.success('New design saved successfully');
-                    //await exportToShare(elements, backgroundColor, backgroundImage,designId);
+                    const designId = saveResponse.data.designId;
+                    console.log("designid",designId )
+                    console.log('New design saved:', payload);
+                    await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 }
             }
             setTitle(inputTitle);
@@ -163,6 +172,7 @@ const Design = () => {
                 item.id === id ? { ...item, ...updatedProperties } : item
             )
         );
+        
         if (selectedItem && selectedItem.id === id) {
             setSelectedItem((prev) => ({ ...prev, ...updatedProperties }));
         }

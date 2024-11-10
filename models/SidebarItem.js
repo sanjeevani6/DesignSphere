@@ -12,12 +12,12 @@ const sidebarItemSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image','animatedText', 'sticker','campuselement'],
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image','animatedText', 'sticker','campuselement'],
         required: true,
     },
     shapeType: {
@@ -26,8 +26,11 @@ const sidebarItemSchema = new mongoose.Schema({
     color: {
         type: String, // color code, e.g., '#ff7f50'
     },
+    backgroundColor: {
+         type:String,
+    },
     imageUrl: {
-        type: String, // URL for images
+        type: String, // URL for images and stickers
     },
     size: {
         width: { type: Number, default: 50 },
@@ -39,6 +42,10 @@ const sidebarItemSchema = new mongoose.Schema({
     fontType: {
     type: String, // e.g., 'Arial', 'Times New Roman'
 },
+animationUrl: {
+    type: String, // URL for animated text or GIFs if animated
+},
+
 
 }, { timestamps: true });
 

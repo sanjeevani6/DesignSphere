@@ -12,12 +12,12 @@ const elementSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image','animatedText','sticker','campuselement'],
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image'],
+        enum: ['text', 'shape', 'image','animatedText','sticker','campuselement'],
         required: true,
     },
     shapeType: {

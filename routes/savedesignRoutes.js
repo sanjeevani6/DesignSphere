@@ -4,10 +4,7 @@ const router = express.Router();
 const { getDesignsByUserId } = require('../controllers/getdesignController');
 const { getDesignById } = require('../controllers/getdesignbyidController');
 const Design = require('../models/Design');
-
-
-
-const teamController = require('../controllers/teamController');
+const teamController=require('../controllers/teamController')
 
 // Route to get designs for a specific user
 router.get('/user/:userId', (req, res) => {
@@ -44,8 +41,6 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete design' });
     }
 });
-
-
 
 
 module.exports = router;

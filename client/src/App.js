@@ -5,10 +5,12 @@ import Login from './pages/Login';
 import socket from './socket'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
+import EventPage from './pages/EventPage'; 
 import { UserProvider } from './context/UserContext'; 
 import Templates from './pages/Templates';
+import PrintOrderPage from './pages/PrintOrderPage';
 
-  import JoinTeam from './pages/JoinTeam';
+  
  
 import TeamForm from './pages/TeamForm';
 
@@ -17,43 +19,52 @@ function App() {
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
-    <UserProvider>
-      <Routes>
-        {/* Protected route for homepage */}
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoutes>
-              <Homepage />
-            </ProtectedRoutes>
-          } 
-        />
-        {/* Route for the Design page */}
-        
-        <Route path="/design" element={<Design />} />
-        <Route path="/design/:designId" element={<Design />} />
-        <Route path="/templates" element={<Templates/>} />
-        <Route path="/teams" element={<TeamForm />} />
-        <Route path="/design/team/:teamCode" element={<Design />} />
-        
-        
-        
+      <UserProvider>
+        <Routes>
+          {/* Protected route for homepage */}
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoutes>
+                <Homepage />
+              </ProtectedRoutes>
+            } 
+          />
+          
+          
+          <Route 
+            path="/event/:designId" 
+            element={
+              
+                <EventPage />
+              
+            } 
+          />
+          
+          <Route path="/print/:designId" element={<PrintOrderPage />} />
+          {/* Route for the Design page */}
+          <Route path="/design" element={<Design />} />
+          <Route path="/design/:designId" element={<Design />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/teams" element={<TeamForm />} />
+          <Route path="/design/team/:teamCode" element={<Design />} />
 
-        {/* Public routes for login and register */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+          {/* Public routes for login and register */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
       </UserProvider>
     </GoogleOAuthProvider>
   );
 }
 
+// Protected Routes Component to check for user authentication
 export function ProtectedRoutes({ children }) {
   // Check if user is logged in by checking localStorage
   if (localStorage.getItem('user')) {
-    return children;
+    return children;  // If user is logged in, render the children (protected page)
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" />;  // If not logged in, redirect to login page
   }
 }
 

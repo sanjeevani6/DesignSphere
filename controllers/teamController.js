@@ -8,7 +8,20 @@ exports.createTeam = async (req, res) => {
     console.log("creating team")
     const { teamName, userId } = req.body;
     
-
+    function generateTeamCode(length = 6) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let teamCode = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            teamCode += characters[randomIndex];
+        }
+        return teamCode;
+    }
+    
+    // Example usage
+    const teamCode = generateTeamCode();
+    console.log("Generated Team Code:", teamCode);
+    
     if (!teamName || !userId) {
         return res.status(400).json({ error: 'Team name and user ID are required.' });
     }

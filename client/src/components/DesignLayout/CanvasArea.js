@@ -2,6 +2,7 @@ import React, { useEffect,useState, useRef } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import socket from '../../socket';
 import { Resizable } from 'react-resizable';
+import Lottie from 'lottie-react'; 
  
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -9,6 +10,7 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 const CanvasItem = ({ teamCode,item, onSelectItem, updateItemProperties }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
+    const [animationData, setAnimationData] = useState(null);
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',
@@ -18,6 +20,16 @@ const CanvasItem = ({ teamCode,item, onSelectItem, updateItemProperties }) => {
         }),
         canDrag: () => !isResizing, // Prevent dragging when resizing
     }));
+
+    useEffect(() => {
+        if (item.type === 'animatedText' && item.animationUrl) {
+            // Fetch animation JSON dynamically
+            fetch(item.animationUrl)
+                .then((response) => response.json())
+                .then((data) => setAnimationData(data))
+                .catch((error) => console.error('Error loading animation:', error));
+        }
+    }, [item.animationUrl, item.type]);
 
     const handleTextClick = () => {
         setIsEditing(true); // Switch to edit mode
@@ -140,6 +152,65 @@ const CanvasItem = ({ teamCode,item, onSelectItem, updateItemProperties }) => {
                 </Resizable>
                 
                 );
+                case 'campuselement':
+                    return (
+                        <Resizable
+                        width={item.size?.width || 100}
+                        height={item.size?.height || 100}
+                        onResizeStart={handleResizeStart} // Prevent default on resize start
+                        onResize={handleResize}
+                        onResizeStop={handleResizeStop}
+                        resizeHandles={['se']}
+                        minConstraints={[50, 50]} // Add minimum constraints if necessary
+                        handle={
+                                <span className="resize-handle" style={{ backgroundColor: 'transparent', cursor: 'se-resize', position: 'absolute', right: 0, bottom: 0, width: '20px', height: '20px' }}>
+                                    +
+                                </span>
+                            }
+                    >
+                        <div style={{ width: '100%', height: '100%' }}>
+                            <img
+                                src={item.imageUrl}
+                                alt={item.name || 'Uploaded Image'}
+                                style={{
+                                    width: item.size?.width || 'auto',
+                                    height: item.size?.height || 'auto',
+                                   
+                                    objectFit: 'contain',  // Keeps the image aspect ratio intact
+                                }}
+                            />
+                        </div>
+                    </Resizable>
+                    
+                    );
+                case 'sticker':
+                    // Example handling for a sticker
+                    return (
+                        <img
+                            src={item.imageUrl}  // URL or path to the sticker image
+                            alt="Sticker"
+                            style={{
+                                width: item.size?.width || 100,
+                                height: item.size?.height || 100,
+                                objectFit: 'contain',
+                            }}
+                        />
+                    );
+        
+                case 'animatedText':
+                    return animationData ? (
+                        <Lottie
+                            animationData={animationData}
+                            loop
+                            autoplay
+                            style={{
+                                width: item.size?.width || 100,
+                                height: item.size?.height || 100,
+                            }}
+                        />
+                    ) : (
+                        <div>Loading...</div>
+                    );
             default:
                 return null;
         }
@@ -277,7 +348,9 @@ const CanvasArea = ({ elements,teamCode, setElements, selectedItem, setSelectedI
                 width: '100%',
                 height: '500px',
                 backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'cover',
+                backgroundSize: 'cover', 
+                backgroundRepeat: 'no-repeat', // Prevents tiling
+                backgroundPosition: 'center center', 
                 backgroundPosition: 'center',
                 border: '2px dashed #ccc',
                 position: 'relative',

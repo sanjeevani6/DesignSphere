@@ -4,19 +4,37 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import {jwtDecode }from 'jwt-decode';
-import { UserContext } from '../context/UserContext';
+
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useContext(UserContext); // Access the login function from context
 
-  const onGoogleLoginSuccess = (res) => {
-    const decoded = jwtDecode(res.credential);
-    localStorage.setItem('user', JSON.stringify(decoded));
-    login({ ...decoded, _id: decoded.sub});
-    message.success('Google login successful');
-    navigate('/');
+
+  
+  const onGoogleLoginSuccess = async (res) => {
+    try {
+      const decoded = jwtDecode(res.credential);
+      const userData = {
+        name: decoded.name,
+        email: decoded.email,
+        googleId: decoded.sub,
+      };
+      
+      // Send the user data to the backend to be saved
+      const response = await axios.post('/users/google-login', userData);
+  
+      // Save user info in localStorage and context
+      const user = { ...response.data.user, password: '' }; 
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log('Logged in user:', user);
+      message.success('Google login successful');
+      navigate('/');
+    } catch (error) {
+      console.error('Error with Google login:', error);
+      message.error('Google login failed');
+    }
   };
+  
 
   const onGoogleLoginError = (res) => {
     console.log('Google login failed', res);
@@ -29,11 +47,12 @@ const Login = () => {
 
   const submitHandler = async (values) => {
     try {
-      const { data } = await axios.post('/users/login', values);
+      
+      const response= await axios.post('/users/login', values);
       message.success('Login successful');
-      const user = { ...data.user, password: '' }; 
-      localStorage.setItem('user', JSON.stringify({ ...data.user, password: '' }));
-      login(user);
+      const user = { ...response.data.user, password: '' }; 
+      localStorage.setItem('user', JSON.stringify(user));
+   
       console.log('Logged in user:', user);
       navigate('/');
     } catch (error) {

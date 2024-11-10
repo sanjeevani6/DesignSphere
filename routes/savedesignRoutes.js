@@ -4,7 +4,7 @@ const router = express.Router();
 const { getDesignsByUserId } = require('../controllers/getdesignController');
 const { getDesignById } = require('../controllers/getdesignbyidController');
 const Design = require('../models/Design');
-const teamController=require('../controllers/teamController')
+const teamDesignController=require('../controllers/teamDesignController')
 
 // Route to get designs for a specific user
 router.get('/user/:userId', (req, res) => {
@@ -21,10 +21,10 @@ router.get('/:designId', (req, res) => {
 //for teams
 
 // Route to fetch a team design by teamCode
-router.get('/team-designs/:teamCode', teamController.getTeamDesignByTeamCode);
+router.get('/team-designs/:teamCode', teamDesignController.getTeamDesign);
 
 // Route to update a team design by teamCode
-router.put('/team-designs/:teamCode', teamController.updateTeamDesign);
+router.put('/team-designs/:teamCode', teamDesignController.updateTeamDesign);
 
 
 //post||save design

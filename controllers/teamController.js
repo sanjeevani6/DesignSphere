@@ -122,30 +122,25 @@ exports.getTeamDesign = async (req, res) => {
 // Update the team design
 exports.updateTeamDesign = async (req, res) => {
     const { teamCode } = req.params;
-    const { elements, backgroundColor, backgroundImage, userId } = req.body;
+    const { elements, backgroundColor, backgroundImage, userId ,title} = req.body;
 
     if (!teamCode || !elements || !userId) {
         return res.status(400).json({ error: 'Team code, user ID, and elements are required.' });
     }
-
-    try {
-        // Find the team design by team code
-        const design = await TeamDesign.findOne({ teamCode });
-        if (!design) {
-            return res.status(404).json({ error: 'Design not found.' });
-        }
-
-        // Update the design fields
-        design.elements = elements;
-        design.backgroundColor = backgroundColor || design.backgroundColor;
-        design.backgroundImage = backgroundImage || design.backgroundImage;
-        design.updatedAt = new Date();
-
-        // Save the updated design
-        await design.save();
-
-        // Notify clients about the update (if using a real-time tool like Socket.io)
-        // io.emit(`design-updated-${teamCode}`, design);
+try{
+    const updatedTeamDesign = await TeamDesign.findOneAndUpdate(
+        { teamCode },
+        {
+            elements,
+            backgroundColor,
+            backgroundImage,
+            title,
+            createdBy,
+            updatedAt: Date.now(),
+        },
+        { new: true, upsert: true } // Upsert option to create if not exists
+    );
+    await updatedTeamDesign.save();
 
         res.status(200).json({ message: 'Design updated successfully', design });
     } catch (error) {

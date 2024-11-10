@@ -17,6 +17,7 @@ const Homepage = () => {
 
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user ? user._id : null;
+    console.log(teamDesigns)
 
     useEffect(() => {
         const fetchDesigns = async () => {
@@ -29,6 +30,7 @@ const Homepage = () => {
           //setDesigns(userResponse.data)
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);
+          console.log("ok",teamDesigns)
           }
   
           
@@ -94,6 +96,7 @@ const Homepage = () => {
 
     const handleDeleteClick = async (designId) => {
         try {
+         
             await axios.delete(`/designs/delete/${designId}`);
             setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
         } catch (error) {
@@ -228,7 +231,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleEventifyClick(design._id); // Navigate to event page
+                                            handleEventifyClick(design.teamCode); // Navigate to event page
                                         }}
                                     >
                                         Eventify
@@ -246,7 +249,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDownloadClick(e, design._id);
+                                            handleDownloadClick(e, design.teamCode);
                                         }}
                                     >
                                         Download

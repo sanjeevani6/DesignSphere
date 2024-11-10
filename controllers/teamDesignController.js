@@ -9,6 +9,7 @@ exports.getTeamDesign = async (req, res) => {
         
         // Find the team design associated with the given teamCode
         const teamDesign = await TeamDesign.findOne({ teamCode });
+        console.log("fetching")
         
         if (!teamDesign) {
             return res.status(404).json({ message: 'Team design not found' });
@@ -36,11 +37,12 @@ exports.updateTeamDesign = async (req, res) => {
                 backgroundColor,
                 backgroundImage,
                 title,
-                createdBy,
+                // createdBy,
                 updatedAt: Date.now(),
             },
             { new: true, upsert: true } // Upsert option to create if not exists
         );
+        console.log(updatedTeamDesign)
 
         res.status(200).json(updatedTeamDesign);
     } catch (error) {

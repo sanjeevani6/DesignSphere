@@ -47,12 +47,14 @@ const Design = () => {
              
               console.log(teamCode)
               console.log(designId)
-           if (designId) { // Loading design for editing if ID exists
+           if (currentUser) { // Loading design for editing if ID exists
               try {
                 let response;
                 if (teamCode) {
+                    console.log("getting team design")
                   response = await axios.get(`/designs/team-designs/${teamCode}`);
                 } else if (designId) {
+                    console.log("getting design")
                     response = await axios.get(`/designs/${designId}`);
                 }
                 else {

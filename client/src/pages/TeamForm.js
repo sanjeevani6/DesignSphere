@@ -5,6 +5,7 @@ import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
 import './TeamForm.css';
+import Header from '../components/Layouts/Header';
 
 const TeamForm = () => {
     const navigate = useNavigate();
@@ -85,6 +86,8 @@ const TeamForm = () => {
     if (loading) return <p>Loading...</p>;
 
     return (
+       <>
+        <Header/>
         <div className="team-form-container">
             {isAuthenticated && !isJoined ? (
                 <div className="form-content">
@@ -115,6 +118,7 @@ const TeamForm = () => {
                     <Canvas teamCode={teamCode || newTeamCode} />
                 </div>
             )}
+        
             
             {showModal && (
                 <div className="modal-overlay">
@@ -128,6 +132,7 @@ const TeamForm = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

@@ -1,4 +1,5 @@
 // src/components/TeamForm.js
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -61,7 +62,14 @@ const TeamForm = () => {
             const response = await axios.post('/teams/join-team', { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
-                socket.emit('joinTeam', { teamCode, userId });
+                socket.emit('joinRoom', {teamCode, callback:(response) => {
+                    if (response.status === 'success') {
+                        console.log(`Joined room successfully: ${response.room}`);
+                    } else {
+                        console.error(`Failed to join room: ${response.message}`);
+                    }
+            }});
+                console.log(`blah blah blah ${teamCode}` );
                 navigate(`/design/team/${teamCode}`);
             } else {
                 alert('Team not found');
@@ -86,7 +94,7 @@ const TeamForm = () => {
     if (loading) return <p>Loading...</p>;
 
     return (
-       <>
+        <>
         <Header/>
         <div className="team-form-container">
             {isAuthenticated && !isJoined ? (
@@ -137,3 +145,9 @@ const TeamForm = () => {
 };
 
 export default TeamForm;
+           
+   
+
+   
+                            
+          

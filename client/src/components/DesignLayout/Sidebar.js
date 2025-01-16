@@ -25,7 +25,7 @@ const Sidebar = ({ setElements }) => {
     
             try {
                 // Upload the image to the server and get the URL
-                const response = await axios.post('/designpage/upload-image', formData, {
+                 const response = await axios.post('/designpage/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

@@ -104,6 +104,7 @@ exports.joinTeam = async (req, res) => {
 // Get the current team design
 exports.getTeamDesign = async (req, res) => {
     const { teamCode } = req.params;
+    
 
     try {
         // Find the team design by team code

@@ -50,7 +50,7 @@ const Login = () => {
       
       const response= await axios.post('/users/login', values);
       message.success('Login successful');
-       user = { ...response.data.user, password: '' }; 
+       const user = { ...response.data.user, password: '' }; 
       localStorage.setItem('user', JSON.stringify(user));
    
       console.log('Logged in user:', user);

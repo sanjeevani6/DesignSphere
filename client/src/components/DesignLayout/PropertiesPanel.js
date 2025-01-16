@@ -1,27 +1,153 @@
 import React from 'react';
+import socket from '../../socket';
 
-const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
+const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
+    const [fontSize, setFontSize] = useState(selectedItem?.fontSize || 16);
+    // const [width, setWidth] = useState(selectedItem?.width || 16);
+    const [color, setColor] = useState(selectedItem?.color || '#000000');
+    const [backgroundColor, setBackgroundColor] = useState(selectedItem?.backgroundColor || '#ffffff');
+    const [fontFamily, setFontFamily] = useState(selectedItem?.fontType || 'Arial');
+
+
+
+    // Update properties in socket event
+    const handlePropertyChange = (name, value) => {
+        if (selectedItem) {
+            socket.emit('updateDesignProperties', {
+                teamCode,
+                properties: {
+                    elements: [
+                        {
+                            ...selectedItem,
+                            [name]: value,
+                            updatedAt: new Date().toISOString(),
+                        },
+                    ],
+                },
+            });
+
+            updateItemProperties(selectedItem.id, { [name]: value });
+        }
+    };
+
+
+    // Handle background color change specifically for the canvas
+    const handleCanvasBackgroundColorChange = (e) => {
+        const newCanvasBackgroundColor = e.target.value;
+        setBackgroundColor(newCanvasBackgroundColor);
+        if (onBackgroundColorChange) {
+            onBackgroundColorChange(newCanvasBackgroundColor);
+        }
+
+        // Emit socket event specifically for canvas background update
+        socket.emit('updateDesignProperties', {
+            teamCode,
+            properties: {
+                backgroundColor: newCanvasBackgroundColor,
+            },
+        });
+    };
+
+
+
+    const handleFontSizeChange = (e) => {
+        const newFontSize = parseInt(e.target.value, 10);
+        setFontSize(newFontSize);
+        handlePropertyChange('fontSize', newFontSize);
+    };
+
+    const handleFontFamilyChange = (e) => {
+        const newFontFamily = e.target.value;
+        setFontFamily(newFontFamily);
+        handlePropertyChange('fontType', newFontFamily);
+    };
+
+
     const handleColorChange = (e) => {
-        onBackgroundColorChange(e.target.value);
-    }; 
+        const newColor = e.target.value;
+        setColor(newColor);
+        handlePropertyChange('color', newColor);
+    };
+    
+    
+    // const handleChangeWidth = (e) => {
+    //     const newWidth = parseInt(e.target.value, 10);
+    //     // if (selectedItem) {
+    //     //     updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, width: newWidth } });
+    //     // }
+    //     setWidth(newWidth);
+    //     handlePropertyChange('width', newWidth);
+    
+    // };
     const handleChangeWidth = (e) => {
         const newWidth = parseInt(e.target.value, 10);
+        if (selectedItem && selectedItem.size) {
+            const updatedSize = { ...selectedItem.size, width: newWidth };
+    
+            // Update locally
+            updateItemProperties(selectedItem.id, { size: updatedSize });
+    
+            // Emit socket update
+            socket.emit('updateDesignProperties', {
+                teamCode,
+                properties: {
+                    elements: [
+                        {
+                            ...selectedItem,
+                            size: updatedSize,
+                            updatedAt: new Date().toISOString(),
+                        },
+                    ],
+                }
+                });
+            
+    
+            console.log('Width updated:', updatedSize);
+        }
+    };
+
+
+    const handleBackgroundColorChange = (e) => {
+        const newItemBackgroundColor = e.target.value;
         if (selectedItem) {
-            updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, width: newWidth } });
+            handlePropertyChange('backgroundColor', newItemBackgroundColor);
         }
     };
 
     const handleChangeHeight = (e) => {
         const newHeight = parseInt(e.target.value, 10);
-        if (selectedItem) {
-            updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, height: newHeight } });
+        if (selectedItem && selectedItem.size) {
+            const updatedSize = { ...selectedItem.size, height: newHeight };
+    
+            // Update locally
+            updateItemProperties(selectedItem.id, { size: updatedSize });
+    
+            // Emit socket update
+            socket.emit('updateDesignProperties', {
+                teamCode,
+                properties: {
+                    elements: [
+                        {
+                            ...selectedItem,
+                            size: updatedSize,
+                            updatedAt: new Date().toISOString(),
+                        },
+                    ],
+                }
+            });
+         
+            
+    
+            console.log('Height updated:', updatedSize);
         }
     };
+    
     
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+        if (!selectedItem) return;
+        
         // Check if width or height is being changed
         if (name === 'width' || name === 'height') {
             // Update the size property directly
@@ -35,7 +161,19 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
             // Update other properties
             updateItemProperties(selectedItem.id, { [name]: value });
         }
+       
     };
+
+    useEffect(() => {
+        // Sync properties with the selected item when it changes
+        if (selectedItem) {
+            setFontSize(selectedItem.fontSize || 16);
+            setColor(selectedItem.color || '#000000');
+           
+            setBackgroundColor(selectedItem.backgroundColor || '#ffffff');
+            setFontFamily(selectedItem.fontType || 'Arial');
+        }
+    }, [selectedItem]);
 
     return (
         <div className='properties-pane'>
@@ -46,7 +184,8 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                     Canvas Background Color:
                     <input
                         type="color"
-                        onChange={handleColorChange}
+                        onChange={handleCanvasBackgroundColorChange}
+                        value={backgroundColor}
                         defaultValue="#ffffff" // You might want to set this dynamically
                     />
                 </label>
@@ -63,12 +202,13 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 name="name"
                                 value={selectedItem.name}
                                 onChange={handleChange}
+                                /*If you wrote onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
                             />
                             <label>Font Type:</label>
                             <select
                                 name="fontType"
                                 value={selectedItem.fontType || 'Arial'}
-                                onChange={handleChange}
+                                onChange={handleFontFamilyChange}
                             >
                                 <option value="Arial">Arial</option>
                                 <option value="Helvetica">Helvetica</option>
@@ -100,7 +240,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 type="number"
                                 name="fontSize"
                                 value={selectedItem.fontSize || 16}
-                                onChange={handleChange}
+                                onChange={handleFontSizeChange}
                                 min={1}
                             />
                             <label>Text Color:</label>
@@ -108,14 +248,14 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 type="color"
                                 name="color"
                                 value={selectedItem.color || '#000000'}
-                                onChange={handleChange}
+                                onChange={handleColorChange}
                             />
                             <label>Background Color:</label>
                             <input
                                 type="color"
                                 name="backgroundColor"
                                 value={selectedItem.backgroundColor || '#ffffff'}
-                                onChange={handleChange}
+                                onChange={handleBackgroundColorChange}
                             />
                         </div>
                     )}
@@ -127,14 +267,15 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 type="color"
                                 name="color"
                                 value={selectedItem.color}
-                                onChange={handleChange}
+                               // onChange={handleChange}
+                                onChange={(e) => handlePropertyChange('color', e.target.value)}
                             />
                             <label>Width:</label>
                             <input
                                 type="number"
                                 name="width"
                                 value={selectedItem.size?.width || 50}
-                                onChange={handleChange}
+                                onChange={handleChangeWidth}
                                 min={1}
                             />
                             <label>Height:</label>
@@ -142,7 +283,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                                 type="number"
                                 name="height"
                                 value={selectedItem.size?.height || 50}
-                                onChange={handleChange}
+                                onChange={handleChangeHeight}
                                 min={1}
                             />
                         </div>
@@ -170,7 +311,7 @@ const PropertiesPanel = ({ selectedItem, updateItemProperties, onBackgroundColor
                         </div>
                     )}
                       {/* Delete button for the selected item */}
-            <button  lassName="delete-button" onClick={() => deleteItem(selectedItem.id)} 
+            <button  className="delete-button" onClick={() => deleteItem(selectedItem.id)} 
                        
                        >Delete Item</button>
                 </>

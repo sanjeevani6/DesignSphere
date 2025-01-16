@@ -6,6 +6,11 @@ const socket = io('http://localhost:8080',{
 });
 socket.on('connect', () => {
     console.log('Socket connected with id:', socket.id);
+    socket.on("welcome",(data)=>{
+        console.log("message from server",data);
+
+    })
+    socket.emit("msg","thanks for connecting");
 });
 socket.on('connect_error', (err) => {
     console.error('Socket connection error:', err);

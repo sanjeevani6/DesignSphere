@@ -1,18 +1,44 @@
 // sockets/canvasSocket.js
-const Team = require('../models/Team'); // Import the Project model
+
 const SidebarItem = require('../models/SidebarItem'); // Import the elements id model
 
-// server.js (or socket handler file)
+
+  
 let connections=[];
+const rooms={};
 module.exports = (io) => {
   io.on('connection', (socket) => {
     connections.push(socket);
+    socket.emit("welcome","thanks for connecting");
     console.log('A user connected:', socket.id);
 
+    socket.on("msg",(data)=>{
+      console.log("message from client: ",data)
+    });
+
   // Event to join a team
-    socket.on('joinTeam', async ({ teamCode }) => {
-      socket.join(teamCode);
+    socket.on('joinRoom',async ( {teamCode,callback }) => {
+      console.log(`attempting to join team on server side ${teamCode}`);
+      if(teamCode){
+        socket.join(teamCode);
       console.log(`User ${socket.id} joined team ${teamCode}`);
+      if (callback && typeof callback === 'function') {
+        callback({ status: 'success', room: teamCode });
+    }
+      }
+      else{
+        console.log("invalid teamCode received");
+        if (callback && typeof callback === 'function') {
+          callback({ status: 'error', message: 'Invalid teamCode' });
+      }
+      }
+      
+      // Send current room state to the newly connected client
+      if (rooms[teamCode]) {
+        socket.emit('initializeCanvas', rooms[teamCode]);
+    } else {
+        rooms[teamCode] = []; // Initialize the room if it doesn't exist
+    }
       try {
         // Fetch the current elements for this team from the database
         const elements = await SidebarItem.find({ teamCode: teamCode });
@@ -24,96 +50,16 @@ module.exports = (io) => {
     }
 });
 
-  //     // Handle design updates and broadcast to the team room
-  //   socket.on('designUpdate', ({ teamCode, updatedDesign }) => {
-  //     console.log(`Broadcasting design update to team ${teamCode}`);
-  //     io.to(teamCode).emit(`design-updated-${teamCode}`, updatedDesign);
-  // });
+  
 
-  //     // Retrieve the latest canvas data from the database
-  //     const project = await Project.findOne({ teamCode });
-  //     if (project) {
-  //       // Send the current canvas data to the newly joined user
-  //       console.log(`Sending canvas data for team ${teamCode} to user ${socket.id}`);
-  //       socket.emit('loadCanvas', project.canvasData);
-  //     }
-  //   });
+  
 
-  //   // Lock an item to prevent concurrent edits
-  //   socket.on('lockItem', ({ teamCode, itemId }) => {
-  //     socket.to(teamCode).emit('itemLocked', { itemId, userId: socket.id });
-  //     console.log(`User ${socket.id} locked item ${itemId} in team ${teamCode}`);
-  //   });
-
-  //   // Release a lock on an item
-  //   socket.on('releaseItem', ({ teamCode, itemId }) => {
-  //     socket.to(teamCode).emit('itemReleased', { itemId, userId: socket.id });
-  //     console.log(`User ${socket.id} released item ${itemId} in team ${teamCode}`);
-  //   });
-
-  //   // Update item properties
-  //   socket.on('updateItem', async ({ teamCode, itemId, updatedProperties }) => {
-  //     try {
-  //       const project = await Project.findOneAndUpdate(
-  //         { teamCode },
-  //         { $set: { "canvasData.items.$[item]": updatedProperties } },
-  //         { arrayFilters: [{ "item.id": itemId }], new: true }
-  //       );
-
-  //       if (project) {
-  //         socket.to(teamCode).emit('itemUpdated', { itemId, updatedProperties });
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating item:', error);
-  //     }
-  //   });
-  //   // Listen for new sidebar item (e.g., uploaded image) and broadcast it to other users in the same team
-  //   socket.on('newSidebarItem', ({ teamCode, item }) => {
-  //     socket.to(teamCode).emit('sidebarItemAdded', item);
-  // });
-
-  //   // Event for updating the canvas
-  //   socket.on('canvasUpdate', async ({ teamCode, canvasData }) => {
-  //     try {
-  //       const project = await Project.findOneAndUpdate(
-  //         { teamCode },
-  //         { canvasData, updatedAt: new Date() },
-  //         { new: true }
-  //       );
-
-  //       if (project) {
-  //         socket.to(teamCode).emit('canvasUpdate', canvasData);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating canvas:', error);
-  //     }
-  //   });
+  
+  
 
 
 
-  // Send initial elements to the newly connected client
-    //socket.emit('initializeElements', elements);
-
-    // Listen for item updates from clients
-    socket.on('updateItem', async ({ teamCode, updatedItem }) => {
-      try {
-          // Find the item in the database and update it
-          await SidebarItem.findOneAndUpdate(
-              { id: updatedItem.id, teamCode: teamCode },
-              { $set: updatedItem },
-              { new: true }
-          );
-          console.log("updating item in database")
-          // Broadcast the update to all other clients in the same team
-         
-           
-          socket.to(teamCode).emit('updateItem', { teamCode, updatedItem });
-          console.log("update sent to all")
-        } catch (error) {
-          console.error('Error updating item:', error);
-      }
-  });
-
+  
   socket.on('itemResize', async ({ teamCode, itemId, size }) => {
     try {
         // Update the size of the item in the database
@@ -132,9 +78,109 @@ module.exports = (io) => {
         console.error('Error resizing item:', error);
     }
 });
+
+
+
+
+
+  // Lock an item to prevent concurrent edits
+  socket.on('lockItem', ({ teamCode, itemId }) => {
+    if (!teamCode || !itemId) {
+        console.error('Invalid lockItem request:', { teamCode, itemId });
+        return;
+    }
+
+    console.log(`User ${socket.id} locked item ${itemId} in team ${teamCode}`);
+    socket.to(teamCode).emit('itemLocked', { itemId, lockedBy: socket.id });
+});
+
+// Release a lock on an item
+socket.on('unlockItem', ({ teamCode, itemId }) => {
+    if (!teamCode || !itemId) {
+        console.error('Invalid unlockItem request:', { teamCode, itemId });
+        return;
+    }
+
+    console.log(`User ${socket.id} unlocked item ${itemId} in team ${teamCode}`);
+    socket.to(teamCode).emit('itemUnlocked', { itemId });
+});
+
+
+
+
+
+
+socket.on('updateDesign', ({ teamCode, updatedItem }) => {
+  if (!teamCode || !updatedItem || typeof updatedItem !== 'object' || !updatedItem.id) {
+      console.error("Invalid updateDesign request:", { teamCode, updatedItem });
+      return;
+  }
+
+  // Emit the updated design to all sockets in the same teamCode room
+  io.to(teamCode).emit('receiveDesignUpdate', {
+    elements:[updatedItem],}
+  );
+
+  console.log(`Update sent to room ${teamCode}:`, updatedItem);
+});
+
+
+
+
+// Listen for updates to design properties like backgroundColor or backgroundImage
+socket.on('updateDesignProperties', ({ teamCode, properties }) => {
+  console.log('Received updateDesignProperties request:', properties);
+
+  if (!teamCode || !properties) {
+      console.error('Invalid updateDesignProperties request:', { teamCode, properties });
+      return;
+  }
+
+  console.log(`Received updateDesignProperties for teamCode ${teamCode}:`, properties);
+  console.log(`Broadcasting backgroundImage for teamCode ${teamCode}:`, properties.backgroundImage);
+
+  // Broadcast the updated properties to all clients in the same room except the sender
+  socket.to(teamCode).emit('receiveDesignUpdate', {...properties, updatedBy: socket.id});
+  socket.emit('receiveDesignUpdate', { ...properties, updatedBy: socket.id }); // Optional: broadcast to sender
+
+  console.log(`Broadcasted updateDesignProperties for teamCode ${teamCode}`);
+});
+
+
+
+
+
+socket.on('deleteItem', ({ teamCode, itemId }) => {
+  if (!teamCode || !itemId) {
+      console.error('Invalid deleteItem request:', { teamCode, itemId });
+      return;
+  }
+
+  console.log(`Received deleteItem for teamCode ${teamCode}, itemId ${itemId}`);
+
+  // Broadcast the deleted item to all clients in the room except the sender
+  socket.to(teamCode).emit('receiveDesignUpdate', { deletedItemId: itemId });
+
+  console.log(`Broadcasted deleteItem for teamCode ${teamCode}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Handle disconnection
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
+      connections = connections.filter((conn) => conn.id !== socket.id);
     });
   });
 };
+

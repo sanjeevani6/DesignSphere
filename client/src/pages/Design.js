@@ -1,6 +1,6 @@
 // Design.js
-// Design.js
-import React, { useState,useEffect,useContext } from 'react';
+
+ import React, { useState,useEffect,useContext,useRef  } from 'react';
 import { useParams,useLocation } from 'react-router-dom';
 import Sidebar from '../components/DesignLayout/Sidebar';
 import CanvasArea from '../components/DesignLayout/CanvasArea';
@@ -24,9 +24,7 @@ const Design = () => {
     const [backgroundImage, setBackgroundImage] = useState(''); 
     const [title, setTitle] = useState('');
    
-    
-   
-   
+    const socketJoinedRooms = useRef(new Set());
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
     var { currentUser } = useContext(UserContext); 
@@ -37,10 +35,23 @@ const Design = () => {
    
     useEffect(() => {
         if (templateUrl) {
-            console.log('templateurl',templateUrl);
+            console.log('template URL selected:',templateUrl);
+            // const updatedImageUrl = templateUrl 
+            // ? `${templateUrl.replace(/\\/g, '/')}`  // Ensuring leading slash and replace backslashes in url
+            // : undefined; 
             setBackgroundImage(templateUrl);
+            if (teamCode) {
+                //socket.emit('updateDesignProperties', { teamCode, properties: { backgroundImage: templateUrl } });
+                // Emit the template selection event to the server
+                 const payload = { teamCode, properties: { backgroundImage: templateUrl } ,updatedBy: socket.id };
+                 console.log('Emitting updateDesignProperties:', payload);
+                 socket.emit('updateDesignProperties', payload);
+
+            
+                }
+                setBackgroundImage(templateUrl);
         }
-    }, [templateUrl]);
+    }, [templateUrl,teamCode]);
 
     useEffect(() => {
         const fetchDesign = async () => {
@@ -61,7 +72,13 @@ const Design = () => {
                     console.log("Neither teamCode nor designId is provided.");
                     return;
                 }
-                console.log("Fetching design response:", response.data);
+                if (response?.data) {
+                    const { backgroundImage } = response.data;
+    
+                    // Use the templateUrl as a fallback for backgroundImage
+                    setBackgroundImage(backgroundImage || templateUrl || '');
+                }
+               console.log("Fetching design response:", response.data);
                  
                   
                  console.log("response",response.data);
@@ -76,8 +93,9 @@ const Design = () => {
                 
                     return {
                         ...element,
-                        imageUrl: updatedImageUrl  
-                    };
+                        imageUrl: updatedImageUrl  ,
+                        lockedBy: element.lockedBy || null, // Initialize lockedBy if not already present
+                };
                 });
                 
               
@@ -86,9 +104,9 @@ const Design = () => {
                 console.log("updated elements",updatedElements);
 
                  setTitle(title);
-                 setElements(updatedElements);
+                 setElements(updatedElements||[]);
                  setBackgroundColor(backgroundColor);
-                 setBackgroundImage(backgroundImage); 
+                // setBackgroundImage(backgroundImage); 
             }
               } catch (error) {
                  console.error('Error loading design:', error);
@@ -97,24 +115,96 @@ const Design = () => {
         };
         
         fetchDesign();
-     }, [designId,teamCode]);
+     }, [designId,teamCode,currentUser,templateUrl]);
+     
+    //  const lockItem = (itemId) => {
+    //     if (!teamCode || !itemId) return;
+    
+    //     console.log("Locking item:", itemId);
+    //     socket.emit('lockItem', { teamCode, itemId, lockedBy: socket.id });
+    // };
+    
+     
      useEffect(() => {
-        if (teamCode) {
-            socket.emit('joinRoom', teamCode);
+        
+         if (teamCode  && !socketJoinedRooms.current.has(teamCode)) {
+            console.log(`Joining room: ${teamCode}`)
+                socket.emit('joinRoom', {teamCode, callback:(response) => {
+                    if (response.status === 'success') {
+                        console.log(`Joined room successfully: ${response.room}`);
+                        socketJoinedRooms.add(teamCode);
+                    } else {
+                        console.error(`Failed to join room: ${response.message}`);
+                    }
+            }});
+            
+            // Listen for design updates from the socket
+        socket.on('receiveDesignUpdate', (updatedData) => {
+            console.log("received data on frontend:",updatedData.backgroundImage)
+            // Handle deleted items
+            if (updatedData.deletedItemId) {
+                setElements((prevElements) =>
+                    prevElements.filter((item) => item.id !== updatedData.deletedItemId)
+                );
+                console.log("Deleted item with ID:", updatedData.deletedItemId);
+            }
+             // Skip processing if this client already performed the update
+            //  if (updatedData.updatedBy === socket.id) {
+            //     console.log('Skipping update for performing client.');
+            //     return;
+            // }
+           
+            // Update background properties if they are part of the update
+            if (updatedData.backgroundColor) setBackgroundColor(updatedData.backgroundColor);
+            if (updatedData.backgroundImage) setBackgroundImage(updatedData.backgroundImage);
+    
+            if (  Array.isArray(updatedData.elements)) {
+                console.log("Received updated elements:", updatedData.elements);
+                // Merge updated elements with existing ones
+             setElements((prevElements) => {
+            const updatedIds = new Set(updatedData.elements.map(item => item.id));
+            const nonUpdatedElements = prevElements.filter(item => !updatedIds.has(item.id));
+            return [...nonUpdatedElements, ...updatedData.elements];
+        });
+            } else {
+                console.error("Received invalid elements:", updatedData.elements);
+            }
+            console.log(updatedData)
 
-            socket.on('receiveDesignUpdate', (updatedData) => {
-                setElements(updatedData.elements);
-                setBackgroundColor(updatedData.backgroundColor);
-                setBackgroundImage(updatedData.backgroundImage);
-            });
+        });
+
+        // Listen for unlockItem event
+    socket.on('unlockItem', ({ teamCode,itemId }) => {
+        console.log(`Item ${itemId} unlocked`);
+        setElements((prevElements) =>
+            prevElements.map((item) =>
+                item.id === itemId ? { ...item, lockedBy: null } : item
+            )
+        );
+    });
+    
+        socket.on('lockItem', ({ teamCode,itemId, lockedBy }) => {
+        console.log(`Item ${itemId} locked by ${lockedBy}`);
+        setElements((prevElements) =>
+            prevElements.map((item) =>
+                item.id === itemId ? { ...item, lockedBy } : item
+            )
+        );
+    });
+    
         }
         return () => {
-            if (teamCode) {
+            if (teamCode ) {
+                console.log(`Leaving room: ${teamCode}`);
                 socket.emit('leaveRoom', teamCode);
                 socket.off('receiveDesignUpdate');
+                socketJoinedRooms.current.delete(teamCode);
+                socket.off('lockItem');
+               
+       
             }
         };
-    }, [teamCode]);
+    }, [teamCode,socket]);
     const saveDesign = async () => {
         let  saveResponse;
        
@@ -140,7 +230,7 @@ const Design = () => {
             if (teamCode) {
                 console.log("saving")
                 await axios.put(`/designs/team-designs/${teamCode}`, payload);
-                socket.emit('sendDesignUpdate', { teamCode, ...payload });
+                socket.emit('updateDesign', { teamCode, ...payload });
                 message.success('Team design updated successfully');
                 console.log('New design saved:', payload);
             } else {
@@ -166,9 +256,22 @@ const Design = () => {
     
     const deleteItem = (id) => {
         setElements((prevItems) => prevItems.filter(item => item.id !== id));
+        
         setSelectedItem(null); // Optionally clear the selected item
+        if (teamCode) {
+            console.log("Deleting item using socket");
+            socket.emit('deleteItem', { teamCode, itemId: id });
+        }
     };
     const updateItemProperties = (id, updatedProperties) => {
+        if(teamCode){
+        const item = elements.find((item) => item.id === id);
+        if (item.lockedBy && item.lockedBy !== socket.id) {
+            alert("This item is being edited by another user.");
+           
+          return;
+        }
+    }
         setElements((prevElements) =>
             prevElements.map((item) =>
                 item.id === id ? { ...item, ...updatedProperties } : item
@@ -179,28 +282,27 @@ const Design = () => {
             setSelectedItem((prev) => ({ ...prev, ...updatedProperties }));
         }
         if (teamCode) {
-            socket.emit('sendDesignUpdate', {
-                teamCode,
-                elements,
-                backgroundColor,
-                backgroundImage,
-                title,
-            });
+            
+            console.log("updating using socket")
+            socket.emit('updateItem', { teamCode, updatedItem: { id, ...updatedProperties } });
         }
     };
     const handleBackgroundColorChange = (color) => {
         setBackgroundColor(color);
         if (teamCode) {
-            socket.emit('sendDesignUpdate', {
-                teamCode,
-                elements,
-                backgroundColor: color,
-                backgroundImage,
-                title,
-            });
+            updateDesignProperties(teamCode, { backgroundColor: color });
         }
     };
+    
 
+    const updateDesignProperties = (teamCode, properties) => {
+        socket.emit('updateDesignProperties', { teamCode, properties });
+    };
+    
+    useEffect(() => {
+        console.log('Parent elements state:', elements);
+    }, [elements]);
+    
  
  
 
@@ -212,6 +314,7 @@ const Design = () => {
    <div className="sidebar"> <Sidebar setElements={setElements} /></div>
     <div className="main-content">
        <div  className="properties-panel" ><PropertiesPanel 
+       teamCode={teamCode}
                                selectedItem={selectedItem}
                                updateItemProperties={updateItemProperties}
                                onBackgroundColorChange={handleBackgroundColorChange}
@@ -221,7 +324,9 @@ const Design = () => {
        </div> 
         <div className="canvas-container">
             <button onClick={saveDesign} className="save-button">Save Design</button>
-            <CanvasArea elements={elements} 
+            <CanvasArea teamCode={teamCode}
+                        socket={socket}
+                        elements={elements} 
                         setElements={setElements}
                         selectedItem={selectedItem}
                         setSelectedItem={setSelectedItem}
@@ -239,4 +344,12 @@ const Design = () => {
 };
 
 
-export default Design;
+export default Design;  
+   
+  
+                    
+            
+              
+               
+       
+      

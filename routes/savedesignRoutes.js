@@ -4,6 +4,8 @@ const router = express.Router();
 const { getDesignsByUserId } = require('../controllers/getdesignController');
 const { getDesignById } = require('../controllers/getdesignbyidController');
 const Design = require('../models/Design');
+const TeamDesign = require('../models/TeamDesign');
+const Teams = require('../models/Team');
 const teamDesignController=require('../controllers/teamDesignController')
 
 // Route to get designs for a specific user
@@ -41,6 +43,36 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete design' });
     }
 });
-
+// Delete a team design by teamCode
+router.delete('/delete/team/:teamCode/:userId', async (req, res) => {
+    try {
+      const {teamCode,userId} = req.params;
+      console.log(`Deleting team design with TeamCode: ${teamCode}`);
+    //   const teamDesign = await TeamDesign.findOne({ teamCode });
+    // if (!teamDesign) {
+    //   console.log(`No team design found for teamCode: ${teamCode}`);
+    //   return res.status(404).json({ error: "Team design not found." });
+    // }
+    // await TeamDesign.deleteOne({ teamCode });
+    // Step 2: Update the Teams collection to remove the member
+    const teamUpdateResult = await Teams.findOneAndUpdate(
+        { teamCode }, // Locate the team using the teamCode
+        { $pull: { members: userId } }, // Remove the userId from the members array
+        { new: true } // Return the updated document
+      );
+  
+      if (!teamUpdateResult) {
+        return res.status(404).json({ error: 'Team not found or member not present.' });
+      }
+  
+      res.status(200).json({
+        message: 'Team design deleted and member removed successfully.',
+        updatedTeam: teamUpdateResult, // Optional: Include the updated team details
+      });
+    } catch (error) {
+      console.error('Error deleting team design or updating team members:', error);
+      res.status(500).json({ error: 'Failed to delete team design or update members.' });
+    }
+  });
 
 module.exports = router;

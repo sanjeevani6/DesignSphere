@@ -42,7 +42,7 @@ exports.updateTeamDesign = async (req, res) => {
             },
             { new: true, upsert: true } // Upsert option to create if not exists
         );
-        console.log(updatedTeamDesign)
+        console.log("after changes", updatedTeamDesign);
 
         res.status(200).json(updatedTeamDesign);
     } catch (error) {

@@ -8,7 +8,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 
 const EventPage = () => {
-    const { designId } = useParams();
+    const { designId,teamCode } = useParams();
     const [designImage, setDesignImage] = useState('');
     const [absdesignImage, setabsDesignImage] = useState('');
     const [eventDetails, setEventDetails] = useState({

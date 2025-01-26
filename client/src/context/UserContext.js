@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
         setCurrentUser(null); // Clear user on logout
     };
 
+    
     return (
         <UserContext.Provider value={{ currentUser, login, logout }}>
             {children}

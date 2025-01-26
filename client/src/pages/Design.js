@@ -1,6 +1,4 @@
-// Design.js
-
- import React, { useState,useEffect,useContext,useRef  } from 'react';
+import React, { useState,useEffect,useContext,useRef  } from 'react';
 import { useParams,useLocation } from 'react-router-dom';
 import Sidebar from '../components/DesignLayout/Sidebar';
 import CanvasArea from '../components/DesignLayout/CanvasArea';

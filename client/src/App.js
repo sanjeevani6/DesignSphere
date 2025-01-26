@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import socket from './socket'
+//import socket from './socket'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
 import EventPage from './pages/EventPage'; 
@@ -16,7 +16,7 @@ import TeamForm from './pages/TeamForm';
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
-
+ 
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <UserProvider>

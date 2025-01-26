@@ -5,14 +5,38 @@ import SidebarItem from './SidebarItem';
 import axios from 'axios';
 import socket from '../../socket'
 import {teamCode} from "../../pages/Design"
-//import { sidebarItems } from './itemData';
+import Chat from './Chat';
+import {
+    Box,
+    Typography,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    List,
+    ListItem,
+    ListItemIcon,
+  ListItemText,
+    Button,
+    
+    Divider,
+  } from '@mui/material';
+  import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+  import TextFieldsIcon from '@mui/icons-material/TextFields';
+import ShapesIcon from '@mui/icons-material/Category';
+import BrushIcon from '@mui/icons-material/Brush';
+import ImageIcon from '@mui/icons-material/Image';
+import StickerIcon from '@mui/icons-material/EmojiEmotions';
+import ChatIcon from '@mui/icons-material/Chat';
+
+
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 
-const Sidebar = ({ setElements }) => {
+const Sidebar = ({ setElements , socket}) => {
     const [sidebarItems, setSidebarItems] = useState([]);
-    const teamCode=useParams()  ;  
+    const [isChatVisible, setIsChatVisible] = useState(false); // State to toggle chat visibility
+    const {teamCode}=useParams()  ;  
 
     //handle image upload:
     const handleImageUpload = async (event) => {
@@ -96,65 +120,165 @@ const Sidebar = ({ setElements }) => {
     const stickerItems = sidebarItems.filter(item => item.category === 'sticker');
 
     return (
-        <div style={{ width: '200px', padding: '16px', backgroundColor: '#f4f4f4' }}>
+        <Box
+          sx={{
+            width: { xs: '100%', sm: '240px' },
+        height: '100vh',
+        backgroundColor: '#f8f9fa',
+        boxShadow: 3,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        overflowX: 'hidden', // Prevent horizontal scrolling
+        overflowY: 'auto', // Enable vertical scrolling for overflow
+        boxSizing: 'border-box', // Prevent layout shifts due to padding
+        padding: '8px',
+          }}
+        >
+          {/* Header */}
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: 'center',
+              padding: '16px',
+              backgroundColor: '#684B74',      
+              
+              color: 'white',
+            }}
+          >
+            Sidebar
+          </Typography>
+    
+          {/* Sidebar Content */}
+          <Box>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <BrushIcon sx={{ marginRight: 1 }} />
+            <Typography>Campus Arts Element</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {artelementsItems.map((item) => (
+                <ListItem key={item.id} button>
+                  <SidebarItem item={item} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
 
-         {/*  campus art element library Section */}
-         <div className="sidebar-section">
-                <h3>Campus Arts Element</h3>
-                <div className="sidebar-list">
-                {artelementsItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} />
-                ))}
-                </div>
-            </div>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <TextFieldsIcon sx={{ marginRight: 1 }} />
+            <Typography>Add Text</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {textItems.map((item) => (
+                <ListItem key={item.id} button>
+                  <SidebarItem item={item} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
 
-            {/* Text Section */}
-            <div className="sidebar-section">
-                <h3>Add Text</h3>
-                <div className="sidebar-list">
-                {textItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} teamCode={teamCode} />
-                ))}
-                </div>
-            </div>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <ShapesIcon sx={{ marginRight: 1 }} />
+            <Typography>Shapes</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {shapeItems.map((item) => (
+                <ListItem key={item.id} button>
+                  <SidebarItem item={item} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
 
-            {/* Shapes Section */}
-            <div className="sidebar-section">
-                <h3>Shapes</h3>
-                <div className="sidebar-list">
-                {shapeItems.map((item) => (
-                    <SidebarItem key={item.id} item={item} teamCode={teamCode} />
-                ))}
-                </div>
-            </div>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <TextFieldsIcon sx={{ marginRight: 1 }} />
+            <Typography>Animated Text</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {animatedTextItems.map((item) => (
+                <ListItem key={item.id} button>
+                  <SidebarItem item={item} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
 
-         
-          { /*animated section*/}
-            <div className="sidebar-section">
-            <h3>Animated Text</h3>
-            <div className="sidebar-list">
-                
-                {animatedTextItems.map(item => <SidebarItem key={item.id} item={item} />)}
-            </div>
-            </div>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <StickerIcon sx={{ marginRight: 1 }} />
+            <Typography>Stickers</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {stickerItems.map((item) => (
+                <ListItem key={item.id} button>
+                  <SidebarItem item={item} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
 
+        <Box sx={{ padding: '16px' }}>
+          <Typography variant="subtitle1">
+            <ImageIcon sx={{ marginRight: 1 }} />
+            Upload Image
+          </Typography>
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+        </Box>
+      </Box>
 
-            <div className="sidebar-section">
-            <h3>Stickers</h3>
-            <div className="sidebar-list">
-               
-                {stickerItems.map(item => <SidebarItem key={item.id} item={item} />)}
-            </div>
-            </div>
+      {/* Footer with Chat Toggle */}
+     
+      {teamCode && (
+        <Box
+          sx={{
+            padding: '16px',
+            borderTop: '1px solid #ccc',
+          }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<ChatIcon />}
+            fullWidth
+            onClick={() => setIsChatVisible((prev) => !prev)}
+            sx={{
+              backgroundColor: '#1C2529',
+              '&:hover': {
+                backgroundColor: '#A1D1B1',
+              },
+            }}
+          >
+            {isChatVisible ? 'Hide Chat' : 'Group Chat'}
+          </Button>
 
-             {/* Image upload section*/}
-            <div className="sidebar-section">
-                <h3>Upload Image</h3>
-                <input type="file" accept="image/*" onChange={handleImageUpload} />
-            </div>
-
-        </div>
-    );
+          {/* Chat Box */}
+          <Box
+            sx={{
+              marginTop: '16px',
+              height: isChatVisible ? '300px' : '0px', // Adjust height dynamically
+              overflow: 'hidden', // Prevent overflow
+              transition: 'height 0.3s ease', // Smooth height transition
+            }}
+          >
+            {isChatVisible && <Chat teamCode={teamCode} socket={socket} />}
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
 };
 
 export default Sidebar;

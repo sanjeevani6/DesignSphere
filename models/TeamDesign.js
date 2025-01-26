@@ -12,12 +12,12 @@ const elementSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image','animatedText','sticker','campuselement'],
+        enum: ['text', 'shape', 'image', 'animatedText', 'sticker', 'campuselement'], // Added "campuselement"
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image','animatedText','sticker','campuselement'],
+        enum: ['text', 'shape', 'image', 'animatedText', 'sticker', 'campuselement'], // Added "campuselement"
         required: true,
     },
     shapeType: {
@@ -26,8 +26,14 @@ const elementSchema = new mongoose.Schema({
     color: {
         type: String, // color code, e.g., '#ff7f50'
     },
+    backgroundColor: {
+        type: String,
+    },
     imageUrl: {
-        type: String, // URL for images
+        type: String, // URL for images or stickers
+    },
+    animationUrl: {
+        type: String, // URL for animated text or GIFs if animated
     },
     size: {
         width: { type: Number, default: 50 },

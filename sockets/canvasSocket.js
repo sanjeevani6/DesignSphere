@@ -1,6 +1,6 @@
 // sockets/canvasSocket.js
-
 const SidebarItem = require('../models/SidebarItem'); // Import the elements id model
+//const TeamDesign = require('../models/TeamDesign'); // Import the elements id model
 
 
   
@@ -55,7 +55,20 @@ module.exports = (io) => {
   
 
   
-  
+socket.on('joinChat', (teamCode) => {
+  socket.join(teamCode);
+  console.log(`User ${socket.id} joined chat room: ${teamCode}`);
+});
+
+socket.on('sendMessage', (message) => {
+  console.log('Message received:', message);
+  socket.to(message.teamCode).emit('receiveMessage', message);
+});
+
+socket.on('leaveChat', (teamCode) => {
+  socket.leave(teamCode);
+  console.log(`User ${socket.id} left chat room: ${teamCode}`);
+});
 
 
 

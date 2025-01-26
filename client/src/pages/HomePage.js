@@ -2,10 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
+
 //import { FiUsers } from 'react-icons/fi'; 
 import { exportToPDF, exportToImage, exportToGIF,designHasAnimatedText } from '../utils/exportUtils';
-import { Button, Menu, MenuItem } from '@mui/material';
-
+//import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
+import {
+    Button,
+    Menu,
+    MenuItem,
+    Grid,
+    Card,
+    CardContent,
+    Typography,
+  } from '@mui/material';
 const Homepage = () => {
    // const [designs, setDesigns] = useState([]);
     const [designs, setDesigns] = useState([]);
@@ -55,12 +64,18 @@ const Homepage = () => {
       navigate('/teams');
     };
 
-    const handleDownloadClick = async(event, designId) => {
+    const handleDownloadClick = async(event, designId,isTeamDesign=false) => {
         setAnchorEl(event.currentTarget);
         setSelectedDesignId(designId);
+        let response
         try {
-            const response = await axios.get(`/designs/${designId}`);
-            setHasAnimatedText(designHasAnimatedText(response.data.elements));
+            if(isTeamDesign){
+             response=await axios.get(`/designs/team-designs/${designId}`)
+            }
+            else{
+             response = await axios.get(`/designs/${designId}`);
+            }
+         setHasAnimatedText(designHasAnimatedText(response.data.elements));
         } catch (error) {
             console.error('Error checking for animated text:', error);
         }
@@ -68,10 +83,16 @@ const Homepage = () => {
 
     const handleClose = () => setAnchorEl(null);
 
-    const handleDownload = async (format) => {
+    const handleDownload = async (format,isTeamDesign=false) => {
         if (!selectedDesignId) return;
+        let response
         try {
-            const response = await axios.get(`/designs/${selectedDesignId}`);
+            // if(isTeamDesign){
+            //    response=await axios.get(`/designs/team-designs/${teamCode}`)
+            // }
+            // else{
+             response = await axios.get(`/designs/${selectedDesignId}`);
+        
             const { elements, backgroundColor, backgroundImage } = response.data;
 
             if (format === 'pdf') {
@@ -89,16 +110,33 @@ const Homepage = () => {
         handleClose();
     };
 
-    const handleEventifyClick = (designId) => {
+    const handleEventifyClick = (designId,isTeamDesign=false) => {
         // Use navigate to go to the event page with the designId
+        if(isTeamDesign)
+            navigate(`/event/teams/${designId}`)
+        else
         navigate(`/event/${designId}`);
     };
 
-    const handleDeleteClick = async (designId) => {
+    const handleDeleteClick = async (designId,isTeamDesign=false) => {
         try {
-         
-            await axios.delete(`/designs/delete/${designId}`);
+            if(isTeamDesign){
+                console.log(`Deleting:${designId}`)
+                const response = await axios.delete(`/designs/delete/team/${designId}/${userId}`);
+                if (response.status === 200) {
+                  // Update local state to remove the team design
+                  setTeamDesigns((prevDesigns) =>
+                    prevDesigns.filter((design) => design.teamCode !== designId)
+                  );
+                } else {
+                  console.error("Failed to delete team design: Response not OK");
+                }
+            }
+            else{
+                await axios.delete(`/designs/delete/${designId}`);
+            
             setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
+            }
         } catch (error) {
             console.error("Failed to delete design:", error);
         }
@@ -108,7 +146,7 @@ const Homepage = () => {
         <Layout>
             <div className="homepage-container">
                 <div className="options">
-                    <h2>Options</h2>
+                    {/* <h2>Options</h2> */}
                     <div className="collaborate-card" onClick={handleCollaborateClick}>
                         {/* <FiUsers size={20} className="collaborate-icon" /> */}
                         <h3>Collaborate with Friends</h3>
@@ -231,7 +269,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleEventifyClick(design.teamCode); // Navigate to event page
+                                            handleEventifyClick(design.teamCode,true); // Navigate to event page
                                         }}
                                     >
                                         Eventify
@@ -249,7 +287,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDownloadClick(e, design.teamCode);
+                                            handleDownloadClick(e, design.teamCode,true);
                                         }}
                                     >
                                         Download
@@ -285,7 +323,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDeleteClick(design._id);
+                                            handleDeleteClick(design.teamCode,true);
                                         }}
                                     >
                                         Delete
@@ -312,3 +350,4 @@ const Homepage = () => {
 };
 
 export default Homepage;
+ 

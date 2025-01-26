@@ -1,13 +1,17 @@
 // src/components/TemplatesPage.js
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Layouts/Header';
 
 const Templates = () => {
     const [templates, setTemplates] = useState([]);
+    //const [teamCode, setTeamCode] = useState(null);  // Store teamCode if available
     const navigate = useNavigate();
 
+    const location = useLocation();
+    const teamCode = location.state?.teamCode || ''; // Get teamCode from state
+     console.log(teamCode)
     useEffect(() => {
         axios.get('/templates/get-templates')
             .then((response) =>{ 
@@ -16,11 +20,19 @@ const Templates = () => {
             })
             .catch(error => console.error('Error fetching templates:', error));
            
-    }, []);
+    
+    console.log(teamCode)
+}, []);
 
     const handleTemplateClick = (templateUrl) => {
-        // Navigate to the canvas area with template URL in state
-        navigate('/design', { state:{templateUrl}  } );
+        if (teamCode) {
+            console.log(templateUrl)
+            // If teamCode exists, navigate to the team design page
+            navigate(`/design/team/${teamCode}`, { state: { templateUrl } });
+        } else {
+            // Otherwise, navigate to the individual design page
+            navigate('/design', { state: { templateUrl } });
+        }
     };
 
     return (

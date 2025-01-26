@@ -1,9 +1,9 @@
-import React, { useEffect,useState, useRef,useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
-import socket from '../../socket';
+import socket from '../../socket'; // Assuming socket.io instance is set up correctly
 import { Resizable } from 'react-resizable';
 import Lottie from 'lottie-react'; 
- 
+
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const { id: socketId } = socket||{}; // Get the socket's unique ID

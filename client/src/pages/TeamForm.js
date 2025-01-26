@@ -96,28 +96,42 @@ const TeamForm = () => {
     return (
         <>
         <Header/>
-        <div className="team-form-container">
+        <div style={{height:"91vh", display:'flex'}}className=" mw-1/2 team-form-container">
+    
+            <div style={{float:'left' , width: '50% '}} className="w-1/2  justify-center bg-white">
+                <img 
+                    src="https://img.freepik.com/premium-photo/team-designing-scalable-ui-elements-that-adjust-different-screen-sizes_1314467-49185.jpg"
+                    alt="Team Design Illustration"
+                     style={{height:"91vh", width:"100%"}} 
+                    className="w-3/4 rounded-lg shadow-lg"
+                />
+            </div>
             {isAuthenticated && !isJoined ? (
-                <div className="form-content">
-                    <h1>Collaborate with Your Team</h1>
+                <div style={{height:"91vh", maxWidth:"50%"}}className="form-content">
+                    <h1 style={{ fontFamily:"", fontSize:"300%"}}>Collaborate with Your Team</h1>
+                    <div style={{marginTop:'10vh'}}>
                     <h3>Create a Team</h3>
                     <input
+                    style={{width:"50%"}}
                     type="text"
                     placeholder="Team Name"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
+                    className="team-input"
                 />
-                    <button className="create-team-btn" onClick={createTeam}>Create a New Team</button>
+                    <button style={{backgroundColor:"#684B74", width:'70%'}}className="create-team-btn " onClick={createTeam}>Create a New Team</button>
                     <div className="join-section">
                         <h3>Or Join an Existing Team</h3>
                         <input
+                        style={{width:"50%"}}
                             type="text"
                             placeholder="Enter Team Code"
                             value={teamCode}
                             onChange={(e) => setTeamCode(e.target.value)}
                             className="team-input"
                         />
-                        <button className="join-team-btn" onClick={joinTeam}>Join Team</button>
+                        <button style={{backgroundColor:"#684B74", width:'70%'}} className="join-team-btn" onClick={joinTeam}>Join Team</button>
+                    </div>
                     </div>
                 </div>
             ) : (
@@ -145,9 +159,7 @@ const TeamForm = () => {
 };
 
 export default TeamForm;
-           
-   
 
-   
-                            
-          
+
+
+

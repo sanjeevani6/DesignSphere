@@ -6,20 +6,29 @@ import { Button, TextField, Typography, Box ,Paper} from '@mui/material';
 import Header from '../components/Layouts/Header';
 
 const PrintOrderPage = () => {
-    const { designId } = useParams();
+    const { designId,teamCode } = useParams();
     const [design, setDesign] = useState(null);
+    const [teamDesign, setTeamDesign] = useState(null);
     const [userDetails, setUserDetails] = useState({
         name: '',
         email: '',
         phone: '',
         address: '',
     });
+    console.log(`teamcode ${teamCode}`);
     const designRef = useRef(null); // Reference to the design image for printing
     useEffect(() => {
         const fetchDesignDetails = async () => {
+            let response;
             try {
-                const response = await axios.get(`/designs/${designId}`);
+                if(teamCode){
+                    response=await axios.get(`/designs/team-designs/${teamCode}`)
+                    setTeamDesign(response.data)
+                }
+                else{
+                 response = await axios.get(`/designs/${designId}`);
                 setDesign(response.data);
+                }
                 console.log("design:",response.data);
             } catch (error) {
                 console.error('Error fetching design details:', error);
@@ -27,7 +36,7 @@ const PrintOrderPage = () => {
         };
 
         fetchDesignDetails();
-    }, [designId]);
+    }, [designId,teamCode]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -42,11 +51,15 @@ const PrintOrderPage = () => {
                 alert("Please fill in all details before sending to shop.");
                 return;
             }
+            const payload = teamCode
+            ? { teamCode, userDetails }
+            : { designId, userDetails };
 
+           
             await axios.post(`/shop/send`, {
-                designId,
-                userDetails,
+               payload
             });
+        
             alert("Design and details sent to local shop!");
         } catch (error) {
             console.error("Failed to send design to shop:", error);
@@ -61,7 +74,7 @@ const PrintOrderPage = () => {
                 <Typography variant="h4" className="print-order-header">
                     Print Order Page
                 </Typography>
-                {design && (
+                {(design || teamDesign) && (
                     <>
                         <Box component="form" className="print-order-form">
                             <Typography variant="h6">Enter Your Details for Print Order</Typography>

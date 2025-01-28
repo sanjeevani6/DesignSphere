@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
+import { FiUsers } from "react-icons/fi"
 
 //import { FiUsers } from 'react-icons/fi'; 
 import { exportToPDF, exportToImage, exportToGIF,designHasAnimatedText } from '../utils/exportUtils';
@@ -21,12 +22,13 @@ const Homepage = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [teamDesigns, setTeamDesigns] = useState([]);
     const [selectedDesignId, setSelectedDesignId] = useState(null);
+    const [selectedteamCode, setSelectedteamCode] = useState(null);
     const [hasAnimatedText, setHasAnimatedText] = useState(false);
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user ? user._id : null;
-    console.log(teamDesigns)
+    //console.log(teamDesigns)
 
     useEffect(() => {
         const fetchDesigns = async () => {
@@ -66,11 +68,17 @@ const Homepage = () => {
 
     const handleDownloadClick = async(event, designId,isTeamDesign=false) => {
         setAnchorEl(event.currentTarget);
-        setSelectedDesignId(designId);
+        if(isTeamDesign){
+            setSelectedteamCode(designId);
+            console.log(`Downloading foe ${selectedteamCode}`)
+        }
+        else
+         setSelectedDesignId(designId);
         let response
         try {
             if(isTeamDesign){
              response=await axios.get(`/designs/team-designs/${designId}`)
+             console.log(response)
             }
             else{
              response = await axios.get(`/designs/${designId}`);
@@ -84,14 +92,19 @@ const Homepage = () => {
     const handleClose = () => setAnchorEl(null);
 
     const handleDownload = async (format,isTeamDesign=false) => {
-        if (!selectedDesignId) return;
+        if(isTeamDesign)
+            if(!selectedteamCode)  return;
+        else
+         if (!selectedDesignId) return;
         let response
         try {
-            // if(isTeamDesign){
-            //    response=await axios.get(`/designs/team-designs/${teamCode}`)
-            // }
-            // else{
-             response = await axios.get(`/designs/${selectedDesignId}`);
+            if(isTeamDesign){
+                console.log(`Downloading foe ${selectedteamCode}`)
+               response=await axios.get(`/designs/team-designs/${selectedteamCode}`)
+            }
+            else{
+                console.log(`Downloading foe ${selectedteamCode}`)
+             response = await axios.get(`/designs/${selectedDesignId}`);}
         
             const { elements, backgroundColor, backgroundImage } = response.data;
 
@@ -119,6 +132,7 @@ const Homepage = () => {
     };
 
     const handleDeleteClick = async (designId,isTeamDesign=false) => {
+        console.log("downloading")
         try {
             if(isTeamDesign){
                 console.log(`Deleting:${designId}`)
@@ -145,15 +159,24 @@ const Homepage = () => {
     return (
         <Layout>
             <div className="homepage-container">
-                <div className="options">
-                    {/* <h2>Options</h2> */}
-                    <div className="collaborate-card" onClick={handleCollaborateClick}>
-                        {/* <FiUsers size={20} className="collaborate-icon" /> */}
-                        <h3>Collaborate with Friends</h3>
-                        <p>Invite friends to work together on projects in real time.</p>
-                    </div>
-    
-                </div>
+               
+                <div className="options max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
+        <div 
+        
+            className="collaborate-card flex flex-col items-center text-center bg-gradient-to-br from-purple-500 to-purple-700 text-white p-4 rounded-xl hover:shadow-xl transform hover:scale-105 transition-transform cursor-pointer" 
+            onClick={handleCollaborateClick}
+        >
+            <FiUsers size={48} style={{color:"#684B74"}}className="collaborate-icon mb-3 " />
+            <h3  style={{color:"#684B74"}}className="text-lg font-semibold mb-2 font-sans tracking-wide">Collaborate with Friends</h3>
+            <p  style={{color:"black"}}className="text-sm font-light font-mono mb-4">Invite friends to work together on projects in real time.</p>
+            <button 
+            style={{backgroundColor:"#684B74",color:'white'}}
+                className="px-4 py-2  text-purple-700 rounded-full shadow-sm hover:bg-purple-100 transition-colors font-medium"
+            >
+                Get Started
+            </button>
+        </div>
+        </div>
                 <div className="mainarea">
                     <h2>YOUR DESIGNS</h2>
                     <div className="design-cards">
@@ -171,6 +194,7 @@ const Homepage = () => {
                                         variant="contained"
                                         style={{
                                             backgroundColor: '#A5D6A7',
+                                            fontWeight:'bold',
                                             color: '#1B5E20',
                                             fontSize: '0.7rem',
                                             padding: '3px 8px',
@@ -188,6 +212,8 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
+
                                             backgroundColor: '#90CAF9',
                                             color: '#0D47A1',
                                             fontSize: '0.7rem',
@@ -206,6 +232,7 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#FFCC80',
                                             color: '#E65100',
                                             fontSize: '0.7rem',
@@ -224,6 +251,7 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#EF9A9A',
                                             color: '#B71C1C',
                                             fontSize: '0.7rem',
@@ -241,6 +269,12 @@ const Homepage = () => {
                                 </div>
                             </div>
                         ))}
+                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                    <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
+                    <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
+                    {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
+                  
+                </Menu>
                     </div>
                      {/* Section for Team Designs */}
           {teamDesigns.length > 0 && (
@@ -253,13 +287,14 @@ const Homepage = () => {
                     className="design-card team-design-card"
                     onClick={() => handleDesignClick(design.teamCode, true)}
                   >
-                    <h3>{design.teamName}</h3>
+                    <h3  style={{color:"white"}}>{design.teamName}</h3>
                     <p>Team Project</p>
                     <p>Created at: {new Date(design.createdAt).toLocaleDateString()}</p>
                     <div className="button-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#A5D6A7',
                                             color: '#1B5E20',
                                             fontSize: '0.7rem',
@@ -278,6 +313,7 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#90CAF9',
                                             color: '#0D47A1',
                                             fontSize: '0.7rem',
@@ -296,6 +332,7 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#FFCC80',
                                             color: '#E65100',
                                             fontSize: '0.7rem',
@@ -305,7 +342,7 @@ const Homepage = () => {
                                         }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            navigate(`/print/${design._id}`); // Navigate to print page with designId
+                                            navigate(`/print/teams/${design.teamCode}`); // Navigate to print page with designId
                                         }}
                                     >
                                         Print
@@ -314,6 +351,7 @@ const Homepage = () => {
                                     <Button
                                         variant="contained"
                                         style={{
+                                            fontWeight:'bold',
                                             backgroundColor: '#EF9A9A',
                                             color: '#B71C1C',
                                             fontSize: '0.7rem',
@@ -335,15 +373,21 @@ const Homepage = () => {
               </div>
             </>
           )}
-
-                </div>
-
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                    <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
-                    <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                    <MenuItem onClick={() => handleDownload('pdf',true)}>Download as PDF</MenuItem>
+                    <MenuItem onClick={() => handleDownload('image',true)}>Download as Image</MenuItem>
                     {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
                   
                 </Menu>
+
+                </div>
+
+                {/* <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                    <MenuItem onClick={() => handleDownload('pdf',true)}>Download as PDF</MenuItem>
+                    <MenuItem onClick={() => handleDownload('image',true)}>Download as Image</MenuItem>
+                    {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
+                  
+                </Menu> */}
             </div>
         </Layout>
     );

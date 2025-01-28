@@ -20,8 +20,9 @@ const EventPage = () => {
 
     useEffect(() => {
         const fetchDesignDetails = async () => {
+            const effectiveDesignId=teamCode?teamCode:designId
             try {
-                const response = await axios.get(`/shop/events/${designId}`);
+                const response = await axios.get(`/shop/events/${effectiveDesignId}`);
                 console.log('Response', response.data.imageUrl);
                 console.log('Response', response.data.relimageUrl);
                 setDesignImage(response.data.relimageUrl);  // Relative image URL
@@ -31,7 +32,7 @@ const EventPage = () => {
             }
         };
         fetchDesignDetails();
-    }, [designId]);
+    }, [designId,teamCode]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

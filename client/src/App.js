@@ -8,6 +8,7 @@ import Design from './pages/Design';
 import EventPage from './pages/EventPage'; 
 import { UserProvider } from './context/UserContext'; 
 import Templates from './pages/Templates';
+import Landing from './pages/Landing';
 import PrintOrderPage from './pages/PrintOrderPage';
 
   
@@ -21,9 +22,14 @@ function App() {
     <GoogleOAuthProvider clientId={clientId}>
       <UserProvider>
         <Routes>
+         {/* Default route to introduction page */}
+         <Route exact path="/" element={<Navigate to="/introduction" />} />
+
+{/* Introduction Page */}
+<Route path="/introduction" element={<Landing />} />
           {/* Protected route for homepage */}
           <Route 
-            path="/" 
+            path="/home" 
             element={
               <ProtectedRoutes>
                 <Homepage />
@@ -40,8 +46,17 @@ function App() {
               
             } 
           />
+          <Route 
+            path="/event/teams/:teamCode" 
+            element={
+              
+                <EventPage />
+              
+            } 
+          />
           
           <Route path="/print/:designId" element={<PrintOrderPage />} />
+          <Route path="/print/teams/:teamCode" element={<PrintOrderPage />} />
           {/* Route for the Design page */}
           <Route path="/design" element={<Design />} />
           <Route path="/design/:designId" element={<Design />} />

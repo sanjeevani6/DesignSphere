@@ -31,14 +31,15 @@ const upload = multer({ storage });
 // POST route to save uploaded images
 router.post('/designimage', upload.single('file'), async(req, res) => {
     try {
-        const { designId } = req.body;
+        const { designId,teamCode } = req.body;
+        const dId=teamCode?teamCode:designId
         const filePath = req.file.path;
         const fileName = req.file.filename;
         console.log('File uploaded:', fileName, 'Path:', filePath);
-        const existingDesignImage = await DesignImage.findOne({ designId: designId });
+        const existingDesignImage = await DesignImage.findOne({ designId: dId });
         if (existingDesignImage) {
             await DesignImage.updateOne(
-                { designId: designId }, 
+                { designId: dId }, 
                 {
                     $set: {
                         imageName: fileName,  
@@ -50,7 +51,7 @@ router.post('/designimage', upload.single('file'), async(req, res) => {
         }
         else{
         const designImage = new DesignImage({
-            designId: designId,
+            designId: dId,
             imageName: fileName,
             imageUrl: filePath // Relative path to the uploaded image
         });

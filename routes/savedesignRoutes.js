@@ -48,12 +48,7 @@ router.delete('/delete/team/:teamCode/:userId', async (req, res) => {
     try {
       const {teamCode,userId} = req.params;
       console.log(`Deleting team design with TeamCode: ${teamCode}`);
-    //   const teamDesign = await TeamDesign.findOne({ teamCode });
-    // if (!teamDesign) {
-    //   console.log(`No team design found for teamCode: ${teamCode}`);
-    //   return res.status(404).json({ error: "Team design not found." });
-    // }
-    // await TeamDesign.deleteOne({ teamCode });
+    //   
     // Step 2: Update the Teams collection to remove the member
     const teamUpdateResult = await Teams.findOneAndUpdate(
         { teamCode }, // Locate the team using the teamCode

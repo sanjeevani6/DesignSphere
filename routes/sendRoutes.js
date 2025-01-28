@@ -1,15 +1,29 @@
 const path = require('path');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
 const express = require('express');
 const router = express.Router();
 const DesignImage = require('../models/DesignImage');  // Import your design image model
+// const DesignImage = require('../models/DesignImage');  // Import your design image model
 
 router.get('/events/:designId', async (req, res) => {
     const { designId } = req.params;
   console.log('design id',designId)
+//   console.log('team id',teamCode)
     try {
-        const designImage = await DesignImage.findOne({ designId: designId });
+        // Check if the provided designId is a valid ObjectId (for designs)
+        const isObjectId = mongoose.Types.ObjectId.isValid(designId);
+        
+        let designImage;
+        if (isObjectId) {
+            // Query for individual design
+            designImage = await DesignImage.findOne({ designId: designId });
+        } else {
+            // Query for team project using teamCode (if designId is not an ObjectId)
+            designImage = await DesignImage.findOne({ teamCode: designId });
+        }
+
         console.log(designImage);
         // Check if the design image URL was found in the database
         if (!designImage || !designImage.imageUrl) {
@@ -39,12 +53,25 @@ router.get('/events/:designId', async (req, res) => {
 });
 
 router.post('/send', async (req, res) => {
-    const { designId, userDetails } = req.body;
+    const { designId, userDetails,teamCode } = req.body.payload;
     console.log('Print details:', req.body);
-
+    const effectiveDesignId = teamCode ? teamCode : designId; // ✅ Use a new variable
+    console.log(`Printing with ID: ${effectiveDesignId}`);console.log(`printing ${teamCode}`);
+      
     try {
         // Query the database to get the image URL for the given designId
-        const designImage = await DesignImage.findOne({ designId: designId });
+        // Check if the provided effectiveDesignId is an ObjectId (for designs)
+        const isObjectId = mongoose.Types.ObjectId.isValid(effectiveDesignId);
+        
+        let designImage;
+        if (isObjectId) {
+            // Query for individual design using designId
+            designImage = await DesignImage.findOne({ designId: effectiveDesignId });
+        } else {
+            // Query for team project using teamCode
+            designImage = await DesignImage.findOne({ teamCode: effectiveDesignId });
+        }
+
         
         // Check if the design image URL was found in the database
         if (!designImage || !designImage.imageUrl) {

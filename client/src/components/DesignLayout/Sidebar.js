@@ -98,18 +98,18 @@ const Sidebar = ({ setElements , socket}) => {
         fetchSidebarItems();
    
      // Listen for new items added by other clients in the same team
-     socket.on('sidebarItemAdded', (newItem) => {
-        setElements((prevItems) => [...prevItems, newItem]); // Add new item to canvas
-        if (newItem.category === 'image') {
-            // Update sidebar if it's an image item
-            setSidebarItems((prevItems) => [...prevItems, newItem]);
-        }
-    });
+    //  socket.on('sidebarItemAdded', (newItem) => {
+    //     setElements((prevItems) => [...prevItems, newItem]); // Add new item to canvas
+    //     if (newItem.category === 'image') {
+    //         // Update sidebar if it's an image item
+    //         setSidebarItems((prevItems) => [...prevItems, newItem]);
+    //     }
+    // });
 
     // Clean up socket listener on component unmount
-    return () => {
-        socket.off('sidebarItemAdded');
-    };
+    // return () => {
+    //     socket.off('sidebarItemAdded');
+    // };
 }, [setElements]);
 
     // Separate items by category
@@ -123,7 +123,7 @@ const Sidebar = ({ setElements , socket}) => {
         <Box
           sx={{
             width: { xs: '100%', sm: '240px' },
-        height: '100vh',
+        height: '82vh',
         backgroundColor: '#f8f9fa',
         boxShadow: 3,
         display: 'flex',

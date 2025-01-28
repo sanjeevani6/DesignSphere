@@ -2,7 +2,13 @@ import './Register.css';
 import React ,{useState,useEffect}from 'react'
 import{Form,Input,message}from 'antd'
 import { Link ,useNavigate} from 'react-router-dom'
-import axios from 'axios' 
+import axios from 'axios'
+import { Button, Container, Grid, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import Slider from 'react-slick';
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Icon for Login
+import LoginIcon from '@mui/icons-material/Login';  // Icon for Signup
+import ContactMailIcon from '@mui/icons-material/ContactMail';  // Icon for Contact 
 
 const Register=()=>{
 
@@ -27,6 +33,27 @@ const Register=()=>{
      },[navigate]);
     return(
       <>
+      {/* Navbar */}
+     <AppBar position="sticky" sx={{ backgroundColor: '#684B74' }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+            DESIGNSPHERE
+          </Typography>
+          <Grid container spacing={2} justifyContent="flex-end">
+            
+            <Grid item>
+              <IconButton color="inherit" href="/register">
+                <LoginIcon />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color="inherit" href="/register">
+                <AccountCircleIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
           <div className="register-page">
             <Form layout="vertical" onFinish={SubmitHandler}>
             <h1>Register Form</h1>
@@ -40,9 +67,10 @@ const Register=()=>{
                     <Input type="password"/> 
                 </Form.Item>
                 <div className=" justify-content-between">
-               <Link to="/login"> Already Register ?Click here to login</Link>
+               <Link to="/login"> Already Register? 
+               Click here to login</Link>
                <div>
-               <button className="btn btn-primary">REGISTER</button>
+               <button style={{backgroundColor:'#684B74',color:'white'}}className="btn ">REGISTER</button>
                </div>
                 </div>
 

@@ -38,24 +38,28 @@ const Header = () => {
   return (
     <>
       <ul className="nav nav-underline">
-        <li className="nav-item">
+        <li style={{fontWeight:'bold', color:'white'}}className="nav-item">
           <Link className="nav-link active" to="/">DesignSphere</Link>
         </li>
         <li className="nav-item simp">
           {loginUser && loginUser.name}
         </li>
-        <li className="nav-item">
+        <li style={{fontWeight:'bold', color:'white'}} className="nav-item">
           <Link className="nav-link active" to="/design">Design</Link>
         </li>
         <li className="nav-item">
           <button className="nav-link active" onClick={handleTemplatesNavigation}>Templates</button>
         </li>
         <li className="simp2">
+       
           <button className="bt" onClick={logoutHandler}>Logout</button>
+        
         </li>
       </ul>
     </>
   );
 };
+
+
 
 export default Header;

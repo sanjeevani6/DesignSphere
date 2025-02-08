@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FiUsers } from "react-icons/fi"
 
 //import { FiUsers } from 'react-icons/fi'; 
-import { exportToPDF, exportToImage, exportToGIF,designHasAnimatedText } from '../utils/exportUtils';
+import { exportToPDF, exportToImage, exportToGIF, designHasAnimatedText } from '../utils/exportUtils';
 //import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
 import {
     Button,
@@ -16,10 +16,22 @@ import {
     CardContent,
     Typography,
   } from '@mui/material';
+
+
+  // Function to check for animated text
+//   const designHasAnimatedText = (elements) => {
+//     if (Array.isArray(elements)) {
+//         return elements.some(element => element.category && element.category.trim().toLowerCase() === 'animatedtext');
+//     }
+//     return false;
+// };
+
 const Homepage = () => {
-   // const [designs, setDesigns] = useState([]);
+   
     const [designs, setDesigns] = useState([]);
-    const [anchorEl, setAnchorEl] = useState(null);
+    
+    const [designMenuAnchorEl, setDesignMenuAnchorEl] = useState(null);
+const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
     const [teamDesigns, setTeamDesigns] = useState([]);
     const [selectedDesignId, setSelectedDesignId] = useState(null);
     const [selectedteamCode, setSelectedteamCode] = useState(null);
@@ -66,48 +78,55 @@ const Homepage = () => {
       navigate('/teams');
     };
 
-    const handleDownloadClick = async(event, designId,isTeamDesign=false) => {
-        setAnchorEl(event.currentTarget);
+    const handleDownloadClick = async(e, designId,isTeamDesign=false) => {
+        
         if(isTeamDesign){
             setSelectedteamCode(designId);
-            console.log(`Downloading foe ${selectedteamCode}`)
+            setTeamMenuAnchorEl(e.currentTarget);
+            console.log(`Downloading for teamCode ${selectedteamCode}`)
+           
         }
-        else
+        else{
          setSelectedDesignId(designId);
-        let response
-        try {
-            if(isTeamDesign){
-             response=await axios.get(`/designs/team-designs/${designId}`)
-             console.log(response)
-            }
-            else{
-             response = await axios.get(`/designs/${designId}`);
-            }
-         setHasAnimatedText(designHasAnimatedText(response.data.elements));
-        } catch (error) {
-            console.error('Error checking for animated text:', error);
+         setDesignMenuAnchorEl(e.currentTarget)
+         console.log(`Downloading for design ${selectedDesignId}`)
+          // Now, we call handleDownload directly with the designId
+        
         }
+        
+    };
+    //close the menu
+    const handleClose = () => {
+        setDesignMenuAnchorEl(null);
+        setTeamMenuAnchorEl(null);
     };
 
-    const handleClose = () => setAnchorEl(null);
 
     const handleDownload = async (format,isTeamDesign=false) => {
-        if(isTeamDesign)
-            if(!selectedteamCode)  return;
-        else
-         if (!selectedDesignId) return;
-        let response
+        const designId = isTeamDesign ? selectedteamCode : selectedDesignId;
+         // Check if the required design ID (or teamCode) exists
+    if (!designId) {
+        console.error('Design ID or Team Code is missing');
+        return;
+    }
+        // if (isTeamDesign && !selectedteamCode) return;
+        // if (!isTeamDesign && !selectedDesignId) return;
+
+        let response;
         try {
             if(isTeamDesign){
-                console.log(`Downloading foe ${selectedteamCode}`)
-               response=await axios.get(`/designs/team-designs/${selectedteamCode}`)
+                console.log(`Downloading for ${designId}`)
+               response=await axios.get(`/designs/team-designs/${designId}`)
             }
             else{
-                console.log(`Downloading foe ${selectedteamCode}`)
-             response = await axios.get(`/designs/${selectedDesignId}`);}
-        
+                console.log(`Downloading foe ${designId}}`)
+             response = await axios.get(`/designs/${designId}`);
+            }
+             console.log(response.data.elements)
             const { elements, backgroundColor, backgroundImage } = response.data;
 
+            setHasAnimatedText(designHasAnimatedText(elements));
+            console.log(hasAnimatedText)
             if (format === 'pdf') {
                 exportToPDF(elements, backgroundColor, backgroundImage);
             } else if (format === 'image') {
@@ -117,6 +136,7 @@ const Homepage = () => {
                 // Check for animated text and handle GIF export
                 exportToGIF(elements, backgroundColor, backgroundImage,200,2000);
             }
+            // After download logic, check for animated text
         } catch (error) {
             console.error('Error fetching design data for download:', error);
         }
@@ -166,11 +186,11 @@ const Homepage = () => {
             className="collaborate-card flex flex-col items-center text-center bg-gradient-to-br from-purple-500 to-purple-700 text-white p-4 rounded-xl hover:shadow-xl transform hover:scale-105 transition-transform cursor-pointer" 
             onClick={handleCollaborateClick}
         >
-            <FiUsers size={48} style={{color:"#684B74"}}className="collaborate-icon mb-3 " />
-            <h3  style={{color:"#684B74"}}className="text-lg font-semibold mb-2 font-sans tracking-wide">Collaborate with Friends</h3>
+            <FiUsers size={48} style={{color:"black"}}className="collaborate-icon mb-3 " />
+            <h3  style={{color:"black"}}className="text-lg font-semibold mb-2 font-sans tracking-wide">Collaborate with Friends</h3>
             <p  style={{color:"black"}}className="text-sm font-light font-mono mb-4">Invite friends to work together on projects in real time.</p>
             <button 
-            style={{backgroundColor:"#684B74",color:'white'}}
+            style={{backgroundColor:"#FF6F61",color:'black'}}
                 className="px-4 py-2  text-purple-700 rounded-full shadow-sm hover:bg-purple-100 transition-colors font-medium"
             >
                 Get Started
@@ -269,7 +289,7 @@ const Homepage = () => {
                                 </div>
                             </div>
                         ))}
-                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                        <Menu anchorEl={designMenuAnchorEl} open={Boolean(designMenuAnchorEl)} onClose={handleClose}>
                     <MenuItem onClick={() => handleDownload('pdf')}>Download as PDF</MenuItem>
                     <MenuItem onClick={() => handleDownload('image')}>Download as Image</MenuItem>
                     {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
@@ -371,23 +391,18 @@ const Homepage = () => {
                   </div>
                 ))}
               </div>
-            </>
-          )}
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+          <Menu anchorEl={teamMenuAnchorEl} open={Boolean(teamMenuAnchorEl)} onClose={handleClose}>
                     <MenuItem onClick={() => handleDownload('pdf',true)}>Download as PDF</MenuItem>
                     <MenuItem onClick={() => handleDownload('image',true)}>Download as Image</MenuItem>
                     {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
                   
                 </Menu>
+            </>
+          )}
 
                 </div>
 
-                {/* <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                    <MenuItem onClick={() => handleDownload('pdf',true)}>Download as PDF</MenuItem>
-                    <MenuItem onClick={() => handleDownload('image',true)}>Download as Image</MenuItem>
-                    {hasAnimatedText && <MenuItem onClick={() => handleDownload('gif')}>Download as GIF</MenuItem>}
-                  
-                </Menu> */}
+                
             </div>
         </Layout>
     );

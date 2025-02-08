@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Container, Grid, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import Slider from 'react-slick';
+import { Tooltip } from "@mui/material";
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Icon for Login
 import LoginIcon from '@mui/icons-material/Login';  // Icon for Signup
@@ -69,17 +70,24 @@ const Landing = () => {
               <Button color="inherit" href="#contact">Contact</Button>
             </Grid>
             <Grid item>
-            
-              <IconButton color="inherit" href="/login">
+            {/* Replace href with Link */}
+            <Tooltip title="Login">
+            <Link to="/login">
+              <IconButton color="inherit">
                 <LoginIcon />
-                <Link className="nav-link active" to="/login"></Link>
               </IconButton>
-            </Grid>
+
+            </Link>
+            </Tooltip>
+          </Grid>
             <Grid item>
+            <Tooltip title="Register">
+                <Link className="nav-link active" to="/register">
               <IconButton color="inherit" href="/register" >
-                <AccountCircleIcon />
-                <Link className="nav-link active" to="/register"></Link>
+                <AccountCircleIcon/>
               </IconButton>
+              </Link>
+              </Tooltip>
             </Grid>
           </Grid>
         </Toolbar>

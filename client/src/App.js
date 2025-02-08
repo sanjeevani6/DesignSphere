@@ -23,10 +23,10 @@ function App() {
       <UserProvider>
         <Routes>
          {/* Default route to introduction page */}
-         <Route exact path="/" element={<Navigate to="/introduction" />} />
+         {/* <Route exact path="/" element={<Navigate to="/introduction" />} /> */}
 
 {/* Introduction Page */}
-<Route path="/introduction" element={<Landing />} />
+<Route path="/" element={<Landing />} />
           {/* Protected route for homepage */}
           <Route 
             path="/home" 

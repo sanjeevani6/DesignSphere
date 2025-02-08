@@ -28,7 +28,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(user));
       console.log('Logged in user:', user);
       message.success('Google login successful');
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       console.error('Error with Google login:', error);
       message.error('Google login failed');
@@ -54,7 +54,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(user));
    
       console.log('Logged in user:', user);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       message.error('Something went wrong');
     }
@@ -62,7 +62,7 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem('user')) {
-      navigate('/');
+      navigate('/home');
     }
   }, [navigate]);
 

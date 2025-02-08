@@ -28,7 +28,7 @@ const Register=()=>{
      //prevent for login user
      useEffect(()=>{
         if(localStorage.getItem('user')){
-            navigate('/')
+            navigate('/home')
         }
      },[navigate]);
     return(

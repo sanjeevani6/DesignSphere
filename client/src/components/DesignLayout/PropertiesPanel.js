@@ -1,5 +1,6 @@
 import React,{ useState, useEffect} from 'react';
 import socket from '../../socket';
+const manualFonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New']; // Fallback fonts
 
 const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
     const [fontSize, setFontSize] = useState(selectedItem?.fontSize || 16);
@@ -7,8 +8,31 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
     const [color, setColor] = useState(selectedItem?.color || '#000000');
     const [backgroundColor, setBackgroundColor] = useState(selectedItem?.backgroundColor || '#ffffff');
     const [fontFamily, setFontFamily] = useState(selectedItem?.fontType || 'Arial');
+    const [fonts, setFonts] = useState([...manualFonts]);// Initialize with manual fonts
 
 
+    // Fetch Google Fonts dynamically
+    useEffect(() => {
+        const API_KEY =  process.env.REACT_APP_API_KEY;
+        console.log("API Key:", process.env.REACT_APP_API_KEY);
+ 
+        if (!API_KEY) {
+            console.error("Google Fonts API key is missing in .env file");
+            return;
+        }
+        const API_URL = `https://www.googleapis.com/webfonts/v1/webfonts?key=${API_KEY}`;
+
+        fetch(API_URL)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.items) {
+                    setFonts([...manualFonts, ...data.items.map(font => font.family)]);
+                } else {
+                    console.warn("No fonts found in Google Fonts API response");
+                }
+            })
+            .catch((error) => console.error("Error fetching fonts:", error));
+    }, []);
 
     // Update properties in socket event
     const handlePropertyChange = (name, value) => {
@@ -56,11 +80,6 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
         handlePropertyChange('fontSize', newFontSize);
     };
 
-    const handleFontFamilyChange = (e) => {
-        const newFontFamily = e.target.value;
-        setFontFamily(newFontFamily);
-        handlePropertyChange('fontType', newFontFamily);
-    };
 
 
     const handleColorChange = (e) => {
@@ -69,16 +88,18 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
         handlePropertyChange('color', newColor);
     };
     
-    
-    // const handleChangeWidth = (e) => {
-    //     const newWidth = parseInt(e.target.value, 10);
-    //     // if (selectedItem) {
-    //     //     updateItemProperties(selectedItem.id, { size: { ...selectedItem.size, width: newWidth } });
-    //     // }
-    //     setWidth(newWidth);
-    //     handlePropertyChange('width', newWidth);
-    
-    // };
+    const handleFontFamilyChange = (e) => {
+        const newFontFamily = e.target.value;
+        setFontFamily(newFontFamily);
+        handlePropertyChange("fontType", newFontFamily);
+
+        // Dynamically load the selected font from Google Fonts
+        const link = document.createElement("link");
+        link.href = `https://fonts.googleapis.com/css2?family=${newFontFamily.replace(/ /g, "+")}&display=swap`;
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
+    };
+  
     const handleChangeWidth = (e) => {
         const newWidth = parseInt(e.target.value, 10);
         if (selectedItem && selectedItem.size) {
@@ -205,35 +226,10 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 /*If you wrote onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
                             />
                             <label>Font Type:</label>
-                            <select
-                                name="fontType"
-                                value={selectedItem.fontType || 'Arial'}
-                                onChange={handleFontFamilyChange}
-                            >
-                                <option value="Arial">Arial</option>
-                                <option value="Helvetica">Helvetica</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Courier New">Courier New</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Verdana">Verdana</option>
-                                <option value="Tahoma">Tahoma</option>
-                                <option value="Impact">Impact</option>
-                                <option value="Comic Sans MS">Comic Sans MS</option>
-                                <option value="Palatino">Palatino</option>
-                                <option value="Garamond">Garamond</option>
-                                <option value="Bookman">Bookman</option>
-                                <option value="Trebuchet MS">Trebuchet MS</option>
-                                <option value="Lucida Sans">Lucida Sans</option>
-                                <option value="Brush Script MT">Brush Script MT</option>
-                                <option value="Century Gothic">Century Gothic</option>
-                                <option value="Lucida Handwriting">Lucida Handwriting</option>
-                                <option value="Monaco">Monaco</option>
-                                <option value="Bodoni MT">Bodoni MT</option>
-                                <option value="Didot">Didot</option>
-                                <option value="Rockwell">Rockwell</option>
-                                <option value="Copperplate">Copperplate</option>
-                                <option value="Futura">Futura</option>
-                                <option value="Gill Sans">Gill Sans</option>
+                            <select name="fontType" value={fontFamily} onChange={handleFontFamilyChange}>
+                                {fonts.map(font => (
+                                    <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
+                                ))}
                             </select>
                             <label>Font Size:</label>
                             <input

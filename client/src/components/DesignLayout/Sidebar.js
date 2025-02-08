@@ -115,7 +115,6 @@ const Sidebar = ({ setElements , socket}) => {
     // Separate items by category
     const textItems = sidebarItems.filter(item => item.category === 'text');
     const shapeItems = sidebarItems.filter(item => item.category === 'shape');
-    const artelementsItems = sidebarItems.filter(item => item.category === 'campuselement');
     const animatedTextItems = sidebarItems.filter(item => item.category === 'animatedText');
     const stickerItems = sidebarItems.filter(item => item.category === 'sticker');
 
@@ -151,21 +150,7 @@ const Sidebar = ({ setElements , socket}) => {
     
           {/* Sidebar Content */}
           <Box>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <BrushIcon sx={{ marginRight: 1 }} />
-            <Typography>Campus Arts Element</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <List>
-              {artelementsItems.map((item) => (
-                <ListItem key={item.id} button>
-                  <SidebarItem item={item} />
-                </ListItem>
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
+       
 
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

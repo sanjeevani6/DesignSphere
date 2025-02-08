@@ -39,7 +39,7 @@ const Templates = () => {
         <>
         <Header/>
         <div className="templates-page">
-            <h2>Select a Template</h2>
+            <h2> BACKGROUND TEMPLATE</h2>
             <div className="template-grid">
                 {templates.map((template, index) => (
                     <div key={index} className="template-card" onClick={() => handleTemplateClick(template.url)}>

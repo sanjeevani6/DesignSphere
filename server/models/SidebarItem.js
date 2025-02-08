@@ -12,12 +12,12 @@ const sidebarItemSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['text', 'shape', 'image','animatedText', 'sticker','campuselement'],
+        enum: ['text', 'shape', 'image','animatedText', 'sticker'],
         required: true,
     },
     category: {
         type: String,
-        enum: ['text', 'shape', 'image','animatedText', 'sticker','campuselement'],
+        enum: ['text', 'shape', 'image','animatedText', 'sticker'],
         required: true,
     },
     shapeType: {

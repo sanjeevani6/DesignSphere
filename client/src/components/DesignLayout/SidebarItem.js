@@ -113,17 +113,7 @@ const SidebarItem = ({ item }) => {
                         marginRight: '8px',
                     }}
                 />
-            ) : 
-            item.type === 'campuselement' ? (
-                <img
-                    src={item.imageUrl}
-                    alt={item.name||'uploaded image'}
-                    style={{
-                        width: `${item.size.width}px`,
-                        height: `${item.size.height}px`,
-                        marginRight: '8px',
-                    }}
-                />
+        
             ):
             item.type === 'shape' ? (
                 <div style={renderShape()} />

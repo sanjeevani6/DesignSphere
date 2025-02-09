@@ -11,7 +11,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
     const [fonts, setFonts] = useState([...manualFonts]);// Initialize with manual fonts
 
 
-    // Fetch Google Fonts dynamically
+    // Fetch Google Fonts dynamically 
     useEffect(() => {
         const API_KEY =  process.env.REACT_APP_API_KEY;
         console.log("API Key:", process.env.REACT_APP_API_KEY);

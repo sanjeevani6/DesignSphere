@@ -5,7 +5,7 @@ import Lottie from 'lottie-react';
 import socket from '../../socket'
 import { useParams } from 'react-router-dom';
   
-const SidebarItem = ({ item }) => {
+const SidebarItem = ({ item }) => { 
     const teamCode=useParams()
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'ELEMENT',

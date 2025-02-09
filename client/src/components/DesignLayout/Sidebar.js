@@ -9,7 +9,7 @@ import Chat from './Chat';
 import {
     Box,
     Typography,
-    Accordion,
+    Accordion, 
     AccordionSummary,
     AccordionDetails,
     List,

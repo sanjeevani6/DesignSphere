@@ -209,37 +209,7 @@ const handleTextChange = (e) => {
                     </Resizable>
                     
                     );
-                    case 'campuselement':
-                        return (
-                            <Resizable
-                            width={item.size?.width || 100}
-                            height={item.size?.height || 100}
-                            onResizeStart={handleResizeStart} // Prevent default on resize start
-                            onResize={handleResize}
-                            onResizeStop={handleResizeStop}
-                            resizeHandles={['se']}
-                            minConstraints={[50, 50]} // Add minimum constraints if necessary
-                            handle={
-                                    <span className="resize-handle" style={{ backgroundColor: 'transparent', cursor: 'se-resize', position: 'absolute', right: 0, bottom: 0, width: '20px', height: '20px' }}>
-                                        +
-                                    </span>
-                                }
-                        >
-                            <div style={{ width: '100%', height: '100%' }}>
-                                <img
-                                    src={item.imageUrl}
-                                    alt={item.name || 'Uploaded Image'}
-                                    style={{
-                                        width: item.size?.width || 'auto',
-                                        height: item.size?.height || 'auto',
-                                       
-                                        objectFit: 'contain',  // Keeps the image aspect ratio intact
-                                    }}
-                                />
-                            </div>
-                        </Resizable>
-                        
-                        );
+                  
                     case 'sticker':
                         // Example handling for a sticker
                         return (
@@ -500,7 +470,7 @@ const CanvasArea = ({ teamCode, socket, elements = [], setElements, selectedItem
                         ...item,
                         left: Math.min(Math.max(0, left), canvasRect.width - 50),
                         top: Math.min(Math.max(0, top), canvasRect.height - 50),
-                        id: item.id || generateId(),
+                        id:  generateId(),
                         lockedBy: null,
                         imageUrl: item.imageUrl || null, // Preserve image URL for image items
                         size: item.size || { width: 100, height: 100 }, // Default size for new items
@@ -567,3 +537,4 @@ const CanvasArea = ({ teamCode, socket, elements = [], setElements, selectedItem
 };
 
 export default CanvasArea; 
+ 

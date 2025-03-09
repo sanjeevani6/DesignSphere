@@ -22,7 +22,7 @@ const Login = () => {
       
       // Send the user data to the backend to be saved
       const response = await axios.post('/users/google-login', userData);
-  
+      localStorage.setItem("jwt_token", response.data.token);  // Save token in localStorage
       // Save user info in localStorage and context
       const user = { ...response.data.user, password: '' }; 
       localStorage.setItem('user', JSON.stringify(user));
@@ -47,8 +47,9 @@ const Login = () => {
 
   const submitHandler = async (values) => {
     try {
-      
+      console.log("control before login button")
       const response= await axios.post('/users/login', values);
+      localStorage.setItem("jwt_token", response.data.token);  // Save token in localStorage
       message.success('Login successful');
        const user = { ...response.data.user, password: '' }; 
       localStorage.setItem('user', JSON.stringify(user));

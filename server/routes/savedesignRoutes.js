@@ -7,14 +7,20 @@ const Design = require('../models/Design');
 const TeamDesign = require('../models/TeamDesign');
 const Teams = require('../models/Team');
 const teamDesignController=require('../controllers/teamDesignController')
+const verifyToken = require('../middlewares/verifyToken');
+
 
 // Route to get designs for a specific user
-router.get('/user/:userId', (req, res) => {
+router.get('/user/:userId',verifyToken, (req, res) => {
     console.log("Fetching designs for user ID:", req.params.userId);
+    if (!req.params.userId) {
+      console.error("❌ Missing user ID in request.");
+      return res.status(400).json({ message: "User ID is required." });
+  }
     getDesignsByUserId(req, res);
 });
 //get||designbydesignId
-router.get('/:designId', (req, res) => {
+router.get('/:designId', verifyToken,(req, res) => {
     console.log("Fetching design ID:", req.params.designId);
     // Your logic to fetch the design by ID
     getDesignById(req, res);
@@ -23,16 +29,16 @@ router.get('/:designId', (req, res) => {
 //for teams
 
 // Route to fetch a team design by teamCode
-router.get('/team-designs/:teamCode', teamDesignController.getTeamDesign);
+router.get('/team-designs/:teamCode', verifyToken, teamDesignController.getTeamDesign);
 
 // Route to update a team design by teamCode
-router.put('/team-designs/:teamCode', teamDesignController.updateTeamDesign);
+router.put('/team-designs/:teamCode', verifyToken,  teamDesignController.updateTeamDesign);
 
 
 //post||save design
 router.post('/save', saveDesign);
 //put|| save edited design
-router.put('/:designId', updateDesign);
+router.put('/:designId',verifyToken, updateDesign);
 //delete a design
 router.delete('/delete/:id', async (req, res) => {
     try {

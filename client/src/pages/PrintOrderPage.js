@@ -6,6 +6,7 @@ import { Button, TextField, Typography, Box ,Paper} from '@mui/material';
 import Header from '../components/Layouts/Header';
 
 const PrintOrderPage = () => {
+    const token = localStorage.getItem('jwt_token');
     const { designId,teamCode } = useParams();
     const [design, setDesign] = useState(null);
     const [teamDesign, setTeamDesign] = useState(null);
@@ -16,17 +17,29 @@ const PrintOrderPage = () => {
         address: '',
     });
     console.log(`teamcode ${teamCode}`);
+    if (!token) {
+        // Handle the case where the token is missing
+        console.error("token is not there");
+      }
     const designRef = useRef(null); // Reference to the design image for printing
     useEffect(() => {
         const fetchDesignDetails = async () => {
             let response;
             try {
                 if(teamCode){
-                    response=await axios.get(`/designs/team-designs/${teamCode}`)
+                    response=await axios.get(`/designs/team-designs/${teamCode}`,{
+                        headers:{
+                        Authorization: `Bearer ${token}`,
+                    },
+                    })
                     setTeamDesign(response.data)
                 }
                 else{
-                 response = await axios.get(`/designs/${designId}`);
+                 response = await axios.get(`/designs/${designId}`,{
+                    headers: {
+                         Authorization: `Bearer ${token}`,
+                },
+                 });
                 setDesign(response.data);
                 }
                 console.log("design:",response.data);
@@ -56,7 +69,11 @@ const PrintOrderPage = () => {
             : { designId, userDetails };
 
            
-            await axios.post(`/shop/send`, {
+            await axios.post(`/shop/send`,{
+                headers: {
+        Authorization: `Bearer ${token}`,
+           },
+            } ,{
                payload
             });
         

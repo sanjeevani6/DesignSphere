@@ -16,7 +16,15 @@ const Register=()=>{
     // form submit
      const SubmitHandler=async (values)=>{
         try{
-            await axios.post('/users/register',values)
+          const response = await axios.post('/users/register', values);
+          console.log(response)
+          // Assuming the response contains a JWT token
+          const token = response.data.token;
+    
+          // Save the JWT token and user data in localStorage
+          localStorage.setItem('jwt_token', token);
+          const user = { ...response.data.user, password: '' };
+          localStorage.setItem('user', JSON.stringify(user));
             message.success('registration successful')
             navigate('/login');
         }

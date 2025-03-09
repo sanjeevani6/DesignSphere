@@ -13,7 +13,8 @@ import socket from '../socket'
 import { message } from 'antd';
 import { Variants } from 'antd/es/config-provider';
 
-  
+
+
 const Design = () => {
     const { designId,teamCode } = useParams();
     const [elements, setElements] = useState([]);
@@ -21,16 +22,21 @@ const Design = () => {
     const [backgroundColor, setBackgroundColor] = useState('#fff'); // Default background color
     const [backgroundImage, setBackgroundImage] = useState(''); 
     const [title, setTitle] = useState('');
-   
+    
     const socketJoinedRooms = useRef(new Set());
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
     var { currentUser } = useContext(UserContext); 
-
+    
+    const token = localStorage.getItem('jwt_token');
     if(! currentUser)
-
-    currentUser = JSON.parse(localStorage.getItem('user'));
-   
+        
+        currentUser = JSON.parse(localStorage.getItem('user'));
+        console.log(`current user ${currentUser}`)
+        if (!token) {
+            // Handle the case where the token is missing
+           console.error("token is not there");
+          }
     useEffect(() => {
         if (templateUrl) {
             console.log('template URL selected:',templateUrl);
@@ -61,10 +67,19 @@ const Design = () => {
                 let response;
                 if (teamCode) {
                     console.log("getting team design")
-                  response = await axios.get(`/designs/team-designs/${teamCode}`);
+                  response = await axios.get(`/designs/team-designs/${teamCode}`,{
+                    headers:{
+                        Authorization: `Bearer ${token}`,
+                    },
+                  });
+                
                 } else if (designId) {
                     console.log("getting design")
-                    response = await axios.get(`/designs/${designId}`);
+                    response = await axios.get(`/designs/${designId}`,{
+                        headers:{
+                        Authorization: `Bearer ${token}`,
+                    },
+                    });
                 }
                 else {
                     console.log("Neither teamCode nor designId is provided.");
@@ -115,12 +130,7 @@ const Design = () => {
         fetchDesign();
      }, [designId,teamCode,currentUser,templateUrl]);
      
-    //  const lockItem = (itemId) => {
-    //     if (!teamCode || !itemId) return;
     
-    //     console.log("Locking item:", itemId);
-    //     socket.emit('lockItem', { teamCode, itemId, lockedBy: socket.id });
-    // };
     
      
      useEffect(() => {
@@ -227,13 +237,27 @@ const Design = () => {
             console.log('Payload to be sent:', payload)
             if (teamCode) {
                 console.log("saving")
-                await axios.put(`/designs/team-designs/${teamCode}`, payload);
+                await axios.put(
+                    `/designs/team-designs/${teamCode}`, 
+                    payload, // Payload goes here
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`, // Token in headers
+                      }
+                    }
+                  );
+                  
                 socket.emit('updateDesign', { teamCode, ...payload });
                 message.success('Team design updated successfully');
                 console.log('New design saved:', payload);
             } else {
                 if (designId) {
-                    await axios.put(`/designs/${designId}`, payload);
+                    await axios.put(`/designs/${designId}`,
+                        payload,{
+                        headers:{
+                        Authorization: `Bearer ${token}`,
+                    },
+                    });
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {

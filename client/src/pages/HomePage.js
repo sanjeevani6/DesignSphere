@@ -25,20 +25,25 @@ import {
 //     }
 //     return false;
 // };
-
 const Homepage = () => {
-   
     const [designs, setDesigns] = useState([]);
     
     const [designMenuAnchorEl, setDesignMenuAnchorEl] = useState(null);
-const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
+    const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
     const [teamDesigns, setTeamDesigns] = useState([]);
     const [selectedDesignId, setSelectedDesignId] = useState(null);
     const [selectedteamCode, setSelectedteamCode] = useState(null);
     const [hasAnimatedText, setHasAnimatedText] = useState(false);
     const navigate = useNavigate();
-
+    const token = localStorage.getItem('jwt_token');
+    
+    
+    if (!token) {
+        // Handle the case where the token is missing
+        console.error("token is not there");
+      }
     const user = JSON.parse(localStorage.getItem('user'));
+    console.log(user)
     const userId = user ? user._id : null;
     //console.log(teamDesigns)
 
@@ -48,8 +53,12 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
           
            if (userId) {
             // Otherwise, fetch user-specific designs
-           
-          const userResponse = await axios.get(`/designs/user/${userId}`);
+           console.log(token);
+          const userResponse = await axios.get(`/designs/user/${userId}`,{
+            headers:{
+                        Authorization: `Bearer ${token}`,
+                    },
+          });
           //setDesigns(userResponse.data)
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);

@@ -5,11 +5,9 @@ const morgan=require('morgan')
 const dotenv= require('dotenv')
 const colors=require('colors')
 const multer = require('multer');
-const socketIo = require('socket.io');
 
 const { Server } = require('socket.io');
 //const { v4: uuidv4 } = require('uuid'); // for generating unique team codes
-
 const connectDb = require('./config/connectDb')
 
 // Import routes and socket handler
@@ -23,6 +21,7 @@ const sendRoutes = require('./routes/sendRoutes');
 const designimageRoutes=require('./routes/designImageRoutes')
 
 //config dot env file
+require('dotenv').config();
 dotenv.config();
 //database call
 connectDb();

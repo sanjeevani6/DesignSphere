@@ -66,7 +66,8 @@ exports.createTeam = async (req, res) => {
 
 // Join an existing team
 exports.joinTeam = async (req, res) => {
-    const { teamCode, userId } = req.body;
+    const {teamCode , userId} = req.body; // Extracted from JWT
+    
     console.log("finding team")
     
     

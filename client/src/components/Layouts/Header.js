@@ -26,6 +26,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("jwt_token")
     message.success("Logout successful");
     navigate("/login");
   };

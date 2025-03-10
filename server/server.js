@@ -5,6 +5,8 @@ const morgan=require('morgan')
 const dotenv= require('dotenv')
 const colors=require('colors')
 const multer = require('multer');
+const cookieParser = require("cookie-parser");
+
 
 const { Server } = require('socket.io');
 //const { v4: uuidv4 } = require('uuid'); // for generating unique team codes
@@ -20,6 +22,7 @@ const templatesRoutes = require('./routes/templatesRoutes');
 const sendRoutes = require('./routes/sendRoutes');
 const designimageRoutes=require('./routes/designImageRoutes')
 
+
 //config dot env file
 require('dotenv').config();
 dotenv.config();
@@ -30,14 +33,15 @@ connectDb();
 const app=express()
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-      origin: "http://localhost:3000/api/v1",  // Allow only your client origin
-      methods: ["GET", "POST","PUT"],
-      credentials: true
-    }
+  cors: {
+    origin: "http://localhost:3000/api/v1",  // Allow only your client origin
+    methods: ["GET", "POST","PUT"],
+    credentials: true
+  }
   });
-
-//middlewares
+  
+  //middlewares
+  app.use(cookieParser());
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cors())
@@ -74,7 +78,6 @@ app.use('/api/v1/designs',savedesignRoutes);
 
 //app.use('/api/v1/projects', projectRoutes);
 app.use('/api/v1/teams', teamRoutes);
-
 
 
 // Socket.io for real-time collaboration

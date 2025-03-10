@@ -36,7 +36,8 @@ router.put('/team-designs/:teamCode', verifyToken,  teamDesignController.updateT
 
 
 //post||save design
-router.post('/save', saveDesign);
+router.post('/save', verifyToken,
+  saveDesign);
 //put|| save edited design
 router.put('/:designId',verifyToken, updateDesign);
 //delete a design

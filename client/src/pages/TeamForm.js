@@ -22,7 +22,7 @@ const TeamForm = () => {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user._id) {
+        if (user && user.userId) {
             setIsAuthenticated(true);
         } else {
             navigate('/login', { replace: true });
@@ -32,7 +32,7 @@ const TeamForm = () => {
     }, [navigate]);
 
     const user = JSON.parse(localStorage.getItem('user'));
-    const userId = user ? user._id : null;
+    const userId = user ? user.userId : null;
 
     const createTeam = async () => {
         if (!userId) {

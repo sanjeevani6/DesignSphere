@@ -6,6 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import BrushIcon from "@mui/icons-material/Brush";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import { message } from "antd";
+import axios from 'axios';
 
 const Header = () => {
   const [loginUser, setLoginUser] = useState("");
@@ -24,11 +25,15 @@ const Header = () => {
     ? location.pathname.split("/design/team/")[1]
     : null;
 
-  const logoutHandler = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("jwt_token")
-    message.success("Logout successful");
-    navigate("/login");
+  const logoutHandler = async() => {
+    try {
+      await axios.post('/users/logout', {}, { withCredentials: true });
+      localStorage.removeItem('user');
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout error:", error);
+      message.error("Logout failed. Please try again.");
+    }
   };
 
   const handleTemplatesNavigation = () => {

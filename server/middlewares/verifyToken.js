@@ -1,34 +1,61 @@
-const jwt = require('jsonwebtoken');
+
+
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-    console.log("Headers received:", req.headers);
-    console.log("✅ JWT_SECRET:", process.env.JWT_SECRET);
-
-    const token = req.headers.authorization;
-    console.log("Headers received:", req.headers); // Check headers
+  try {
+    // Extract token from cookies
+    const token = req.cookies.token; 
+    console.log(`token: ${token}`)
     if (!token) {
-        return res.status(403).send("Access denied. No token provided.");
+      return res.status(403).json({ message: "Access denied. No token provided." });
     }
     
-    try {
-        // Remove "Bearer " prefix from token
-        const jwtToken = token.split(' ')[1];
-        console.log(jwtToken)
-        const decoded = jwt.decode(token);
-    console.log("🔍 Decoded Token Without Verification:", decoded);
+    // Verify token using JWT_SECRET from .env
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            if (err.name === "TokenExpiredError") {
+                return refreshAccessToken(req, res, next);
+            }
+            return res.status(403).json({ message: "Invalid token" });
+        }
+    req.user = { userId: decoded.userId };
+    console.log("Decoded token:", JSON.stringify(decoded, null, 2));
 
-        // Verify the token
-        const verified = jwt.verify(jwtToken, process.env.JWT_SECRET);
-        console.log("Decoded User:", verified); // Debugging (remove in production)
-
-        // Attach user details to request object
-        req.user = verified;
-
-        // Call the next middleware or route handler
-        next();
-    } catch (error) {
-        res.status(400).send("Invalid or expired token");
-    }
+   
+    next();
+    })
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return res.status(403).json({ message: "Invalid or expired token." });
+  }
 };
+const refreshAccessToken = (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+        return res.status(403).json({ message: "Refresh token missing" });
+    }
+
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ message: "Invalid refresh token" });
+        }
+
+        const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, {
+            expiresIn: "15m", // New short-lived access token
+        });
+
+        res.cookie("token", newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+
+        req.user = { userId: decoded.userId };// Attach user data
+        next(); // Proceed with the request after refreshing token
+    });
+};
+
 
 module.exports = verifyToken;

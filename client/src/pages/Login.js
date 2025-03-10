@@ -48,8 +48,8 @@ const Login = () => {
   const submitHandler = async (values) => {
     try {
       console.log("control before login button")
-      const response= await axios.post('/users/login', values);
-      localStorage.setItem("jwt_token", response.data.token);  // Save token in localStorage
+      const response= await axios.post('/users/login', values,{withCredentials: true});
+     
       message.success('Login successful');
        const user = { ...response.data.user, password: '' }; 
       localStorage.setItem('user', JSON.stringify(user));

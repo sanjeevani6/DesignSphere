@@ -12,7 +12,7 @@ import {  exportToShare } from '../utils/exportUtils';
 import socket from '../socket'
 import { message } from 'antd';
 import { Variants } from 'antd/es/config-provider';
-
+import axiosInstance from "../services/axiosInstance";
 
 
 const Design = () => {
@@ -28,15 +28,12 @@ const Design = () => {
     const templateUrl = location.state?.templateUrl || ''; 
     var { currentUser } = useContext(UserContext); 
     
-    const token = localStorage.getItem('jwt_token');
+    
     if(! currentUser)
         
         currentUser = JSON.parse(localStorage.getItem('user'));
         console.log(`current user ${currentUser}`)
-        if (!token) {
-            // Handle the case where the token is missing
-           console.error("token is not there");
-          }
+        
     useEffect(() => {
         if (templateUrl) {
             console.log('template URL selected:',templateUrl);
@@ -67,18 +64,14 @@ const Design = () => {
                 let response;
                 if (teamCode) {
                     console.log("getting team design")
-                  response = await axios.get(`/designs/team-designs/${teamCode}`,{
-                    headers:{
-                        Authorization: `Bearer ${token}`,
-                    },
+                  response = await axiosInstance.get(`/designs/team-designs/${teamCode}`,{
+                    withCredentials: true 
                   });
                 
                 } else if (designId) {
                     console.log("getting design")
-                    response = await axios.get(`/designs/${designId}`,{
-                        headers:{
-                        Authorization: `Bearer ${token}`,
-                    },
+                    response = await axiosInstance.get(`/designs/${designId}`,{
+                        withCredentials: true 
                     });
                 }
                 else {
@@ -225,9 +218,10 @@ const Design = () => {
                 return alert("User must be logged in to save a design.");
             }
             console.log('Current title before saving:', title);
-            
+            console.log("Current User:", currentUser);
+
             const payload = {
-               userId: currentUser?._id,
+              userId: currentUser?.userId|| currentUser?._id,
                title: inputTitle,
                elements,
                backgroundColor,
@@ -237,14 +231,11 @@ const Design = () => {
             console.log('Payload to be sent:', payload)
             if (teamCode) {
                 console.log("saving")
-                await axios.put(
+                await axiosInstance.put(
                     `/designs/team-designs/${teamCode}`, 
                     payload, // Payload goes here
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`, // Token in headers
-                      }
-                    }
+                 { withCredentials: true }
+                    
                   );
                   
                 socket.emit('updateDesign', { teamCode, ...payload });
@@ -252,11 +243,9 @@ const Design = () => {
                 console.log('New design saved:', payload);
             } else {
                 if (designId) {
-                    await axios.put(`/designs/${designId}`,
+                    await axiosInstance.put(`/designs/${designId}`,
                         payload,{
-                        headers:{
-                        Authorization: `Bearer ${token}`,
-                    },
+                             withCredentials: true 
                     });
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);

@@ -26,6 +26,7 @@ const updateDesign = async (req, res) => {
 
 // Save a new design
 const saveDesign = async (req, res) => {
+    console.log(req.user);
     console.log('Received data:', req.body); // Log the incoming request body
     const { userId,title, elements, backgroundColor,backgroundImage } = req.body;
 

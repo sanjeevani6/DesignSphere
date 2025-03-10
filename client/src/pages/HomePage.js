@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layouts/Layout';
 import axios from 'axios';
 import { FiUsers } from "react-icons/fi"
-
+import axiosInstance from "../services/axiosInstance";
 //import { FiUsers } from 'react-icons/fi'; 
 import { exportToPDF, exportToImage, exportToGIF, designHasAnimatedText } from '../utils/exportUtils';
 //import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
@@ -35,30 +35,22 @@ const Homepage = () => {
     const [selectedteamCode, setSelectedteamCode] = useState(null);
     const [hasAnimatedText, setHasAnimatedText] = useState(false);
     const navigate = useNavigate();
-    const token = localStorage.getItem('jwt_token');
+   
     
     
-    if (!token) {
-        // Handle the case where the token is missing
-        console.error("token is not there");
-      }
     const user = JSON.parse(localStorage.getItem('user'));
     console.log(user)
-    const userId = user ? user._id : null;
-    //console.log(teamDesigns)
+    const userId = user ? user.userId : null;
+    
 
     useEffect(() => {
         const fetchDesigns = async () => {
           try{
-          
+          console.log("fetching designs")
            if (userId) {
             // Otherwise, fetch user-specific designs
-           console.log(token);
-          const userResponse = await axios.get(`/designs/user/${userId}`,{
-            headers:{
-                        Authorization: `Bearer ${token}`,
-                    },
-          });
+          
+          const userResponse = await axiosInstance.get(`/designs/user/${userId}`);
           //setDesigns(userResponse.data)
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);

@@ -8,7 +8,7 @@ const DesignImage = require('../models/DesignImage');  // Import your design ima
 // const DesignImage = require('../models/DesignImage');  // Import your design image model
 const verifyToken = require('../middlewares/verifyToken');
 
-router.get('/events/:designId',verifyToken, async (req, res) => {
+router.get('/events/:designId', async (req, res) => {
     const { designId } = req.params;
   console.log('design id',designId)
 //   console.log('team id',teamCode)
@@ -53,7 +53,7 @@ router.get('/events/:designId',verifyToken, async (req, res) => {
     }
 });
 
-router.post('/send',verifyToken, async (req, res) => {
+router.post('/send', async (req, res) => {
     const { designId, userDetails,teamCode } = req.body.payload;
     console.log('Print details:', req.body);
     const effectiveDesignId = teamCode ? teamCode : designId; // ✅ Use a new variable

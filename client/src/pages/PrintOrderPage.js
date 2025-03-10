@@ -6,7 +6,7 @@ import { Button, TextField, Typography, Box ,Paper} from '@mui/material';
 import Header from '../components/Layouts/Header';
 
 const PrintOrderPage = () => {
-    const token = localStorage.getItem('jwt_token');
+   
     const { designId,teamCode } = useParams();
     const [design, setDesign] = useState(null);
     const [teamDesign, setTeamDesign] = useState(null);
@@ -17,10 +17,7 @@ const PrintOrderPage = () => {
         address: '',
     });
     console.log(`teamcode ${teamCode}`);
-    if (!token) {
-        // Handle the case where the token is missing
-        console.error("token is not there");
-      }
+    
     const designRef = useRef(null); // Reference to the design image for printing
     useEffect(() => {
         const fetchDesignDetails = async () => {
@@ -28,17 +25,13 @@ const PrintOrderPage = () => {
             try {
                 if(teamCode){
                     response=await axios.get(`/designs/team-designs/${teamCode}`,{
-                        headers:{
-                        Authorization: `Bearer ${token}`,
-                    },
+                        withCredentials: true ,
                     })
                     setTeamDesign(response.data)
                 }
                 else{
                  response = await axios.get(`/designs/${designId}`,{
-                    headers: {
-                         Authorization: `Bearer ${token}`,
-                },
+                     withCredentials: true 
                  });
                 setDesign(response.data);
                 }
@@ -69,13 +62,10 @@ const PrintOrderPage = () => {
             : { designId, userDetails };
 
            
-            await axios.post(`/shop/send`,{
-                headers: {
-        Authorization: `Bearer ${token}`,
-           },
-            } ,{
-               payload
-            });
+            await axios.post(`/shop/send`,payload,
+                { withCredentials: true });
+                
+           
         
             alert("Design and details sent to local shop!");
         } catch (error) {

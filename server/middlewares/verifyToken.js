@@ -36,7 +36,7 @@ const refreshAccessToken = (req, res, next) => {
         return res.status(403).json({ message: "Refresh token missing" });
     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
         if (err) {
             return res.status(403).json({ message: "Invalid refresh token" });
         }

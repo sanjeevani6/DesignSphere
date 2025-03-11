@@ -21,10 +21,9 @@ const Register=()=>{
             withCredentials: true, // Ensures cookies are sent
             headers: { "Content-Type": "application/json" },
           });
-          console.log(response)
-          // Assuming the response contains a JWT token
-          const { accessToken} = response.data;
-
+          console.log("response got",response)
+          
+            
           // Store access token & user data in localStorage
           
           const user = { ...response.data.user, password: '' };

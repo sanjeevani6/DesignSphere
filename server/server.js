@@ -2,7 +2,7 @@ const express=require('express')
 const cors=require('cors')
 const http = require('http');
 const morgan=require('morgan')
-const dotenv= require('dotenv')
+const dotenv= require('dotenv');
 const colors=require('colors')
 const multer = require('multer');
 const cookieParser = require("cookie-parser");
@@ -24,8 +24,8 @@ const designimageRoutes=require('./routes/designImageRoutes')
 
 
 //config dot env file
-require('dotenv').config();
-dotenv.config();
+
+dotenv.config();;
 //database call
 connectDb();
 

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Button, TextField, Typography, Box ,Paper} from '@mui/material';
 import Header from '../components/Layouts/Header';
 
-const PrintOrderPage = () => {
+const PrintOrderPage = () => { 
    
     const { designId,teamCode } = useParams();
     const [design, setDesign] = useState(null);
@@ -61,7 +61,7 @@ const PrintOrderPage = () => {
             ? { teamCode, userDetails }
             : { designId, userDetails };
 
-           
+           console.log("sending from frontend to backend for printing");
             await axios.post(`/shop/send`,payload,
                 { withCredentials: true });
                 

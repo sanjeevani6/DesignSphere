@@ -53,8 +53,8 @@ router.get('/events/:designId', async (req, res) => {
     }
 });
 
-router.post('/send', async (req, res) => {
-    const { designId, userDetails,teamCode } = req.body.payload;
+router.post('/send', async (req, res) => { 
+    const { designId, userDetails,teamCode } = req.body;
     console.log('Print details:', req.body);
     const effectiveDesignId = teamCode ? teamCode : designId; // ✅ Use a new variable
     console.log(`Printing with ID: ${effectiveDesignId}`);console.log(`printing ${teamCode}`);
@@ -62,12 +62,17 @@ router.post('/send', async (req, res) => {
     try {
         // Query the database to get the image URL for the given designId
         // Check if the provided effectiveDesignId is an ObjectId (for designs)
+        console.log("Effective Design ID:", effectiveDesignId);
+        console.log("Is Object ID Valid?", mongoose.Types.ObjectId.isValid(effectiveDesignId));
+
         const isObjectId = mongoose.Types.ObjectId.isValid(effectiveDesignId);
+        console.log("objectid",isObjectId)
         
         let designImage;
         if (isObjectId) {
             // Query for individual design using designId
             designImage = await DesignImage.findOne({ designId: effectiveDesignId });
+            console.log("designimage",designImage);
         } else {
             // Query for team project using teamCode
             designImage = await DesignImage.findOne({ teamCode: effectiveDesignId });
@@ -78,10 +83,12 @@ router.post('/send', async (req, res) => {
         if (!designImage || !designImage.imageUrl) {
             return res.status(404).json({ message: 'Design image URL not found in the database.' });
         }
-
+       console.log( "imageurl",designImage.imageUrl);
         // Construct the absolute path to the image file based on the retrieved URL
         const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
-        console.log('Design path:', designPath);
+     //  designPath=designImage.imageUrl;
+       console.log('Design path:', designPath);
+
 
         // Check if the design file exists
         if (!fs.existsSync(designPath)) {

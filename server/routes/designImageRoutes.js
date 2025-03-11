@@ -12,7 +12,7 @@ const router = express.Router();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         
-        const dir =  'uploads/designimage';
+        const dir =  path.join(__dirname,'..', 'uploads', 'designimage');
       
        console.log('file',file)
         console.log('directory:',dir);
@@ -33,7 +33,9 @@ router.post('/designimage', upload.single('file'), async(req, res) => {
     try {
         const { designId,teamCode } = req.body;
         const dId=teamCode?teamCode:designId
-        const filePath = req.file.path;
+       // const filePath = req.file.path;
+       const filePath = `/uploads/designimage/${req.file.filename}`;  // Relative Path
+
         const fileName = req.file.filename;
         console.log('File uploaded:', fileName, 'Path:', filePath);
         const existingDesignImage = await DesignImage.findOne({ designId: dId });

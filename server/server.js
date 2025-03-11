@@ -4,7 +4,6 @@ const http = require('http');
 const morgan=require('morgan')
 const dotenv= require('dotenv');
 const colors=require('colors')
-const multer = require('multer');
 const cookieParser = require("cookie-parser");
 
 
@@ -60,10 +59,10 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 
 // Serve static files from the 'uploads' directory
 app.use('/api/v1/uploads/images', express.static('server/uploads/images'));
-app.use('/api/v1/uploads/templates', express.static('server/uploads/templates'));
-app.use('/api/v1/uploads/stickers', express.static('server/uploads/stickers'));
+//app.use('/api/v1/uploads/templates', express.static('server/uploads/templates'));
+//app.use('/api/v1/uploads/stickers', express.static('server/uploads/stickers'));
 app.use('/api/v1/uploads/animations', express.static('server/uploads/animations'));
-app.use('/api/v1/uploads/artelements', express.static('server/uploads/artelements'));
+//app.use('/api/v1/uploads/artelements', express.static('server/uploads/artelements'));
 app.use('/api/v1/uploads/designimage',express.static('server/uploads/designimage'));
 
 
@@ -87,6 +86,8 @@ canvasSocket(io);
 app.use('/api/v1/shop',sendRoutes);
 //upload design image in server
 app.use('/api/v1/store',designimageRoutes);
+
+
 //port
 const PORT=8080||process.env.PORT;
 

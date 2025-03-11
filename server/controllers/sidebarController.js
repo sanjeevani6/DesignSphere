@@ -12,7 +12,7 @@ const getSidebarItems = async (req, res) => {
     }
 };
 
-const imageupload=(req,res)=>{
+ const imageupload=(req,res)=>{
     console.log(req.file)
     try {
         if (!req.file) {

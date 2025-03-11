@@ -8,7 +8,7 @@ import {teamCode} from "../../pages/Design"
 import Chat from './Chat';
 import {
     Box,
-    Typography,
+    Typography, 
     Accordion, 
     AccordionSummary,
     AccordionDetails,

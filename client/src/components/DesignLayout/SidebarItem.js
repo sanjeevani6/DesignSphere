@@ -137,7 +137,7 @@ const SidebarItem = ({ item }) => {
                 <div
                     style={{
                         width: `${item.size.width || 80}px`,
-                        height: `${item.size.height || 30}px`,
+                         height: `${item.size.height || 30}px`,
                         color: item.color,
                         backgroundColor: item.backgroundColor || '#f4f4f4',
                         marginRight: '8px',

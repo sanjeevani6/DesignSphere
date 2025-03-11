@@ -55,14 +55,14 @@ const Sidebar = ({ setElements , socket}) => {
                     }
                 });
                 console.log("URL",response.data.url);
-               const imageUrl = '/' + (response.data.url).replace(/\\/g, '/');// Adjust according to your response structure
-               console.log("URL updated",imageUrl);
+              // const imageUrl = '/' + (response.data.url).replace(/\\/g, '/');// Adjust according to your response structure
+               //console.log("URL updated",imageUrl);
                 const newImageItem = {
                     name:'uploaded image',
                     id: generateId(),
                     type: 'image',
                     category: 'image', 
-                    imageUrl: imageUrl, // Use the permanent URL
+                    imageUrl: response.data.url, // Use the permanent URL
                     size: { width: 100, height: 100 }, // Default size
                     top: 50,
                     left: 50,

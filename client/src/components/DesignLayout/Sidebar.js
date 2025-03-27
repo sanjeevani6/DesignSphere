@@ -127,7 +127,9 @@ const Sidebar = ({ setElements , socket}) => {
         boxShadow: 3,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+       
+        justifyContent: 'center',
+        
         overflowX: 'hidden', // Prevent horizontal scrolling
         overflowY: 'auto', // Enable vertical scrolling for overflow
         boxSizing: 'border-box', // Prevent layout shifts due to padding

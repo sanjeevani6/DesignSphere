@@ -184,81 +184,61 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
  {isSmallScreen? 
  <div class="container-fluid  options overflow-auto  max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
    
-         
-        <div 
-        
-            className="text-lg sm:text-base md:text-lg lg:text-xl font-semibold mb-2 font-sans tracking-wide text-black" 
-            onClick={handleCollaborateClick}
-        >
-            <FiUsers size={48} style={{color:"black"}}className="collaborate-icon mb-3 " />
-            <h3  style={{
-                    fontSize: "1.8rem", // Default for large screens
-                    color: "black",
-                    transition: "all 0.3s ease-in-out"
-                }}className="text-lg font-semibold mb-2 font-sans tracking-wide">Collaborate with Friends</h3>
-            <p  style={{
-                    fontSize: "1rem",
-                    color: "black",
-                    marginBottom: "1rem",
-                    transition: "all 0.3s ease-in-out"
-                }}className="text-base font-light font-mono mb-4">Invite friends to work together on projects in real time.</p>
-            <button 
-            style={{
-                backgroundColor: "#FF6F61",
-                color: "black",
-                padding: "12px 24px",
-                fontSize: "1rem",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.3s ease-in-out"
-            }}
-                className="px-4 py-2  text-purple-700 rounded-full shadow-sm hover:bg-purple-100 transition-colors font-medium"
-            >
-                Get Started
-            </button>
-            <style>
-                {`
-                @media screen and (max-width: 1024px) {
-                    h3 {
-                        font-size: 1.5rem !important;
-                    }
-                    p {
-                        font-size: 0.9rem !important;
-                    }
-                    button {
-                        font-size: 0.9rem !important;
-                        padding: 10px 20px !important;
-                    }
-                }
-                
-                @media screen and (max-width: 768px) {
-                    h3 {
-                        font-size: 1.2rem !important;
-                    }
-                    p {
-                        font-size: 0.8rem !important;
-                    }
-                    button {
-                        font-size: 0.8rem !important;
-                        padding: 8px 16px !important;
-                    }
-                }
+   <div 
+    className="text-lg sm:text-base md:text-lg lg:text-xl font-semibold mb-2 font-sans tracking-wide text-black shadow-lg" 
+    onClick={handleCollaborateClick}
+    style={{
+        borderRadius: "16px", // Smooth edges for itself
+        overflow: "hidden", // Ensures it doesn’t break the parent’s rounded shape
+        clipPath: "inset(0 round 16px)", // Prevents it from appearing sharp over the parent
+        backgroundColor: "white", // Background color
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
+        padding: "16px",
+    }}
+>
+    <FiUsers 
+        size={48} 
+        style={{ color: "black" }} 
+        className="collaborate-icon mb-3" 
+    />
+    <h3  
+        style={{
+            fontSize: "1.8rem",
+            color: "black",
+            transition: "all 0.3s ease-in-out",
+        }} 
+        className="text-lg font-semibold mb-2 font-sans tracking-wide"
+    >
+        Collaborate with Friends
+    </h3>
+    <p  
+        style={{
+            fontSize: "1rem",
+            color: "black",
+            marginBottom: "1rem",
+            transition: "all 0.3s ease-in-out",
+        }} 
+        className="text-base font-light font-mono mb-4"
+    >
+        Invite friends to work together on projects in real time.
+    </p>
+    <button 
+        style={{
+            backgroundColor: "#FF6F61",
+            color: "black",
+            padding: "12px 24px",
+            fontSize: "1rem",
+            border: "none",
+            cursor: "pointer",
+            transition: "all 0.3s ease-in-out",
+            borderRadius: "24px",
+        }}
+        className="px-4 py-2 text-purple-700 rounded-full shadow-sm hover:bg-purple-100 transition-colors font-medium"
+    >
+        Get Started
+    </button>
+</div>
 
-                @media screen and (max-width: 480px) {
-                    h3 {
-                        font-size: 1rem !important;
-                    }
-                    p {
-                        display: none !important;
-                    }
-                    button {
-                        font-size: 0.75rem !important;
-                        padding: 6px 12px !important;
-                    }
-                }
-                `}
-            </style>
-        </div>
         
     
     
@@ -473,7 +453,7 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
 
 
   <div class="row">
-    <div class="col-sm-4 col-md-3  options  max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
+    <div class=" col-sm-4 col-md-3  options  max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
          
         <div 
         

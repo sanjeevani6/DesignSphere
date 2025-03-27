@@ -41,7 +41,9 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#a1c2d2", padding: "10px" ,color: 'black'}}>
+    <AppBar position="sticky" sx={{ backgroundColor: "#a1c2d2", padding: "10px" ,color: 'black'}}>
+     
+
       <Toolbar>
       <Typography
   variant={isSmallScreen ? "h6" : "h4"}

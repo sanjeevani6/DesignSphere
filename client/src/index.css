@@ -248,7 +248,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
+  background-color:#fff2e9;
   border: 2px solid black;
   
   padding: 5px;
@@ -292,10 +292,13 @@
 
 .options {
   width: 15%;
-  background-color: #dfdbd1; 
+  background-color: #fff2e9; 
   padding: 20px;
   color: #333; /* Dark text color */
   height:100%
+}
+.options2{
+  background-color:#9eb7e1;
 }
 
 .mainarea {
@@ -326,7 +329,7 @@
 
 .design-card {
   align-items: center;
-  background-color:#dfdbd1; /* White background for cards */
+  background-color:#519bc5; /* White background for cards */
   border: 1px solid #ddd; /* Light border for cards */
   border-radius: 8px; /* Rounded corners for cards */
   padding: 15px; /* Internal padding for content */

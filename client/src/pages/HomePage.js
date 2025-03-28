@@ -179,10 +179,10 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
 
     return (
         <Layout>
-            <div className="homepage-container overflow-auto ">
+            <div className="homepage-container options2  overflow-auto ">
             <div class="container-fluid  text-center   row d-flex align-items-stretch">
  {isSmallScreen? 
- <div class="container-fluid  options overflow-auto  max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
+ <div class="container-fluid  options2 overflow-auto max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6"   style={{ minWidth: "400px" }}>
    
    <div 
     className="text-lg sm:text-base md:text-lg lg:text-xl font-semibold mb-2 font-sans tracking-wide text-black shadow-lg" 
@@ -201,16 +201,23 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
         style={{ color: "black" }} 
         className="collaborate-icon mb-3" 
     />
-    <h3  
-        style={{
-            fontSize: "1.8rem",
-            color: "black",
-            transition: "all 0.3s ease-in-out",
-        }} 
-        className="text-lg font-semibold mb-2 font-sans tracking-wide"
-    >
-        Collaborate with Friends
-    </h3>
+   
+    <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>Collaborate with Friends
+</Typography>
+    
     <p  
         style={{
             fontSize: "1rem",
@@ -243,7 +250,22 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
     
     
     
-                    <h2>YOUR DESIGNS</h2>
+                 
+                    <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>YOUR DESIGNS
+</Typography>
                     <div className="design-cards">
                         {designs.map((design) => (
                             <div
@@ -344,7 +366,22 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
                      {/* Section for Team Designs */}
           {teamDesigns.length > 0 && (
             <>
-              <h2>TEAM PROJECTS</h2>
+               <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>
+    TEAM PROJECTS
+</Typography>
               <div className="design-cards team-design-cards">
                 {teamDesigns.map((design) => (
                   <div
@@ -453,7 +490,7 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
 
 
   <div class="row">
-    <div class=" col-sm-4 col-md-3  options  max-w-md w-full bg-purple-50 rounded-2xl shadow-lg p-6">
+    <div class=" col-sm-4 col-md-3  options  max-w-md w-full  rounded-2xl shadow-lg p-6">
          
         <div 
         
@@ -461,11 +498,23 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
             onClick={handleCollaborateClick}
         >
             <FiUsers size={48} style={{color:"black"}}className="collaborate-icon mb-3 " />
-            <h3  style={{
-                    fontSize: "1.8rem", // Default for large screens
-                    color: "black",
-                    transition: "all 0.3s ease-in-out"
-                }}className="text-lg font-semibold mb-2 font-sans tracking-wide">Collaborate with Friends</h3>
+          
+                 <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>Collaborate with Friends
+  
+</Typography>
             <p  style={{
                     fontSize: "1rem",
                     color: "black",
@@ -474,13 +523,14 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
                 }}className="text-base font-light font-mono mb-4">Invite friends to work together on projects in real time.</p>
             <button 
             style={{
-                backgroundColor: "#FF6F61",
-                color: "black",
+                backgroundColor: "#e46064",
+                color: "solid black",
                 padding: "12px 24px",
                 fontSize: "1rem",
-                border: "none",
+                border: "2px solid black",
                 cursor: "pointer",
-                transition: "all 0.3s ease-in-out"
+                transition: "all 0.3s ease-in-out", 
+                 borderRadius: "24px",
             }}
                 className="px-4 py-2  text-purple-700 rounded-full shadow-sm hover:bg-purple-100 transition-colors font-medium"
             >
@@ -531,9 +581,24 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
         </div>
         </div>
     
-    <div class="col-sm-8  col-md-9 ">
+    <div class="col-sm-8  col-md-9   ">
     
-                    <h2>YOUR DESIGNS</h2>
+    <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>
+    YOUR DESIGNS
+</Typography>
                     <div className="design-cards">
                         {designs.map((design) => (
                             <div
@@ -634,7 +699,22 @@ const [teamMenuAnchorEl, setTeamMenuAnchorEl] = useState(null);
                      {/* Section for Team Designs */}
           {teamDesigns.length > 0 && (
             <>
-              <h2>TEAM PROJECTS</h2>
+              <Typography 
+    variant="h4" 
+    sx={{ 
+        paddingTop: "30px", 
+
+        flexGrow: 1,
+        fontWeight: "bold",
+        fontFamily: "'Chewy', cursive",
+        letterSpacing: "2px",
+        color: "#593125",
+        textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+      
+    }}
+>
+    TEAM PROJECTS
+</Typography>
               <div className="design-cards team-design-cards">
                 {teamDesigns.map((design) => (
                   <div

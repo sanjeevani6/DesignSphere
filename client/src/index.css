@@ -5,9 +5,23 @@
   margin:0;
   box-sizing: border-box;
 }
+body {
+  font-family: Arial, sans-serif;
+}
+html, body { 
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
 .content{
   height:80vh;
+  flex: 1;
  
 }
 
@@ -81,7 +95,7 @@
 
 .sidebar {
   /* Sidebar takes up less than half the page */
-  background-color: #f4f4f4;
+  background-color:#60759f;
   padding: 10px;
   
   overflow-y: hidden; 
@@ -128,6 +142,7 @@
   flex-direction: column;
   flex: 1;
   padding: 5px;
+  background-color: #60759f;
  
 }
 
@@ -135,7 +150,7 @@
   min-height: 120px;
   overflow-y: auto;          
   border: 2px solid black;
-  background-color: #f9f9f9;
+  background-color: whitesmoke;
   
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
@@ -144,9 +159,10 @@
 
 .properties-pane{
   height:130px;
-  overflow-y: auto;          /* Enable vertical scrolling for overflow */
+  overflow-y: auto;  /* Enable vertical scrolling for overflow */
+         
   border: 2px solid rgb(236, 211, 211);
-  background-color:  #f9f9f9;
+  background-color: whitesmoke;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -162,14 +178,16 @@
 
 .properties-pane .canvas-background {
   margin-bottom: 16px;
-
+ padding-left: 10px;
+ 
 }
 
 .properties-pane .property-row {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-   
+  align-items: center;
+  padding:10px 30px ;
+  gap: 6px;
   margin-bottom: 12px;
   
  
@@ -178,12 +196,14 @@
 .properties-pane .property-row label {
   flex: 1;
   font-size: 14px;
+  
   color: #555;
 }
 
 .properties-pane .property-row input,
 .properties-pane .property-row select {
   flex: 1.5;
+
   padding:2px  4px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -206,7 +226,7 @@
   background-color: #d9534f;
   color: #fff;
   border: none;
-  border-radius: 4px;
+ align-items: center;
   cursor: pointer;
   margin-top: 8px;
 }
@@ -224,14 +244,14 @@
 
 /* Smaller, centered delete button */
 .properties-pane .delete-button {
+  width: 100%;
   display: block;
   margin: 0 auto;
   padding: 4px 8px;
   font-size: 12px;
-  background-color: #d9534f;
-  color: #fff;
+  background-color: #e67660;
+  
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   text-align: center;
 }
@@ -248,7 +268,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color:#fff2e9;
+  background-color:#dae5f9;
   border: 2px solid black;
   
   padding: 5px;
@@ -292,13 +312,16 @@
 
 .options {
   width: 15%;
-  background-color: #fff2e9; 
+ margin-bottom: 0;
+  background-color: #9eb7e1; 
   padding: 20px;
+  padding-top: 50px;
   color: #333; /* Dark text color */
   height:100%
 }
-.options2{
-  background-color:#9eb7e1;
+.options2 {
+  background: #fffdf0;
+  padding-bottom: 0;
 }
 
 .mainarea {
@@ -329,7 +352,7 @@
 
 .design-card {
   align-items: center;
-  background-color:#519bc5; /* White background for cards */
+  background-color:whitesmoke; /* White background for cards */
   border: 1px solid #ddd; /* Light border for cards */
   border-radius: 8px; /* Rounded corners for cards */
   padding: 15px; /* Internal padding for content */
@@ -347,29 +370,46 @@
 
 .design-card h3 {
   font-size: 1.2em; /* Slightly larger font for title */
-  color: #f6f4f4; /* Primary color for the title */
+  color: #593125; /* Primary color for the title */
   margin-bottom: 10px; /* Space below title */
 }
 
 .design-card p {
-  color: #ae9a9a; /* Grey color for the date text */
+  color:#485bab; /* Grey color for the date text */
   font-size: 0.9em; /* Slightly smaller font for the date */
 }
 
-/* src/styles/TemplatesPage.css */
+/* Overall Page Styles */
 .templates-page {
+  background-color: #fffdf0;
   text-align: center;
-  padding: 20px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
+/* Header Animation */
+.templates-header {
+  animation: fadeIn 1.2s ease-out;
+  margin: 10px 10px;
+}
+
+/* Grid Layout */
 .template-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
   margin: 20px;
-  padding: 0;
+  padding: 20px 40px 20px 40px;
+  width: 90%;
+  max-width: 1200px;
 }
 
+/* Template Card Base Styles */
 .template-card {
   position: relative;
   background-color: #fff;
@@ -379,25 +419,32 @@
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   text-align: center;
-  width: 250px; /* Fixed width for smaller size */
-  height: 250px; /* Fixed height for consistency */
+  width: 250px;
+  height: 250px;
 }
 
+/* Hover Effects */
 .template-card:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* FadeInUp Animation on Card */
+.animated-card {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+/* Image and Info Styles */
 .template-image {
   width: 100%;
-  height: auto;
+  height: 80%;
   object-fit: cover;
   display: block;
 }
 
 .template-info {
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.8); /* Optional background */
+  background-color: rgba(255, 255, 255, 0.8);
   text-align: center;
   position: absolute;
   bottom: 0;
@@ -414,17 +461,85 @@
   color: #555;
   font-size: 0.9rem;
 }
+
+/* Media Queries for Responsive Layouts */
+@media (max-width: 768px) {
+  .template-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .template-card {
+    height: 220px;
+  }
+}
+
+@media (max-width: 270px) {
+  .template-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .template-card {
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+  .template-image {
+    display: none;
+  }
+  .template-info {
+    position: static;
+    background: none;
+    padding: 5px;
+    width: 100%;
+  }
+  .template-info h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .template-info p {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 4px;
+  }
+}
+
+/* Keyframes for Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
 /***print page***/
 /* PrintOrderPage */
 
 /* Container for the print order page */
+
 .print-order-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 60px);
-  background-color: #f4f6f8;
-  padding: 10px;
+  min-height: calc(100vh - 60px); /* Adjust if you have a header */
+  background-color: #fffdf0; /* Matching background from other pages */
+  padding: 20px;
 }
 
 /* Style for the main paper card */
@@ -480,9 +595,7 @@
   }
 }
 /* General Styling */
-body {
-  font-family: Arial, sans-serif;
-}
+
 
 h1, h2, h3, h4 {
   color: #333;

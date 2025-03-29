@@ -1,3 +1,4 @@
+// src/components/Header.js
 import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, useMediaQuery, Menu, MenuItem } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu"; // Icon for dropdown menu
 import { message } from "antd";
 
 const Header = () => {
-  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+  const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const isVerySmallScreen = useMediaQuery("(max-width: 400px)");
   const [loginUser, setLoginUser] = useState("");
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -41,7 +42,6 @@ const Header = () => {
     }
   };
 
-  // Handle opening and closing the menu
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -51,7 +51,15 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "#f3ccc0", padding: "10px", color: "black" }}>
+    <AppBar 
+      position="sticky" 
+      sx={{ 
+        // Updated gradient: dark edge with a moderately lighter tone towards the right
+        background: "#f5c5b3",
+        padding: "10px",
+        color: "black" 
+      }}
+    >
       <Toolbar>
         {/* Title with Logo */}
         <Typography
@@ -98,12 +106,9 @@ const Header = () => {
                 <MenuItem>
                   <Box
                     sx={{
-                      backgroundColor: "#f4eaea",
+                      backgroundColor: "#e46064",
                       padding: "5px 10px",
                       borderRadius: "10px",
-                      color: "#593125",
-                      fontWeight: "bold",
-                      fontFamily: "Poppins",
                       fontSize: "14px",
                       border: "1px solid #3A3A4A",
                       boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
@@ -111,7 +116,17 @@ const Header = () => {
                       width: "100%",
                     }}
                   >
-                    {loginUser.name}
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontFamily: "'Baloo', sans-serif",
+                        letterSpacing: "2px",
+                        color: "white",
+                        textShadow: "2px 2px 5px rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      {loginUser.name}
+                    </Typography>
                   </Box>
                 </MenuItem>
               )}
@@ -121,16 +136,41 @@ const Header = () => {
             </Menu>
           </>
         ) : (
-          /* Regular Layout for Larger Screens */
           <>
             <Box sx={{ display: "flex", gap: "10px" }}>
-              <Button color="inherit" startIcon={<HomeIcon />} component={Link} to="/home">
+              <Button 
+                color="inherit" 
+                startIcon={<HomeIcon />} 
+                component={Link} 
+                to="/home"
+                sx={{
+                  transition: "transform 0.2s",
+                  "&:hover": { transform: "scale(1.05)" },
+                }}
+              >
                 {!isSmallScreen && "Home"}
               </Button>
-              <Button color="inherit" startIcon={<BrushIcon />} component={Link} to="/design">
+              <Button 
+                color="inherit" 
+                startIcon={<BrushIcon />} 
+                component={Link} 
+                to="/design"
+                sx={{
+                  transition: "transform 0.2s",
+                  "&:hover": { transform: "scale(1.05)" },
+                }}
+              >
                 {!isSmallScreen && "Design"}
               </Button>
-              <Button color="inherit" startIcon={<CollectionsIcon />} onClick={handleTemplatesNavigation}>
+              <Button 
+                color="inherit" 
+                startIcon={<CollectionsIcon />} 
+                onClick={handleTemplatesNavigation}
+                sx={{
+                  transition: "transform 0.2s",
+                  "&:hover": { transform: "scale(1.05)" },
+                }}
+              >
                 {!isSmallScreen && "Templates"}
               </Button>
             </Box>
@@ -140,18 +180,27 @@ const Header = () => {
               {loginUser && (
                 <Box
                   sx={{
-                    backgroundColor: "#f4eaea",
-                    padding: isSmallScreen ? "5px 10px" : "8px 15px",
+                    backgroundColor: "#e46064",
+                    padding: "5px 10px",
                     borderRadius: "10px",
-                    color: "#593125",
-                    fontWeight: "bold",
-                    fontFamily: "Poppins",
-                    fontSize: isSmallScreen ? "12px" : "14px",
+                    fontSize: "14px",
                     border: "1px solid #3A3A4A",
                     boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+                    textAlign: "center",
+                    width: "100%",
                   }}
                 >
-                  {loginUser.name}
+                  <Typography
+                    variant="h6"
+                    sx={{
+                     
+                      letterSpacing: "2px",
+                      color: "white",
+                      textShadow: "2px 2px 5px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    {loginUser.name}
+                  </Typography>
                 </Box>
               )}
               <IconButton color="inherit" onClick={logoutHandler}>

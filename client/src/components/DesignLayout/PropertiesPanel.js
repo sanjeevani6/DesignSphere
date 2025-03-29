@@ -1,6 +1,11 @@
 import React,{ useState, useEffect} from 'react';
 import socket from '../../socket';
+import {
+   
+    Typography
+  } from '@mui/material';
 const manualFonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New']; // Fallback fonts
+
 
 const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
     const [fontSize, setFontSize] = useState(selectedItem?.fontSize || 16);
@@ -198,11 +203,39 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
 
     return (
         <div className='properties-pane'>
-            <h3>Properties Panel</h3>
+            <Typography 
+                variant="h4" 
+                sx={{ 
+                    paddingTop: "20px", 
+                    textAlign:'center',
+                    flexGrow: 1,
+                    fontWeight: "bold",
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > PropertiesPanel
+            </Typography>
             {/* Background color option for canvas */}
             <div className="canvas-background">
-                <label>
-                    Canvas Background Color:
+                <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Typography 
+                variant="h6" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > CanvasBackgroundColor :
+            </Typography>
                     <input
                         type="color"
                         onChange={handleCanvasBackgroundColorChange}
@@ -217,21 +250,64 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                 <>
                     {selectedItem.type === 'text' && (
                         <div className="property-row">
-                            <label>Text:</label>
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   paddingRight:"5px",
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            >Text:
+            </Typography></label>
                             <input
                                 type="text"
                                 name="name"
                                 value={selectedItem.name}
                                 onChange={handleChange}
+                                style={{ width: "150px" }}
                                 /*If you wrote onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
                             />
-                            <label>Font Type:</label>
+                            <label style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Font Type:
+            </Typography></label>
                             <select name="fontType" value={fontFamily} onChange={handleFontFamilyChange}>
                                 {fonts.map(font => (
                                     <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
                                 ))}
                             </select>
-                            <label>Font Size:</label>
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Font Size:
+            </Typography></label>
                             <input
                                 type="number"
                                 name="fontSize"
@@ -239,34 +315,101 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 onChange={handleFontSizeChange}
                                 min={1}
                             />
-                            <label>Text Color:</label>
-                            <input
-                                type="color"
-                                name="color"
-                                value={selectedItem.color || '#000000'}
-                                onChange={handleColorChange}
-                            />
-                            <label>Background Color:</label>
-                            <input
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Text Color:
+            </Typography></label>
+            <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
+    <input
+        type="color"
+        name="color"
+        value={selectedItem.color || '#000000'}
+        onChange={handleColorChange}
+      
+    />
+</div>
+
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Background Color:
+            </Typography></label>
+            <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
+            <input
                                 type="color"
                                 name="backgroundColor"
                                 value={selectedItem.backgroundColor || '#ffffff'}
                                 onChange={handleBackgroundColorChange}
                             />
+</div>
+
+                        
                         </div>
                     )}
 
                     {selectedItem.type === 'shape' && (
                         <div className="property-row">
-                            <label>Color:</label>
-                            <input
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            >Color:
+            </Typography></label>
+            <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
+            <input
                                 type="color"
                                 name="color"
                                 value={selectedItem.color}
                                // onChange={handleChange}
                                 onChange={(e) => handlePropertyChange('color', e.target.value)}
                             />
-                            <label>Width:</label>
+</div>
+                           
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Width:
+            </Typography></label>
                             <input
                                 type="number"
                                 name="width"
@@ -274,7 +417,21 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 onChange={handleChangeWidth}
                                 min={1}
                             />
-                            <label>Height:</label>
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Height:
+            </Typography></label>
                             <input
                                 type="number"
                                 name="height"
@@ -288,7 +445,21 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                     {selectedItem.type === 'image' && (
                         <div className="property-row">
                           
-                            <label>Width:</label>
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            > Width:
+            </Typography></label>
                             <input
                                 type="number"
                                 name="width"
@@ -296,7 +467,21 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 onChange={handleChangeWidth}
                                 min={1}
                             />
-                            <label>Height:</label>
+                            <label><Typography 
+                variant="h7" 
+                sx={{ 
+                    paddingTop: "1px", 
+                   
+                   
+                    fontFamily: "'Chewy', cursive",
+                    letterSpacing: "2px",
+                    color: "#593125",
+                   
+                    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                  
+                }}
+            >Height:
+            </Typography></label>
                             <input
                                 type="number"
                                 name="height"
@@ -309,7 +494,21 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                       {/* Delete button for the selected item */}
             <button  className="delete-button" onClick={() => deleteItem(selectedItem.id)} 
                        
-                       >Delete Item</button>
+                       ><Typography 
+                       variant="h6" 
+                       sx={{ 
+                           paddingTop: "1px", 
+                          
+                          
+                           fontFamily: "'Chewy', cursive",
+                           letterSpacing: "2px",
+                           color: "#593125",
+                          
+                           textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                         
+                       }}
+                   > Delete Item
+                   </Typography></button>
                 </>
             ) : (
                 <div className="empty-properties-panel">Select an item to view properties</div>

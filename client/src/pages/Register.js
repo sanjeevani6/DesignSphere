@@ -1,84 +1,149 @@
-import './Register.css';
-import React ,{useState,useEffect}from 'react'
-import{Form,Input,message}from 'antd'
-import { Link ,useNavigate} from 'react-router-dom'
-import axios from 'axios'
-import { Button, Container, Grid, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import Slider from 'react-slick';
+import React from 'react';
+import { TextField, Button, Typography, Paper, Box } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Icon for Login
-import LoginIcon from '@mui/icons-material/Login';  // Icon for Signup
-import ContactMailIcon from '@mui/icons-material/ContactMail';  // Icon for Contact 
+import { jwtDecode } from 'jwt-decode';
+import { styled } from '@mui/system';
+import img1 from '../assets/img1.png';
+import img2 from '../assets/img2.png';
+import img3 from '../assets/img3.png';
+import img4 from '../assets/img4.png';
+//import img5 from '../assets/img5.png';
 
-const Register=()=>{
 
-    const navigate= useNavigate()
-    // form submit
-     const SubmitHandler=async (values)=>{
-        try{
-            await axios.post('/users/register',values)
-            message.success('registration successful')
-            navigate('/login');
-        }
-        catch(error){
-        message.error("invalid username or password");
-        }
-        
-     };
-     //prevent for login user
-     useEffect(()=>{
-        if(localStorage.getItem('user')){
-            navigate('/home')
-        }
-     },[navigate]);
-    return(
-      <>
-      {/* Navbar */}
-     <AppBar position="sticky" sx={{ backgroundColor: '#684B74' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            DESIGNSPHERE
+const Container = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#fffdf0',
+});
+
+const RegisterBox = styled(Paper)({
+  display: 'flex',
+  width: 900,
+  padding: 20,
+  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#519bc5',
+  borderRadius: 10,
+  position: 'relative',
+  overflow: 'hidden',
+});
+
+const LeftSection = styled(Box)({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#ffd374',
+  borderRadius: '10px 0 0 10px',
+  padding: 20,
+});
+
+const ImageBox = styled(Box)({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 1fr)',
+  gap: '10px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+});
+
+const Image = styled('img')({
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  borderRadius: 10,
+});
+
+const RightSection = styled(Box)({
+  flex: 1,
+  padding: 20,
+  backgroundColor: '#fffdf0',
+  borderRadius: '0 10px 10px 0',
+});
+
+const Register = () => {
+  const navigate = useNavigate();
+  const GITHUB_CLIENT_ID = 'your-github-client-id';
+
+  const onGoogleRegisterSuccess = async (res) => {
+    try {
+      const decoded = jwtDecode(res.credential);
+      const userData = {
+        name: decoded.name,
+        email: decoded.email,
+        googleId: decoded.sub,
+      };
+      
+      await axios.post('/users/google-register', userData);
+      navigate('/login');
+    } catch (error) {
+      console.error('Google registration failed', error);
+    }
+  };
+
+  const onGoogleRegisterError = () => {
+    console.error('Google registration failed');
+  };
+
+  const handleGitHubRegister = () => {
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user:email`;
+  };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const values = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+    };
+    try {
+      await axios.post('/users/register', values);
+      navigate('/login');
+    } catch (error) {
+      console.error('Registration failed', error);
+    }
+  };
+
+  return (
+    <Container>
+      <RegisterBox>
+        <LeftSection>
+          <ImageBox>
+            <Box><Image src={img1} alt="Image 1" /></Box>
+            <Box><Image src={img2} alt="Image 2" /></Box>
+            <Box><Image src={img3} alt="Image 3" /></Box>
+            <Box><Image src={img4} alt="Image 4" /></Box>
+         
+         
+          </ImageBox>
+        </LeftSection>
+        <RightSection>
+          <Typography variant="h5" gutterBottom color="#e46064">
+            Register for DesignSphere
           </Typography>
-          <Grid container spacing={2} justifyContent="flex-end">
-            
-            <Grid item>
-              <IconButton color="inherit" href="/register">
-                <LoginIcon />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton color="inherit" href="/register">
-                <AccountCircleIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-          <div className="register-page">
-            <Form layout="vertical" onFinish={SubmitHandler}>
-            <h1>Register Form</h1>
-                <Form.Item label="Name" name="name">
-                    <Input/> 
-                </Form.Item>
-                <Form.Item label="Email" name="email">
-                    <Input type="email"/> 
-                </Form.Item>
-                <Form.Item label="Password" name="password">
-                    <Input type="password"/> 
-                </Form.Item>
-                <div className=" justify-content-between">
-               <Link to="/login"> Already Register? 
-               Click here to login</Link>
-               <div>
-               <button style={{backgroundColor:'#684B74',color:'white'}}className="btn ">REGISTER</button>
-               </div>
-                </div>
-
-            </Form> 
-          </div>
-
-      </>  
-    );
+          <Box component="form" onSubmit={submitHandler} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField label="Name" name="name" fullWidth required sx={{ backgroundColor: '#f6bea9', borderRadius: 1 }} />
+            <TextField label="Email" name="email" type="email" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
+            <TextField label="Password" name="password" type="password" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
+            <Button variant="contained" sx={{ backgroundColor: '#90b0e6', color: '#fffdf0' }} type="submit" fullWidth>
+              Register
+            </Button>
+          </Box>
+          <Typography variant="body2" sx={{ marginTop: 2 }}>
+            Already have an account? <Link to="/login" style={{ color: '#519bc5' }}>Login</Link>
+          </Typography>
+         
+         
+        </RightSection>
+      </RegisterBox>
+    </Container>
+  );
 };
 
 export default Register;

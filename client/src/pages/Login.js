@@ -1,16 +1,55 @@
-import React, { useEffect,useContext } from 'react';
-import { Form, Input, message } from 'antd';
+import React, { useEffect } from 'react';
+import { TextField, Button, Typography, Paper, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode }from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { styled } from '@mui/system';
+//import loginIllustration from '../assets/login-illustration.png';
 
+const Container = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#fffdf0',
+});
+
+const LoginBox = styled(Paper)({
+  display: 'flex',
+  width: 800,
+  padding: 20,
+  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#519bc5',
+  borderRadius: 10,
+});
+
+const LeftSection = styled(Box)({
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#ffd374',
+  borderRadius: '10px 0 0 10px',
+  padding: 20,
+});
+
+const RightSection = styled(Box)({
+  flex: 1,
+  padding: 20,
+  backgroundColor: '#fffdf0',
+  borderRadius: '0 10px 10px 0',
+});
 
 const Login = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      navigate('/home');
+    }
+  }, [navigate]);
 
-  
   const onGoogleLoginSuccess = async (res) => {
     try {
       const decoded = jwtDecode(res.credential);
@@ -20,76 +59,63 @@ const Login = () => {
         googleId: decoded.sub,
       };
       
-      // Send the user data to the backend to be saved
       const response = await axios.post('/users/google-login', userData);
-  
-      // Save user info in localStorage and context
-      const user = { ...response.data.user, password: '' }; 
+      const user = { ...response.data.user, password: '' };
       localStorage.setItem('user', JSON.stringify(user));
-      console.log('Logged in user:', user);
-      message.success('Google login successful');
       navigate('/home');
     } catch (error) {
-      console.error('Error with Google login:', error);
-      message.error('Google login failed');
+      console.error('Google login failed', error);
     }
   };
-  
 
-  const onGoogleLoginError = (res) => {
-    console.log('Google login failed', res);
-    message.error('Google login failed');
+  const onGoogleLoginError = () => {
+    console.error('Google login failed');
   };
- 
-  
 
- 
-
-  const submitHandler = async (values) => {
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const values = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+    };
     try {
-      
-      const response= await axios.post('/users/login', values);
-      message.success('Login successful');
-       const user = { ...response.data.user, password: '' }; 
+      const response = await axios.post('/users/login', values);
+      const user = { ...response.data.user, password: '' };
       localStorage.setItem('user', JSON.stringify(user));
-   
-      console.log('Logged in user:', user);
       navigate('/home');
     } catch (error) {
-      message.error('Something went wrong');
+      console.error('Login failed', error);
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem('user')) {
-      navigate('/home');
-    }
-  }, [navigate]);
 
   return (
-    <div className="register-page">
-      <Form layout="vertical" onFinish={submitHandler}>
-        <h1>LOGIN Form</h1>
-        <Form.Item label="Email" name="email">
-          <Input type="email" />
-        </Form.Item>
-        <Form.Item label="Password" name="password">
-          <Input type="password" />
-        </Form.Item>
-        <div className="justify-content-between">
-          <Link to="/register">Not a User? Click here to register</Link>
-          <div>
-            <button className="btn btn-primary" type="submit">LOGIN</button>
-          </div>
-        </div>
-
-        <div>
-          <h5>OR</h5>
-          <GoogleLogin onSuccess={onGoogleLoginSuccess} onError={onGoogleLoginError} />
-         
-        </div>
-      </Form>
-    </div>
+    <Container>
+      <LoginBox>
+        <LeftSection>
+         <img src={loginIllustration} alt="Login Illustration" style={{ width: '80%', height: 'auto' }} />
+        </LeftSection>
+        <RightSection>
+          <Typography variant="h5" gutterBottom color="#e46064">
+            Login to DesignSphere
+          </Typography>
+          <Box component="form" onSubmit={submitHandler} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField label="Email" name="email" type="email" fullWidth required sx={{ backgroundColor: '#f6bea9', borderRadius: 1 }} />
+            <TextField label="Password" name="password" type="password" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
+            <Button variant="contained" sx={{ backgroundColor: '#90b0e6', color: '#fffdf0' }} type="submit" fullWidth>
+              Login
+            </Button>
+          </Box>
+          <Typography variant="body2" sx={{ marginTop: 2 }}>
+            Don't have an account? <Link to="/register" style={{ color: '#519bc5' }}>Register</Link>
+          </Typography>
+          <Typography variant="body2" sx={{ marginTop: 2, color: '#e46064' }}>OR</Typography>
+          <Box sx={{ marginTop: 2 }}>
+            <GoogleLogin onSuccess={onGoogleLoginSuccess} onError={onGoogleLoginError} />
+          </Box>
+        </RightSection>
+      </LoginBox>
+    </Container>
   );
 };
 

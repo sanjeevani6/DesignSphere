@@ -250,7 +250,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                 <>
                     {selectedItem.type === 'text' && (
                         <div className="property-row">
-                            <label><Typography 
+                            <label style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -264,7 +264,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             >Text:
-            </Typography></label>
+            </Typography>
                             <input
                                 type="text"
                                 name="name"
@@ -272,7 +272,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 onChange={handleChange}
                                 style={{ width: "150px" }}
                                 /*If you wrote onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
-                            />
+                            /></label>
                             <label style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
@@ -287,13 +287,13 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Font Type:
-            </Typography></label>
+            </Typography>
                             <select name="fontType" value={fontFamily} onChange={handleFontFamilyChange}>
                                 {fonts.map(font => (
                                     <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
                                 ))}
-                            </select>
-                            <label><Typography 
+                            </select></label>
+                            <label style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -307,15 +307,15 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Font Size:
-            </Typography></label>
+            </Typography>
                             <input
                                 type="number"
                                 name="fontSize"
                                 value={selectedItem.fontSize || 16}
                                 onChange={handleFontSizeChange}
                                 min={1}
-                            />
-                            <label><Typography 
+                            /></label>
+                            <label  style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -329,7 +329,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Text Color:
-            </Typography></label>
+            </Typography>
             <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
     <input
         type="color"
@@ -338,9 +338,9 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
         onChange={handleColorChange}
       
     />
-</div>
+</div></label>
 
-                            <label><Typography 
+                            <label  style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -354,7 +354,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Background Color:
-            </Typography></label>
+            </Typography>
             <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
             <input
                                 type="color"
@@ -362,7 +362,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 value={selectedItem.backgroundColor || '#ffffff'}
                                 onChange={handleBackgroundColorChange}
                             />
-</div>
+</div></label>
 
                         
                         </div>
@@ -370,7 +370,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
 
                     {selectedItem.type === 'shape' && (
                         <div className="property-row">
-                            <label><Typography 
+                            <label  style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -384,7 +384,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             >Color:
-            </Typography></label>
+            </Typography>
             <div style={{ width: "50px",height:"25px", overflow: "hidden",borderRadius:"4px" }}>
             <input
                                 type="color"
@@ -393,9 +393,9 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                // onChange={handleChange}
                                 onChange={(e) => handlePropertyChange('color', e.target.value)}
                             />
-</div>
+</div></label>
                            
-                            <label><Typography 
+                            <label  style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -409,15 +409,15 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Width:
-            </Typography></label>
+            </Typography>
                             <input
                                 type="number"
                                 name="width"
                                 value={selectedItem.size?.width || 50}
                                 onChange={handleChangeWidth}
                                 min={1}
-                            />
-                            <label><Typography 
+                            /></label>
+                            <label  style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 
                 sx={{ 
                     paddingTop: "1px", 
@@ -431,14 +431,14 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                   
                 }}
             > Height:
-            </Typography></label>
+            </Typography>
                             <input
                                 type="number"
                                 name="height"
                                 value={selectedItem.size?.height || 50}
                                 onChange={handleChangeHeight}
                                 min={1}
-                            />
+                            /></label>
                         </div>
                     )}
 

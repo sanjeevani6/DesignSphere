@@ -1,67 +1,39 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Container, Grid, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import Slider from 'react-slick';
-import { Tooltip } from "@mui/material";
-
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Icon for Login
-import LoginIcon from '@mui/icons-material/Login';  // Icon for Signup
-import ContactMailIcon from '@mui/icons-material/ContactMail';  // Icon for Contact
-//import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-// Custom styles (will include images for the features)
+import React from "react";
+import { Button, AppBar, Toolbar, Grid, Tooltip, IconButton, Typography, Box, useMediaQuery, Container } from "@mui/material";
+import { Link } from "react-router-dom";
+import LoginIcon from "@mui/icons-material/Login";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import BrushIcon from "@mui/icons-material/Brush";
+import i1_1 from "../assets/i1.png";
+import i1_2 from "../assets/i2.png";
+import i1_3 from "../assets/i3.png";
+import img1 from "../assets/img1.png";
+import img2 from "../assets/img3.png";
+import img3 from "../assets/img2.png";
 
 const Landing = () => {
-  const [slider, setSlider] = useState(null); // Store the slider reference
-
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 1500,
-    arrows: false, // No arrows
-    dots: true, // Show dots for navigation
-    centerMode: true, // Center the active slide
-    centerPadding: '0', // Prevent unnecessary padding on the sides
-  };
-
-  const featureData = [
-    {
-      title: 'Drag and Drop Functionality',
-      description: 'Seamlessly create and customize designs with our intuitive drag-and-drop interface.',
-      image: 'https://cdn2.editmysite.com/images/landing-pages/global/features/Website-Builder/drag-drop-screen@2x.png',
-    },
-    {
-      title: 'Save and Download Designs',
-      description: 'Save your creations and download them in multiple formats including PNG, JPEG, and SVG.',
-      image: 'https://converter.app/jpeg-to-pdf/images/jpeg-to-pdf.png',
-    },
-    {
-      title: 'Real-Time Collaborative Designs',
-      description: 'Work together in real-time on the same project with teammates or clients, no matter where you are.',
-      image: 'https://img.freepik.com/premium-photo/group-multiethnic-business-people-working-together-project-while-sitting-modern-office_673498-156.jpg?w=1480',
-    },
-    {
-      title: 'Eventify',
-      description: 'Create event designs effortlessly and share them with your team or clients instantly.',
-      image: 'https://www.westcounty.com/wp-content/uploads/2019/05/posting-to-social-media.jpg',
-    },
-    {
-      title: 'Print-Ready Designs',
-      description: 'Easily convert your designs to print-ready formats and get them professionally printed.',
-      image: 'https://www.catdi.com/wp-content/uploads/2022/12/AdobeStock_119955021-scaled-1.jpeg',
-    },
-  ];
+  const isSmallScreen = useMediaQuery("(max-width: 700px)");
 
   return (
-      <div className="App">
-     {/* Navbar */}
-     <AppBar position="sticky" sx={{ backgroundColor: '#684B74' }}>
+    <div className="landing-container" style={{ backgroundColor: "#fffdf0" }}>
+      {/* Navbar */}
+      <AppBar position="sticky" sx={{ backgroundColor: "#f5c5b3" }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            DESIGNSPHERE
+          <Typography
+            variant={isSmallScreen ? "h6" : "h4"}
+            sx={{
+              flexGrow: 1,
+              fontWeight: "bold",
+              fontFamily: "'Chewy', cursive",
+              letterSpacing: "2px",
+              color: "#593125",
+            }}
+          >
+            <Link to="/" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center" }}>
+              <BrushIcon sx={{ marginRight: 0.2 }} /> {!isSmallScreen && "DesignSphere"}
+            </Link>
           </Typography>
+
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button color="inherit" href="#features">Features</Button>
@@ -70,77 +42,100 @@ const Landing = () => {
               <Button color="inherit" href="#contact">Contact</Button>
             </Grid>
             <Grid item>
-            {/* Replace href with Link */}
-            <Tooltip title="Login">
-            <Link to="/login">
-              <IconButton color="inherit">
-                <LoginIcon />
-              </IconButton>
-
-            </Link>
-            </Tooltip>
-          </Grid>
+              <Tooltip title="Login">
+                <Link to="/login">
+                  <IconButton color="inherit">
+                    <LoginIcon />
+                  </IconButton>
+                </Link>
+              </Tooltip>
+            </Grid>
             <Grid item>
-            <Tooltip title="Register">
-                <Link className="nav-link active" to="/register">
-              <IconButton color="inherit" href="/register" >
-                <AccountCircleIcon/>
-              </IconButton>
-              </Link>
+              <Tooltip title="Register">
+                <Link to="/register">
+                  <IconButton color="inherit">
+                    <AccountCircleIcon />
+                  </IconButton>
+                </Link>
               </Tooltip>
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-    {/* Header Section */}
-    <header className="hero-section">
-      <Container className="text-center">
-        <h1 className="site-title">DesignSphere</h1>
-        <p className="tagline">Unleash your creativity with our powerful design tools</p>
-       
+
+      {/* Hero Section */}
+      <Box sx={{ textAlign: "center", padding: 8, backgroundColor: "#90b0e6" }}>
+      <Typography
+            variant={isSmallScreen ? "h4" : "h2"}
+            sx={{
+              flexGrow: 1,
+              fontWeight: "bold",
+              fontFamily: "'Chewy', cursive",
+              letterSpacing: "2px",
+              color: "whitesmoke",
+            }}
+          >
+          
+            Unleash Your Creativity!
+          
+          </Typography>
+        <Typography variant="h5" sx={{ marginTop: 2, color: "#f6bea9" }}>Create stunning campus visuals effortlessly.</Typography>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 3, backgroundColor: "#e46064", color: "#fffdf0", fontSize: "1.2rem", padding: "10px 25px" }}
+          component={Link}
+          to="/register"
+        >
+          Get Started
+        </Button>
+      </Box>
+
+      {/* Features Section */}
+      <Container sx={{ marginTop: 5, textAlign: "center" }} id="features">
+        <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: 4, color: "#e46064" }}>Why Choose Us?</Typography>
+        <Grid container spacing={4}>
+          {[{ img: i1_1, title: "Easy-to-Use Editor", desc: "Drag, drop, and customize effortlessly." },
+            { img: i1_2, title: "Custom Templates", desc: "Choose from a variety of pre-made designs." },
+            { img: i1_3, title: "Export & Share", desc: "Download in high-quality formats instantly." }].map((feature, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <Box>
+                  <img src={feature.img} alt={feature.title} style={{ width: "80%", borderRadius: 10 }} />
+                  <Typography variant="h6" sx={{ marginTop: 2, fontWeight: "bold", color: "#519bc5" }}>{feature.title}</Typography>
+                  <Typography sx={{ marginTop: 1, fontSize: "1rem", fontWeight: "500", color: "#444" }}>{feature.desc}</Typography>
+                </Box>
+              </Grid>
+            ))}
+        </Grid>
       </Container>
-    </header>
-    {/* Get Started and Contact Details */}
-    <section className="cta-section">
-        <Container className="text-center">
-          <Grid container justifyContent="center" spacing={2}>
-            <Grid item>
-              <Button style={{backgroundColor:'#684B74', color:'white',height:'7vh'}} className="cta-button" size="large" href="/register">
-                Start Designing
-              </Button>
-            </Grid>
-          </Grid>
-        </Container>
-      </section>
 
-
-    {/* Features Section with Carousel */}
-    <section className="features-section" id='features'>
-      <Container>
-        {/* <h2 className="text-center mb-5">Features</h2> */}
-        <Slider {...settings} ref={(slider) => setSlider(slider)}>
-          {featureData.map((feature, index) => (
-            <div key={index} className="carousel-item">
-              <img src={feature.image} alt={feature.title} className="feature-image" />
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
-            </div>
-          ))}
-        </Slider>
+      {/* Extra Features */}
+      <Container sx={{ marginTop: 8 }}>
+        <Grid container spacing={4} justifyContent="center" alignItems="center">
+          {[{ img: img3, title: "Print-Ready Designs", desc: "Convert your designs to print-ready formats." },
+            { img: img2, title: "Real-Time Collaboration", desc: "Work with your team anywhere, anytime." },
+            { img: img1, title: "Drag-and-Drop Functionality", desc: "Seamlessly customize your designs." }].map((feature, index) => (
+              <Grid item xs={12} sm={4} key={index} sx={{ textAlign: "center" }}>
+                <Box>
+                  <img src={feature.img} alt={feature.title} style={{ width: "70%", borderRadius: 10 }} />
+                  <Typography variant="h6" sx={{ marginTop: 2, fontWeight: "bold", color: "#f6bea9" }}>{feature.title}</Typography>
+                  <Typography sx={{ marginTop: 1, fontSize: "1rem", fontWeight: "500", color: "#444" }}>{feature.desc}</Typography>
+                </Box>
+              </Grid>
+            ))}
+        </Grid>
       </Container>
-    </section>
-    
 
-
-    {/* Footer Section with Contact Info */}
-    <footer id="contact" className="footer-section text-center">
-      <Container>
-        <h4>Contact Us</h4>
-        <p>Email: contact@designsphere.com</p>
-        <p>Phone: +1 (555) 123-4567</p>
-      </Container>
-    </footer>
-  </div>
-);
+      {/* Footer */}
+      <Box sx={{ backgroundColor: "#519bc5", color: "#fffdf0", padding: 4, textAlign: "center", marginTop: 8 }} id="contact">
+        <Typography variant="h6">Contact Us</Typography>
+        <Typography>Email: contact@designsphere.com</Typography>
+        <Typography>Phone: +1 (555) 123-4567</Typography>
+      </Box>
+      <Box sx={{ backgroundColor: "black", color: "#fffdf0", padding: 2, textAlign: "center" }}>
+        <Typography>&copy; 2025 Campus Art Creator. All rights reserved.</Typography>
+      </Box>
+    </div>
+  );
 };
+
 export default Landing;

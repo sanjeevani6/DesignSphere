@@ -1,8 +1,14 @@
 import React from 'react';
-import { TextField, Button, Typography, Paper, Box } from '@mui/material';
+import { TextField, Button, Typography, Paper,useMediaQuery, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AppBar, Toolbar, Grid, Tooltip, IconButton } from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BrushIcon from "@mui/icons-material/Brush";
 
+
+import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { styled } from '@mui/system';
 import img1 from '../assets/img1.png';
@@ -67,8 +73,9 @@ const RightSection = styled(Box)({
 });
 
 const Register = () => {
+  const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
-  const GITHUB_CLIENT_ID = 'your-github-client-id';
+  
 
   const onGoogleRegisterSuccess = async (res) => {
     try {
@@ -79,10 +86,12 @@ const Register = () => {
         googleId: decoded.sub,
       };
       
-      await axios.post('/users/google-register', userData);
-      navigate('/login');
+      const response = await axios.post('/users/google-login', userData);
+      const user = { ...response.data.user, password: '' };
+      localStorage.setItem('user', JSON.stringify(user));
+      navigate('/home');
     } catch (error) {
-      console.error('Google registration failed', error);
+      console.error('Google login failed', error);
     }
   };
 
@@ -90,9 +99,7 @@ const Register = () => {
     console.error('Google registration failed');
   };
 
-  const handleGitHubRegister = () => {
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user:email`;
-  };
+ 
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -111,7 +118,64 @@ const Register = () => {
   };
 
   return (
-    <Container>
+    <>
+      <AppBar position="sticky" sx={{ backgroundColor: '#f5c5b3' }}>
+            <Toolbar>
+            <Typography
+          variant={isSmallScreen ? "h6" : "h4"}
+          sx={{
+            flexGrow: 1,
+            fontWeight: "bold",
+            fontFamily: "'Chewy', cursive",
+            letterSpacing: "2px",
+            color: "#593125",
+            textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+          }}
+        >
+          <Link
+            to="/home"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <BrushIcon sx={{ marginRight: 0.2 }} /> {!isSmallScreen && "DesignSphere"}
+          </Link>
+        </Typography>
+
+              <Grid container spacing={2} justifyContent="flex-end">
+                <Grid item>
+                  <Button color="inherit" href="#features">Features</Button>
+                </Grid>
+                <Grid item>
+                  <Button color="inherit" href="#contact">Contact</Button>
+                </Grid>
+                <Grid item>
+                {/* Replace href with Link */}
+                <Tooltip title="Login">
+                <Link to="/login">
+                  <IconButton color="inherit">
+                    <LoginIcon />
+                  </IconButton>
+    
+                </Link>
+                </Tooltip>
+              </Grid>
+                <Grid item>
+                <Tooltip title="Register">
+                    <Link className="nav-link active" to="/register">
+                  <IconButton color="inherit" href="/register" >
+                    <AccountCircleIcon/>
+                  </IconButton>
+                  </Link>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
+<Container>
       <RegisterBox>
         <LeftSection>
           <ImageBox>
@@ -138,11 +202,18 @@ const Register = () => {
           <Typography variant="body2" sx={{ marginTop: 2 }}>
             Already have an account? <Link to="/login" style={{ color: '#519bc5' }}>Login</Link>
           </Typography>
+           <Typography variant="body2" sx={{ marginTop: 2, color: '#e46064' }}>OR</Typography>
+                    <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <GoogleLogin onSuccess={onGoogleRegisterSuccess} onError={onGoogleRegisterError} />
+                     
+                    </Box>
          
          
         </RightSection>
       </RegisterBox>
     </Container>
+    </>
+    
   );
 };
 

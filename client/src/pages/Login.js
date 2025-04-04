@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, Typography, Paper, Box } from '@mui/material';
-import { AppBar, Toolbar, Grid, Tooltip, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Grid, Tooltip, IconButton,useMediaQuery } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import BrushIcon from "@mui/icons-material/Brush";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
@@ -72,6 +72,7 @@ const RightSection = styled(Box)({
 });
 
 const Login = () => {
+  const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
   const GITHUB_CLIENT_ID = 'your-github-client-id';
 
@@ -125,41 +126,53 @@ const Login = () => {
   };
 
   return (
-    <>  <AppBar position="sticky" sx={{ backgroundColor: '#684B74' }}>
-            <Toolbar>
-              <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-                DESIGNSPHERE
-              </Typography>
-              <Grid container spacing={2} justifyContent="flex-end">
-                <Grid item>
-                  <Button color="inherit" href="#features">Features</Button>
-                </Grid>
-                <Grid item>
-                  <Button color="inherit" href="#contact">Contact</Button>
-                </Grid>
-                <Grid item>
-                {/* Replace href with Link */}
-                <Tooltip title="Login">
+    <> 
+      <AppBar position="sticky" sx={{ backgroundColor: '#f5c5b3' }}>
+        <Toolbar>
+          <Typography
+            variant={isSmallScreen ? "h6" : "h4"}
+            sx={{
+              flexGrow: 1,
+              fontWeight: "bold",
+              fontFamily: "'Chewy', cursive",
+              letterSpacing: "2px",
+              color: "#593125",
+              textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+            }}
+          >
+            <Link to="/" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center" }}>
+              <BrushIcon sx={{ marginRight: 0.2 }} /> {!isSmallScreen && "DesignSphere"}
+            </Link>
+          </Typography>
+
+          <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+              <Button color="inherit" href="#features">Features</Button>
+            </Grid>
+            <Grid item>
+              <Button color="inherit" href="#contact">Contact</Button>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Login">
                 <Link to="/login">
                   <IconButton color="inherit">
                     <LoginIcon />
                   </IconButton>
-    
                 </Link>
-                </Tooltip>
-              </Grid>
-                <Grid item>
-                <Tooltip title="Register">
-                    <Link className="nav-link active" to="/register">
-                  <IconButton color="inherit" href="/register" >
-                    <AccountCircleIcon/>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Register">
+                <Link to="/register">
+                  <IconButton color="inherit">
+                    <AccountCircleIcon />
                   </IconButton>
-                  </Link>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </Toolbar>
-          </AppBar>
+                </Link>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
      <Container>
       
       <LoginBox>

@@ -123,11 +123,13 @@ const Sidebar = ({ setElements , socket}) => {
           sx={{
             width: { xs: '100%', sm: '240px' },
         height: '82vh',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#9eb7e1',
         boxShadow: 3,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+       
+        justifyContent: 'center',
+        
         overflowX: 'hidden', // Prevent horizontal scrolling
         overflowY: 'auto', // Enable vertical scrolling for overflow
         boxSizing: 'border-box', // Prevent layout shifts due to padding
@@ -135,24 +137,34 @@ const Sidebar = ({ setElements , socket}) => {
           }}
         >
           {/* Header */}
-          <Typography
-            variant="h6"
-            sx={{
-              textAlign: 'center',
-              padding: '16px',
-              backgroundColor: '#684B74',      
-              
-              color: 'white',
-            }}
+          
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                textAlign: 'center',
+                padding: '16px',
+                backgroundColor: 'whitesmoke',      
+                
+                color: '#593125',
+                 
+          
+                  
+                  fontWeight: "bold",
+                  fontFamily: "'Chewy', cursive",
+                  letterSpacing: "2px",
+                 
+                  textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                
+              }}
           >
-            Sidebar
+              Sidebar
           </Typography>
     
           {/* Sidebar Content */}
-          <Box>
+          <Box >
        
 
-        <Accordion>
+        <Accordion >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <TextFieldsIcon sx={{ marginRight: 1 }} />
             <Typography>Add Text</Typography>
@@ -216,8 +228,23 @@ const Sidebar = ({ setElements , socket}) => {
           </AccordionDetails>
         </Accordion>
 
-        <Box sx={{ padding: '16px' }}>
-          <Typography variant="subtitle1">
+        <Box sx={{ padding: '16px', paddingTop:'30px', backgroundColor: 'whitesmoke',  }}>
+          <Typography variant="subtitle1"  sx={{ 
+                textAlign: 'center',
+                padding: '16px',
+                   
+                
+                color: '#593125',
+                 
+          
+                  
+                  fontWeight: "bold",
+                  fontFamily: "'Chewy', cursive",
+                  letterSpacing: "2px",
+                 
+                  textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
+                
+              }}>
             <ImageIcon sx={{ marginRight: 1 }} />
             Upload Image
           </Typography>

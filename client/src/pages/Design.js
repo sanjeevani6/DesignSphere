@@ -322,7 +322,7 @@ const Design = () => {
         <>
             <Header/>
             <div className="editor-container">
-   <div className="sidebar"> <Sidebar setElements={setElements} /></div>
+   <div className="sidebar  "> <Sidebar setElements={setElements} /></div>
     <div className="main-content">
        <div  className="properties-panel" ><PropertiesPanel 
        teamCode={teamCode}

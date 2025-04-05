@@ -1,24 +1,19 @@
-// src/components/TeamForm.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
-import './TeamForm.css';
 import Header from '../components/Layouts/Header';
 
 const TeamForm = () => {
     const navigate = useNavigate();
-   const [teamCode, setTeamCode] = useState('');
+    const [teamCode, setTeamCode] = useState('');
     const [isJoined, setIsJoined] = useState(false);
     const [newTeamCode, setNewTeamCode] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false); // State for the modal
-
+    const [showModal, setShowModal] = useState(false);
     const [teamName, setTeamName] = useState('');
-    
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -40,12 +35,11 @@ const TeamForm = () => {
             return;
         }
         try {
-            const response = await axios.post('/teams/create-team', { teamName,userId });
+            const response = await axios.post('/teams/create-team', { teamName, userId });
             const { teamCode } = response.data;
-           setNewTeamCode(teamCode);
+            setNewTeamCode(teamCode);
             setIsJoined(true);
-            setShowModal(true); // Show modal on team creation
-            //navigate(`/design/${teamCode}`)
+            setShowModal(true);
             socket.emit('joinTeam', { teamCode, userId });
         } catch (error) {
             console.error('Error creating team:', error);
@@ -58,18 +52,18 @@ const TeamForm = () => {
             return;
         }
         try {
-            console.log("a")
             const response = await axios.post('/teams/join-team', { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
-                socket.emit('joinRoom', {teamCode, callback:(response) => {
-                    if (response.status === 'success') {
-                        console.log(`Joined room successfully: ${response.room}`);
-                    } else {
-                        console.error(`Failed to join room: ${response.message}`);
+                socket.emit('joinRoom', {
+                    teamCode, callback: (response) => {
+                        if (response.status === 'success') {
+                            console.log(`Joined room successfully: ${response.room}`);
+                        } else {
+                            console.error(`Failed to join room: ${response.message}`);
+                        }
                     }
-            }});
-                console.log(`blah blah blah ${teamCode}` );
+                });
                 navigate(`/design/team/${teamCode}`);
             } else {
                 alert('Team not found');
@@ -80,86 +74,187 @@ const TeamForm = () => {
     };
 
     const handleModalClose = () => {
-        setShowModal(false); // Close the modal
-        navigate(`/design/team/${newTeamCode}`); // Navigate to design page
+        setShowModal(false);
+        navigate(`/design/team/${newTeamCode}`);
     };
 
-    // Listen for real-time design updates
     socket.on(`design-updated-${teamCode}`, (updatedDesign) => {
-        // Handle real-time design updates, such as updating the design in state
         console.log('Design updated:', updatedDesign);
-        // Possibly implement further updates to the local state
     });
 
     if (loading) return <p>Loading...</p>;
 
     return (
         <>
-        <Header/>
-        <div style={{height:"91vh", display:'flex'}}className=" mw-1/2 team-form-container">
-    
-            <div style={{float:'left' , width: '50% '}} className="w-1/2  justify-center bg-white">
-                <img 
-                    src="https://img.freepik.com/premium-photo/team-designing-scalable-ui-elements-that-adjust-different-screen-sizes_1314467-49185.jpg"
-                    alt="Team Design Illustration"
-                     style={{height:"91vh", width:"100%"}} 
-                    className="w-3/4 rounded-lg shadow-lg"
-                />
+            <Header />
+            <div style={{
+                height: "91vh",
+                display: 'flex',
+                backgroundColor: '#fffdf0',
+                fontFamily: 'Arial, sans-serif',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <div style={{ float: 'left', width: '50%' }}>
+                    <img
+                        src="https://img.freepik.com/premium-photo/team-designing-scalable-ui-elements-that-adjust-different-screen-sizes_1314467-49185.jpg"
+                        alt="Team Design Illustration"
+                        style={{ height: "91vh", width: "100%", objectFit: 'cover', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}
+                    />
+                </div>
+
+                {isAuthenticated && !isJoined ? (
+                    <div style={{
+                        height: "91vh",
+                        maxWidth: "50%",
+                        padding: '3rem',
+                        textAlign: 'center',
+                        background: '#fffdf0',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                    }}>
+                        <h1 style={{ fontSize: "2.5rem", color: '#519bc5', fontWeight: 'bold' }}>Collaborate with Your Team</h1>
+                        <div style={{ marginTop: '5vh' }}>
+                            <h3 style={{ color: '#e46064' }}>Create a Team</h3>
+                            <input
+                                type="text"
+                                placeholder="Team Name"
+                                value={teamName}
+                                onChange={(e) => setTeamName(e.target.value)}
+                                style={{
+                                    width: "70%",
+                                    padding: "10px",
+                                    margin: "10px 0",
+                                    borderRadius: "8px",
+                                    border: "1px solid #519bc5",
+                                    backgroundColor: "#fffdf0",
+                                    fontSize: '14px',
+                                    color: '#333'
+                                }}
+                            />
+                            <button
+                                onClick={createTeam}
+                                style={{
+                                    backgroundColor: "#519bc5",
+                                    color: "#fffdf0",
+                                    border: "none",
+                                    borderRadius: "8px",
+                                    padding: "12px",
+                                    width: '75%',
+                                    fontWeight: 'bold',
+                                    marginBottom: '2rem',
+                                    cursor: 'pointer',
+                                    transition: 'background-color 0.3s ease'
+                                }}
+                                onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
+                                onMouseOut={e => e.target.style.backgroundColor = "#519bc5"}
+                            >
+                                Create a New Team
+                            </button>
+
+                            <div style={{ marginTop: '20px' }}>
+                                <h3 style={{ color: '#e46064' }}>Or Join an Existing Team</h3>
+                                <input
+                                    type="text"
+                                    placeholder="Enter Team Code"
+                                    value={teamCode}
+                                    onChange={(e) => setTeamCode(e.target.value)}
+                                    style={{
+                                        width: "70%",
+                                        padding: "10px",
+                                        margin: "10px 0",
+                                        borderRadius: "8px",
+                                        border: "1px solid #519bc5",
+                                        backgroundColor: "#fffdf0",
+                                        fontSize: '14px',
+                                        color: '#333'
+                                    }}
+                                />
+                                <button
+                                    onClick={joinTeam}
+                                    style={{
+                                        backgroundColor: "#90b0e6",
+                                        color: "#fffdf0",
+                                        border: "none",
+                                        borderRadius: "8px",
+                                        padding: "12px",
+                                        width: '75%',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        transition: 'background-color 0.3s ease'
+                                    }}
+                                    onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
+                                    onMouseOut={e => e.target.style.backgroundColor = "#90b0e6"}
+                                >
+                                    Join Team
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div style={{ padding: '2rem', color: '#519bc5' }}>
+                        <h1>Welcome to Team <span style={{ color: '#e46064' }}>{teamCode || newTeamCode}</span></h1>
+                        <Canvas teamCode={teamCode || newTeamCode} />
+                    </div>
+                )}
+
+                {showModal && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000
+                    }}>
+                        <div style={{
+                            background: '#fffdf0',
+                            padding: '30px',
+                            width: '400px',
+                            maxWidth: '90%',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            textAlign: 'center'
+                        }}>
+                            <h2 style={{ color: '#333', marginBottom: '15px' }}>Your Team Code</h2>
+                            <div style={{
+                                fontSize: '24px',
+                                color: '#0066ff',
+                                fontWeight: 'bold',
+                                background: '#f0f8ff',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                marginTop: '10px'
+                            }}>
+                                {newTeamCode}
+                            </div>
+                            <button
+                                onClick={handleModalClose}
+                                style={{
+                                    marginTop: '20px',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#0066ff',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontSize: '16px'
+                                }}
+                                onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
+                                onMouseOut={e => e.target.style.backgroundColor = "#0066ff"}
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-            {isAuthenticated && !isJoined ? (
-                <div style={{height:"91vh", maxWidth:"50%"}}className="form-content">
-                    <h1 style={{ fontFamily:"", fontSize:"300%"}}>Collaborate with Your Team</h1>
-                    <div style={{marginTop:'10vh'}}>
-                    <h3>Create a Team</h3>
-                    <input
-                    style={{width:"50%"}}
-                    type="text"
-                    placeholder="Team Name"
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                    className="team-input"
-                />
-                    <button style={{backgroundColor:"#684B74", width:'70%'}}className="create-team-btn " onClick={createTeam}>Create a New Team</button>
-                    <div className="join-section">
-                        <h3>Or Join an Existing Team</h3>
-                        <input
-                        style={{width:"50%"}}
-                            type="text"
-                            placeholder="Enter Team Code"
-                            value={teamCode}
-                            onChange={(e) => setTeamCode(e.target.value)}
-                            className="team-input"
-                        />
-                        <button style={{backgroundColor:"#684B74", width:'70%'}} className="join-team-btn" onClick={joinTeam}>Join Team</button>
-                    </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="canvas-section">
-                    <h1>Welcome to Team {teamCode || newTeamCode}</h1>
-                    <Canvas teamCode={teamCode || newTeamCode} />
-                </div>
-            )}
-        
-            
-            {showModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>Team Created Successfully!</h2>
-                        <p>Your team code is:</p>
-                        <div className="team-code-box">{newTeamCode}</div>
-                        <p>Share this code with your friends to collaborate.</p>
-                        <button className="continue-btn" onClick={handleModalClose}>Continue</button>
-                    </div>
-                </div>
-            )}
-        </div>
         </>
     );
 };
 
 export default TeamForm;
-
-
-
-

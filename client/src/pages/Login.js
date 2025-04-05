@@ -146,16 +146,24 @@ const Login = () => {
           </Typography>
 
           <Grid container spacing={2} justifyContent="flex-end">
+           <Grid item>
+                          <Tooltip title="Home">
+                              <Link className="nav-link active" to="/">
+                              <Button sx={{ color: 'black' }} href="/"> HOME</Button>
+                              
+                            </Link>
+                            </Tooltip>
+                          </Grid>
             <Grid item>
-              <Button color="inherit" href="#features">Features</Button>
+              <Button sx={{ color: 'black' }} href="#features">Features</Button>
             </Grid>
             <Grid item>
-              <Button color="inherit" href="#contact">Contact</Button>
+              <Button sx={{ color: 'black' }} href="#contact">Contact</Button>
             </Grid>
             <Grid item>
               <Tooltip title="Login">
                 <Link to="/login">
-                  <IconButton color="inherit">
+                  <IconButton sx={{ color: 'black' }}>
                     <LoginIcon />
                   </IconButton>
                 </Link>
@@ -164,7 +172,7 @@ const Login = () => {
             <Grid item>
               <Tooltip title="Register">
                 <Link to="/register">
-                  <IconButton color="inherit">
+                  <IconButton sx={{ color: 'black' }}>
                     <AccountCircleIcon />
                   </IconButton>
                 </Link>

@@ -146,17 +146,28 @@ const Register = () => {
         </Typography>
 
               <Grid container spacing={2} justifyContent="flex-end">
-                <Grid item>
-                  <Button color="inherit" href="#features">Features</Button>
+              <Grid item>
+                
+                  <Grid item>
+                <Tooltip title="Register">
+                    <Link className="nav-link active" to="/">
+                    <Button sx={{ color: 'black' }} href="/"> HOME</Button>
+                    
+                  </Link>
+                  </Tooltip>
+                </Grid>
                 </Grid>
                 <Grid item>
-                  <Button color="inherit" href="#contact">Contact</Button>
+                  <Button sx={{ color: 'black' }} href="#features">Features</Button>
+                </Grid>
+                <Grid item>
+                  <Button sx={{ color: 'black' }} href="#contact">Contact</Button>
                 </Grid>
                 <Grid item>
                 {/* Replace href with Link */}
                 <Tooltip title="Login">
                 <Link to="/login">
-                  <IconButton color="inherit">
+                  <IconButton sx={{ color: 'black' }}>
                     <LoginIcon />
                   </IconButton>
     
@@ -166,7 +177,7 @@ const Register = () => {
                 <Grid item>
                 <Tooltip title="Register">
                     <Link className="nav-link active" to="/register">
-                  <IconButton color="inherit" href="/register" >
+                  <IconButton sx={{ color: 'black' }} href="/register" >
                     <AccountCircleIcon/>
                   </IconButton>
                   </Link>

@@ -23,7 +23,7 @@ const sendRoutes = require('./routes/sendRoutes');
 const designimageRoutes=require('./routes/designImageRoutes')
 
 //config dot env file
-dotenv.config();
+dotenv.config({});
 //database call
 connectDb();
 

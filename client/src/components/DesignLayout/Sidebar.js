@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import axios from 'axios';
 import socket from '../../socket'
-import {teamCode} from "../../pages/Design"
+//import {teamCode} from "../../pages/Design"
 import Chat from './Chat';
 import {
     Box,
@@ -285,7 +285,7 @@ const Sidebar = ({ setElements , socket}) => {
               transition: 'height 0.3s ease', // Smooth height transition
             }}
           >
-            {isChatVisible && <Chat teamCode={teamCode} socket={socket} />}
+            {isChatVisible && <Chat teamCode={teamCode}  />}
           </Box>
         </Box>
       )}

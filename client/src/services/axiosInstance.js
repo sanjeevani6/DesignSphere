@@ -2,12 +2,12 @@ import axios from "axios";
 import { refreshToken } from "./authService"; // Function to refresh token
 
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL ||"/",
-    withCredentials: true, // Ensures cookies are sent
+    baseURL: 'http://localhost:8080' ||"/",
+    withCredentials: true, // withCredentials: true ensures cookies are sent — essential when using HttpOnly tokens.
 });
-
-let isRefreshing = false;
-let failedQueue = [];
+let isRefreshing = false;// Is refresh in progress?
+//Ensures you don’t refresh token more than once simultaneously
+let failedQueue = [];  // Queue of waiting requests
 
 const processQueue = (error, token = null) => {
     failedQueue.forEach((prom) => {

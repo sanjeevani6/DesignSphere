@@ -9,8 +9,10 @@ import {
   ListItemText,
   Avatar,
 } from '@mui/material';
+import socket from '../../socket';
 
-const Chat = ({ teamCode, socket }) => {
+
+const Chat = ({ teamCode }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
 

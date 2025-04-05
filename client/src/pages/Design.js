@@ -29,9 +29,9 @@ const Design = () => {
     var { currentUser } = useContext(UserContext); 
     
     
-    if(! currentUser)
+    // if(! currentUser)
         
-        currentUser = JSON.parse(localStorage.getItem('user'));
+        //currentUser = JSON.parse(localStorage.getItem('user'));
         console.log(`current user ${currentUser}`)
         
     useEffect(() => {

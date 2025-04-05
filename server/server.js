@@ -33,7 +33,7 @@ const app=express()
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000/api/v1",  // Allow only your client origin
+    origin: "http://localhost:3000",  // Allow only your client origin
     methods: ["GET", "POST","PUT"],
     credentials: true
   }
@@ -55,6 +55,7 @@ app.use((req, res, next) => {
 
 //for user 
 app.use('/api/v1/users',require('./routes/userRoute'))
+
 //design page
 
 // Serve static files from the 'uploads' directory

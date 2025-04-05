@@ -1,7 +1,7 @@
 const express=require('express')
 const { logincontroller, registercontroller, logoutController } = require('../controllers/userController')
 const { googleLoginController } = require('../controllers/googleLoginController');
-
+const verifyToken = require('../middlewares/verifyToken');
 const { refreshToken } = require("../controllers/refreshToken");
 //router object
 const router =express.Router();
@@ -12,7 +12,9 @@ const router =express.Router();
 
 
 
-
+router.get('/me', verifyToken, (req, res) => {
+    res.status(200).json({ user: req.user }); // { userId: ... }
+  });
 router.get('/test', (req, res) => {
     console.log("test route worked");
     res.send('Test route works');

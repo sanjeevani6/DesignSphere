@@ -5,7 +5,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BrushIcon from "@mui/icons-material/Brush";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../services/axiosInstance';
+import { useUser } from '../context/UserContext';
 import {message} from 'antd';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
@@ -75,14 +76,26 @@ const RightSection = styled(Box)({
 const Login = () => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
-  const GITHUB_CLIENT_ID = 'your-github-client-id';
+  const { login } = useUser();
 
+  const GITHUB_CLIENT_ID = 'your-github-client-id';
+// Check if already logged in (via cookie)
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      navigate('/home');
-    }
-  }, [navigate]);
- 
+    const checkLogin = async () => {
+      try {
+        const res = await axios.get('/users/me', {
+          withCredentials: true,
+        });
+        if (res.data.user) {
+          login(res.data.user);
+          navigate('/home');
+        }
+      } catch (err) {
+        console.log("🧪 Not logged in:", err?.response?.data?.message || err.message);
+      }
+    };
+    checkLogin();
+  }, [navigate, login]);
 
   const onGoogleLoginSuccess = async (res) => {
     try {
@@ -100,9 +113,7 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
   
-      const user = { ...response.data.user, password: '' };
-      localStorage.setItem('user', JSON.stringify(user));
-  
+      login(response.data.user);
       message.success('Login successful via Google');
       navigate('/home');
     } catch (error) {
@@ -133,13 +144,12 @@ const Login = () => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post('/users/login', values, {
+      const response = await axios.post("http://localhost:8080/api/v1/users/login", values, {
         withCredentials: true,
        
       });
   
-      const user = { ...response.data.user, password: '' };
-      localStorage.setItem('user', JSON.stringify(user));
+      login(response.data.user);
       message.success('Login successful');
       navigate('/home');
     } catch (error) {

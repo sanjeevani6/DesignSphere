@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
 import SidebarItem from './SidebarItem';
-import axios from 'axios';
-import socket from '../../socket'
+//import axios from 'axios';
+//import socket from '../../socket';
+import axios from "../../services/axiosInstance";
 //import {teamCode} from "../../pages/Design"
 import Chat from './Chat';
 import {
@@ -52,7 +53,8 @@ const Sidebar = ({ setElements , socket}) => {
                  const response = await axios.post('/designpage/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
-                    }
+                    },
+                    withCredentials: true,
                 });
                 console.log("URL",response.data.url);
               // const imageUrl = '/' + (response.data.url).replace(/\\/g, '/');// Adjust according to your response structure

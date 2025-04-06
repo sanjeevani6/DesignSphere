@@ -15,10 +15,10 @@ export const UserProvider = ({ children }) => {
    
         const getUser = async () => {
             try {
-                const res = await axiosInstance.get('/api/v1/users/me',{
+                const res = await axiosInstance.get("/users/me",{
                     withCredentials: true,
                 }); // backend verifies token from cookies
-                setCurrentUser(res.data.user); // e.g., { userId: ... }
+                setCurrentUser(res.data.user || null); // e.g., { userId: ... }
             } catch (err) {
                 console.error("❌ Error fetching user:", err?.response || err.message);
                 setCurrentUser(null);

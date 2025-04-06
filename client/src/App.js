@@ -26,6 +26,10 @@ const ProtectedRoutes = ({ children }) => {
       </div>
     );
   }
+  if (!currentUser) {
+    console.warn("User not authenticated. Redirecting to login.");
+    return <Navigate to="/login" replace />;
+  }
   
 
   return children;
@@ -117,14 +121,15 @@ function App() {
               }
             />
 
-            <Route
-              path="/teams"
-              element={
-                <ProtectedRoutes>
-                  <TeamForm />
-                </ProtectedRoutes>
-              }
-            />
+<Route
+  path="/teams"
+  element={
+    <ProtectedRoutes>
+      <TeamForm />
+    </ProtectedRoutes>
+  }
+/>
+
 
             <Route
               path="/design/team/:teamCode"

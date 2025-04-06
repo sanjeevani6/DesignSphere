@@ -7,7 +7,7 @@ const Design = require('../models/Design');
 const TeamDesign = require('../models/TeamDesign');
 const Teams = require('../models/Team');
 const teamDesignController=require('../controllers/teamDesignController')
-const verifyToken = require('../middlewares/verifyToken');
+const {verifyToken} = require('../middlewares/verifyToken');
 
 
 // Route to get designs for a specific user

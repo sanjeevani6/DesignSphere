@@ -26,6 +26,7 @@ const Design = () => {
     const socketJoinedRooms = useRef(new Set());
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
+    
     var { currentUser } = useContext(UserContext); 
     
     
@@ -250,9 +251,10 @@ const Design = () => {
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {
-                    saveResponse=await axios.post('/designs/save', payload);
-                    message.success('New design saved successfully');
-                    const designId = saveResponse.data.designId;
+                    saveResponse = await axios.post('/designs/save', payload, {
+                        withCredentials: true,
+                      });
+                      
                     console.log("designid",designId )
                     console.log('New design saved:', payload);
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);

@@ -11,7 +11,7 @@ const updateDesign = async (req, res) => {
     try {
        const { designId } = req.params;
        const { title, elements, backgroundColor,backgroundImage } = req.body;
- 
+        console.log("at update design")
        const updatedDesign = await Design.findByIdAndUpdate(
           designId,
           { title, elements, backgroundColor,backgroundImage },

@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "./authService"; // Function to refresh token
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080' ||"/",
+    baseURL: 'http://localhost:8080/api/v1' ||"/",
     withCredentials: true, // withCredentials: true ensures cookies are sent — essential when using HttpOnly tokens.
 });
 let isRefreshing = false;// Is refresh in progress?

@@ -19,15 +19,29 @@ const SidebarItem = ({ item }) => {
 
     useEffect(() => {
         if (item.type === 'animatedText') {
-            fetch(item.animationUrl)
-                .then((response) => response.json())
-                .then((data) => {setAnimationData(data)
-                    console.log('animation data url',data)
-                })
-                .catch((error) => console.error('Error loading animation:', error));
-          
+          let url = item.animationUrl; // The URL you want to fetch
+      
+          // Check if the URL is relative (doesn't start with 'http' or 'https')
+          if (!/^https?:\/\//.test(url)) {
+            url = `/api/v1${url}`; // Prepend '/api/v1' to relative URLs
+          }
+      
+          console.log("Fetching from URL:", url); // Log the full URL being fetched
+      
+          fetch(url)
+            .then((response) => {
+              console.log("response received:", response);
+              return response.json();
+            })
+            .then((data) => {
+              setAnimationData(data);
+              console.log('animation data parsed:', data);
+            })
+            .catch((error) => console.error('❌ Error loading animation:', error));
         }
-    }, [item.animationUrl, item.type]);
+      }, [item.animationUrl, item.type]);
+      
+      
 
     // Dynamic styles based on item properties
     const baseStyle = {

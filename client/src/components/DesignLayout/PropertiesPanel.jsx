@@ -18,8 +18,8 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
 
     // Fetch Google Fonts dynamically 
     useEffect(() => {
-        const API_KEY =  process.env.REACT_APP_API_KEY;
-        console.log("API Key:", process.env.REACT_APP_API_KEY);
+        const API_KEY =  import.meta.env.VITE_API_KEY;
+        console.log("API Key:", import.meta.env.VITE_API_KEY);
  
         if (!API_KEY) {
             console.error("Google Fonts API key is missing in .env file");

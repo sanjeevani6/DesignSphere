@@ -64,13 +64,13 @@ const Design = () => {
                 let response;
                 if (teamCode) {
                     console.log("getting team design")
-                  response = await axiosInstance.get(`/designs/team-designs/${teamCode}`,{
+                  response = await axiosInstance.get(`/api/v1/designs/team-designs/${teamCode}`,{
                     withCredentials: true 
                   });
                 
                 } else if (designId) {
                     console.log("getting design")
-                    response = await axiosInstance.get(`/designs/${designId}`,{
+                    response = await axiosInstance.get(`/api/v1/designs/${designId}`,{
                         withCredentials: true 
                     });
                 }
@@ -232,7 +232,7 @@ const Design = () => {
             if (teamCode) {
                 console.log("saving")
                 await axiosInstance.put(
-                    `/designs/team-designs/${teamCode}`, 
+                    `/api/v1/designs/team-designs/${teamCode}`, 
                     payload, // Payload goes here
                  { withCredentials: true }
                     
@@ -243,14 +243,14 @@ const Design = () => {
                 console.log('New design saved:', payload);
             } else {
                 if (designId) {
-                    await axiosInstance.put(`/designs/${designId}`,
+                    await axiosInstance.put(`/api/v1/designs/${designId}`,
                         payload,{
                              withCredentials: true 
                     });
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {
-                    saveResponse=await axios.post('/designs/save', payload);
+                    saveResponse=await axios.post('/api/v1/designs/save', payload);
                     message.success('New design saved successfully');
                     const designId = saveResponse.data.designId;
                     console.log("designid",designId )

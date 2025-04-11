@@ -35,7 +35,7 @@ const TeamForm = () => {
             return;
         }
         try {
-            const response = await axios.post('/teams/create-team', { teamName, userId });
+            const response = await axios.post('/api/v1/teams/create-team', { teamName, userId });
             const { teamCode } = response.data;
             setNewTeamCode(teamCode);
             setIsJoined(true);
@@ -52,7 +52,7 @@ const TeamForm = () => {
             return;
         }
         try {
-            const response = await axios.post('/teams/join-team', { teamCode, userId });
+            const response = await axios.post('/api/v1/teams/join-team', { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
                 socket.emit('joinRoom', {

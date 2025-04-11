@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import axios from 'axios';
 import socket from '../../socket'
-import {teamCode} from "../../pages/Design"
+//import {teamCode} from "../../pages/Design"
 import Chat from './Chat';
 import {
     Box,
@@ -49,7 +49,7 @@ const Sidebar = ({ setElements , socket}) => {
     
             try {
                 // Upload the image to the server and get the URL
-                 const response = await axios.post('/designpage/upload-image', formData, {
+                 const response = await axios.post('/api/v1/designpage/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -86,9 +86,9 @@ const Sidebar = ({ setElements , socket}) => {
     useEffect(() => {
         const fetchSidebarItems = async () => {
             try {
-                const response = await fetch('/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
+                const response = await fetch('/api/v1/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
                 const data = await response.json();
-                console.log('sidebar items',data)
+                console.log('sidebar items:',data)
                 setSidebarItems(data);
             } catch (error) {
                 console.error('Error fetching sidebar items:', error);
@@ -123,6 +123,8 @@ const Sidebar = ({ setElements , socket}) => {
           sx={{
             width: { xs: '100%', sm: '240px' },
         height: '82vh',
+       
+
         backgroundColor: '#9eb7e1',
         boxShadow: 3,
         display: 'flex',

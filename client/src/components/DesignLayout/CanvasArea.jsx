@@ -28,12 +28,21 @@ const CanvasItem = ({ teamCode, item, onSelectItem, updateItemProperties,lockIte
 
     useEffect(() => {
         if (item.type === 'animatedText' && item.animationUrl) {
-            fetch(item.animationUrl)
-                .then((response) => response.json())
-                .then((data) => setAnimationData(data))
-                .catch((error) => console.error('Error loading animation:', error));
+          // Check if the URL is relative (doesn't start with 'http' or 'https')
+          let url = item.animationUrl;
+          if (!/^https?:\/\//.test(url)) {
+            url = `/api/v1${url}`; // Prepend '/api/v1' to relative URLs
+          }
+      
+          console.log("Fetching from URL:", url); // Log the full URL being fetched
+      
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => setAnimationData(data))
+            .catch((error) => console.error('Error loading animation:', error));
         }
-    }, [item.animationUrl, item.type]);
+      }, [item.animationUrl, item.type]);
+      
 
     
 

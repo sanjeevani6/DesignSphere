@@ -1,7 +1,7 @@
 import axios from "axios";
 export const refreshToken = async () => {
     try {
-        const response = await axios.post("/users/refresh-token", {}, {
+        const response = await axios.post("/api/v1/users/refresh-token", {}, {
             withCredentials: true, // Ensures cookies are sent
         });
 

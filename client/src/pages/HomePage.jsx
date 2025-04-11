@@ -53,7 +53,7 @@ const Homepage = () => {
            if (userId) {
             // Otherwise, fetch user-specific designs
           
-          const userResponse = await axiosInstance.get(`/designs/user/${userId}`);
+          const userResponse = await axiosInstance.get(`/api/v1/designs/user/${userId}`);
           //setDesigns(userResponse.data)
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);
@@ -120,11 +120,11 @@ const Homepage = () => {
         try {
             if(isTeamDesign){
                 console.log(`Downloading for ${designId}`)
-               response=await axios.get(`/designs/team-designs/${designId}`)
+               response=await axios.get(`/api/v1/designs/team-designs/${designId}`)
             }
             else{
                 console.log(`Downloading foe ${designId}}`)
-             response = await axios.get(`/designs/${designId}`);
+             response = await axios.get(`/api/v1/designs/${designId}`);
             }
              console.log(response.data.elements)
             const { elements, backgroundColor, backgroundImage } = response.data;
@@ -160,7 +160,7 @@ const Homepage = () => {
         try {
             if(isTeamDesign){
                 console.log(`Deleting:${designId}`)
-                const response = await axios.delete(`/designs/delete/team/${designId}/${userId}`);
+                const response = await axios.delete(`/api/v1/designs/delete/team/${designId}/${userId}`);
                 if (response.status === 200) {
                   // Update local state to remove the team design
                   setTeamDesigns((prevDesigns) =>
@@ -171,7 +171,7 @@ const Homepage = () => {
                 }
             }
             else{
-                await axios.delete(`/designs/delete/${designId}`);
+                await axios.delete(`/api/v1/designs/delete/${designId}`);
             
             setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
             }

@@ -90,7 +90,7 @@ const Register = () => {
   
       console.log("📤 Google Login Data:", userData);
   
-      const response = await axios.post('/users/google-login', userData, {
+      const response = await axios.post('/api/v1/users/google-login', userData, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -117,6 +117,7 @@ const Register = () => {
 
   
   const submitHandler = async (e) => {
+    console.log("🟡 Form Submitted");
     e.preventDefault(); // prevent page reload
     const formData = new FormData(e.currentTarget);
     const values = {
@@ -128,7 +129,7 @@ const Register = () => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post('/users/register', values, {
+      const response = await axios.post('/api/v1/users/register', values, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -180,7 +181,7 @@ const Register = () => {
                   <Grid item>
                 <Tooltip title="Register">
                     <Link className="nav-link active" to="/">
-                    <Button sx={{ color: 'black' }} href="/"> HOME</Button>
+                    <Button sx={{ color: 'black' }} > HOME</Button>
                     
                   </Link>
                   </Tooltip>
@@ -206,7 +207,7 @@ const Register = () => {
                 <Grid item>
                 <Tooltip title="Register">
                     <Link className="nav-link active" to="/register">
-                  <IconButton sx={{ color: 'black' }} href="/register" >
+                  <IconButton sx={{ color: 'black' }}  >
                     <AccountCircleIcon/>
                   </IconButton>
                   </Link>

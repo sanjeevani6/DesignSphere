@@ -31,7 +31,7 @@ const Header = () => {
 
   const logoutHandler = async() => {
     try {
-      await axios.post('/users/logout', {}, { withCredentials: true });
+      await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
       localStorage.removeItem('user');
       navigate('/login');
     } catch (error) {

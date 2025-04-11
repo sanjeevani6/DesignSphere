@@ -95,7 +95,7 @@ const Login = () => {
   
       console.log("📤 Google Login Data:", userData);
   
-      const response = await axios.post('/users/google-login', userData, {
+      const response = await axios.post('/api/v1/users/google-login', userData, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -133,7 +133,7 @@ const Login = () => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post('/users/login', values, {
+      const response = await axios.post('/api/v1/users/login', values, {
         withCredentials: true,
        
       });

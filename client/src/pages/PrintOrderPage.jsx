@@ -24,13 +24,13 @@ const PrintOrderPage = () => {
             let response;
             try {
                 if(teamCode){
-                    response=await axios.get(`/designs/team-designs/${teamCode}`,{
+                    response=await axios.get(`/api/v1/designs/team-designs/${teamCode}`,{
                         withCredentials: true ,
                     })
                     setTeamDesign(response.data)
                 }
                 else{
-                 response = await axios.get(`/designs/${designId}`,{
+                 response = await axios.get(`/api/v1/designs/${designId}`,{
                      withCredentials: true 
                  });
                 setDesign(response.data);
@@ -62,7 +62,7 @@ const PrintOrderPage = () => {
             : { designId, userDetails };
 
            console.log("sending from frontend to backend for printing");
-            await axios.post(`/shop/send`,payload,
+            await axios.post(`/api/v1/shop/send`,payload,
                 { withCredentials: true });
                 
            

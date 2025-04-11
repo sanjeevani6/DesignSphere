@@ -24,7 +24,7 @@ const EventPage = () => {
     const fetchDesignDetails = async () => {
       const effectiveDesignId = teamCode ? teamCode : designId;
       try {
-        const response = await axios.get(`/shop/events/${effectiveDesignId}`);
+        const response = await axios.get(`/api/v1/shop/events/${effectiveDesignId}`);
         setDesignImage(response.data.relimageUrl);
         setabsDesignImage(response.data.imageUrl);
       } catch (error) {

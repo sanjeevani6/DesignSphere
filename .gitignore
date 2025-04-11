@@ -1,4 +1,18 @@
-# Ignore environment variables
+# Ignore dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
 .env
-# dependencies
-/node_modules
+
+# Build outputs
+dist/
+build/
+
+# OS & IDE files
+.DS_Store
+.vscode/

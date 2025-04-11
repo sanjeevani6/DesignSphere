@@ -5,9 +5,9 @@ const axiosInstance = axios.create({
     baseURL:import.meta.env.VITE_API_URL ||"/",
     withCredentials: true, // Ensures cookies are sent
 });
-
-let isRefreshing = false;
-let failedQueue = [];
+let isRefreshing = false;// Is refresh in progress?
+//Ensures you don’t refresh token more than once simultaneously
+let failedQueue = [];  // Queue of waiting requests
 
 const processQueue = (error, token = null) => {
     failedQueue.forEach((prom) => {

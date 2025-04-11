@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Router } from 'react-router-dom';
 import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -6,7 +6,8 @@ import Login from './pages/Login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
 import EventPage from './pages/EventPage'; 
-import { UserProvider } from './context/UserContext'; 
+import { UserProvider, UserContext, useUser } from './context/UserContext';
+import { useContext } from 'react';
 import Templates from './pages/Templates';
 import Landing from './pages/Landing';
 import PrintOrderPage from './pages/PrintOrderPage';
@@ -14,73 +15,138 @@ import PrintOrderPage from './pages/PrintOrderPage';
   
  
 import TeamForm from './pages/TeamForm';
+// ✅ ProtectedRoutes component (inline)
+const ProtectedRoutes = ({ children }) => {
+  const { currentUser, loading } = useUser();
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}>
+        <p>Loading user info...</p>
+      </div>
+    );
+  }
+  if (!currentUser) {
+    console.warn("User not authenticated. Redirecting to login.");
+    return <Navigate to="/login" replace />;
+  }
+  
+
+  return children;
+};
+
 
 function App() {
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
- 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
+  <GoogleOAuthProvider clientId={clientId}>
       <UserProvider>
-        <Routes>
-         {/* Default route to introduction page */}
-         {/* <Route exact path="/" element={<Navigate to="/introduction" />} /> */}
+        
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-{/* Introduction Page */}
-<Route path="/" element={<Landing />} />
-          {/* Protected route for homepage */}
-          <Route 
-            path="/home" 
-            element={
-              <ProtectedRoutes>
-                <Homepage />
-              </ProtectedRoutes>
-            } 
-          />
-          
-          
-          <Route 
-            path="/event/:designId" 
-            element={
-              
-                <EventPage />
-              
-            } 
-          />
-          <Route 
-            path="/event/teams/:teamCode" 
-            element={
-              
-                <EventPage />
-              
-            } 
-          />
-          
-          <Route path="/print/:designId" element={<PrintOrderPage />} />
-          <Route path="/print/teams/:teamCode" element={<PrintOrderPage />} />
-          {/* Route for the Design page */}
-          <Route path="/design" element={<Design />} />
-          <Route path="/design/:designId" element={<Design />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/teams" element={<TeamForm />} />
-          <Route path="/design/team/:teamCode" element={<Design />} />
+            {/* Protected Routes */}
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoutes>
+                  <Homepage />
+                </ProtectedRoutes>
+              }
+            />
 
-          {/* Public routes for login and register */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+            <Route
+              path="/event/:designId"
+              element={
+                <ProtectedRoutes>
+                  <EventPage />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/event/teams/:teamCode"
+              element={
+                <ProtectedRoutes>
+                  <EventPage />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/print/:designId"
+              element={
+                <ProtectedRoutes>
+                  <PrintOrderPage />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/print/teams/:teamCode"
+              element={
+                <ProtectedRoutes>
+                  <PrintOrderPage />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/design"
+              element={
+                <ProtectedRoutes>
+                  <Design />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/design/:designId"
+              element={
+                <ProtectedRoutes>
+                  <Design />
+                </ProtectedRoutes>
+              }
+            />
+
+            <Route
+              path="/templates"
+              element={
+                <ProtectedRoutes>
+                  <Templates />
+                </ProtectedRoutes>
+              }
+            />
+
+<Route
+  path="/teams"
+  element={
+    <ProtectedRoutes>
+      <TeamForm />
+    </ProtectedRoutes>
+  }
+/>
+
+
+            <Route
+              path="/design/team/:teamCode"
+              element={
+                <ProtectedRoutes>
+                  <Design />
+                </ProtectedRoutes>
+              }
+            />
+
+            {/* Catch-all: Redirect unknown routes */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+       
       </UserProvider>
     </GoogleOAuthProvider>
   );
-}
-
-// Protected Routes Component to check for user authentication
-export function ProtectedRoutes({ children }) {
-  // Check if user is logged in by checking localStorage
-  if (localStorage.getItem('user')) {
-    return children;  // If user is logged in, render the children (protected page)
-  } else {
-    return <Navigate to="/login" />;  // If not logged in, redirect to login page
-  }
 }
 
 export default App;

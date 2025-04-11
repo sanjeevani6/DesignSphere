@@ -1,5 +1,4 @@
 {
-    
     "name": "client",
     "version": "0.1.0",
     "private": true,
@@ -21,6 +20,7 @@
         "gif.js.optimized": "^1.0.1",
         "html2canvas": "^1.4.1",
         "https-browserify": "^1.0.0",
+        "js-cookie": "^3.0.5",
         "jspdf": "^2.5.2",
         "jwt-decode": "^4.0.0",
         "lottie-react": "^2.4.0",
@@ -42,13 +42,12 @@
         "url": "^0.11.4",
         "web-vitals": "^2.1.4"
     },
-   "scripts": {
-    "start":"vite",
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
-}
-,
+    "scripts": {
+        "start": "vite",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
     "eslintConfig": {
         "extends": [
             "react-app",

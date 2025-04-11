@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
 import Header from '../components/Layouts/Header';
+import { useUser } from '../context/UserContext'; 
+import axiosInstance from "../services/axiosInstance";
+
 
 const TeamForm = () => {
     const navigate = useNavigate();
+    const { currentUser} = useUser();
+
     const [teamCode, setTeamCode] = useState('');
     const [isJoined, setIsJoined] = useState(false);
     const [newTeamCode, setNewTeamCode] = useState('');
@@ -14,20 +19,31 @@ const TeamForm = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [teamName, setTeamName] = useState('');
-
+    console.log(`current user: ${currentUser}`)
+    const userId = currentUser?.userId || null;
+     console.log(userId)
+     useEffect(() => {
+        console.log("🧠 TeamForm: loading =", loading);
+        console.log("👤 TeamForm: currentUser =", currentUser);
+      }, [currentUser]);
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.userId) {
+          console.log(`current user ${currentUser}`)
+          if (currentUser === undefined) {
+            // Still loading user from context — don't do anything yet
+            return;
+        }
+               
+        // const userId=currentUser.userId
+        if (currentUser && currentUser.userId) {
             setIsAuthenticated(true);
         } else {
             navigate('/login', { replace: true });
             return;
         }
         setLoading(false);
-    }, [navigate]);
+    }, [navigate, currentUser]);
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userId = user ? user.userId : null;
+    
 
     const createTeam = async () => {
         if (!userId) {
@@ -47,6 +63,7 @@ const TeamForm = () => {
     };
 
     const joinTeam = async () => {
+        const userId = currentUser?.userId;
         if (!userId) {
             console.error("User not logged in or userId is missing");
             return;

@@ -1,5 +1,5 @@
 // src/components/Header.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, useMediaQuery, Menu, MenuItem } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -8,6 +8,7 @@ import BrushIcon from "@mui/icons-material/Brush";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import MenuIcon from "@mui/icons-material/Menu"; // Icon for dropdown menu
 import { message } from "antd";
+import { UserContext, useUser } from '../../context/UserContext'; 
 import axios from 'axios';
 
 const Header = () => {
@@ -17,11 +18,14 @@ const Header = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  var { currentUser } = useUser(); 
+      
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setLoginUser(user);
+    console.log("hehe",currentUser)
+    
+    if (currentUser) {
+      setLoginUser(currentUser);
     }
   }, []);
 

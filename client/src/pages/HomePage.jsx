@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import Layout from '../components/Layouts/Layout';
 import { useMediaQuery} from "@mui/material";
 import axios from 'axios';
-import { FiUsers } from "react-icons/fi"
+import { FiUsers } from "react-icons/fi";
+import { UserContext } from '../context/UserContext'; 
 import axiosInstance from "../services/axiosInstance";
+
 //import { FiUsers } from 'react-icons/fi'; 
 import { exportToPDF, exportToImage, exportToGIF, designHasAnimatedText } from '../utils/exportUtils';
 //import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
@@ -41,9 +44,14 @@ const Homepage = () => {
    
     
     
-    const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user)
-    const userId = user ? user.userId : null;
+   var { currentUser } = useContext(UserContext); 
+   console.log(`current user ${currentUser}`)
+        
+  const userId=currentUser.userId;
+       
+    console.log(currentUser)
+    console.log(userId)
+    //const userId = user ? user.userId : null;
     
 
     useEffect(() => {
@@ -79,7 +87,9 @@ const Homepage = () => {
       }
     };
     const handleCollaborateClick = () => {
-      navigate('/teams');
+      console.log('Token:', Cookies.get('token')); // 👈 Check this
+      console.log(`user: ${currentUser}`)
+      navigate('/teams', { replace: true });
     };
 
     const handleDownloadClick = async(e, designId,isTeamDesign=false) => {

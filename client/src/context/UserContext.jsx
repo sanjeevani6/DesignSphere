@@ -1,32 +1,46 @@
 // src/context/UserContext.js
 
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axiosInstance from '../services/axiosInstance';
+
 
 // Create a UserContext
 export const UserContext = createContext();
+export const useUser = () => useContext(UserContext);
 
 // Create a provider component
 export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    useEffect(() => {
-        // Check local storage or make an API call to set currentUser
-        const user = JSON.parse(localStorage.getItem('user')); // Assuming you store user info in localStorage
-        if (user) {
-            setCurrentUser(user);
-        }
-    }, []);
+    const [loading, setLoading] = useState(true);
+   
+        const getUser = async () => {
+            try {
+                const res = await axiosInstance.get("/users/me",{
+                    withCredentials: true,
+                }); // backend verifies token from cookies
+                setCurrentUser(res.data.user || null); // e.g., { userId: ... }
+            } catch (err) {
+                console.error("❌ Error fetching user:", err?.response || err.message);
+                setCurrentUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        useEffect(() => {
+            getUser();
+          }, []);   
 
     const login = (user) => {
-        setCurrentUser(user); // Set user object after successful login
+        setCurrentUser(user);
     };
 
     const logout = () => {
-        setCurrentUser(null); // Clear user on logout
+        setCurrentUser(null);
     };
 
-    
     return (
-        <UserContext.Provider value={{ currentUser, login, logout }}>
+        <UserContext.Provider value={{ currentUser, login, logout, loading }}>
             {children}
         </UserContext.Provider>
     );

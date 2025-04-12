@@ -25,16 +25,15 @@ router.get('/events/:designId', async (req, res) => {
             designImage = await DesignImage.findOne({ teamCode: designId });
         }
 
-        console.log(designImage);
+        console.log("design image:",designImage);
         // Check if the design image URL was found in the database
         if (!designImage || !designImage.imageUrl) {
             return res.status(404).json({ message: 'Design image URL not found in the database.' });
         }
 
-        // Construct the absolute path to the image file based on the retrieved URL
-        //const designPath = '/'+ designImage.imageUrl.replace(/\\/g, '/');
-        const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
-        const reldesignPath =           '/'+ designImage.imageUrl.replace(/\\/g, '/');
+      
+        const designPath =designImage.imageUrl;
+     
         console.log('Design path:', designPath);
       
         // Check if the design file exists
@@ -83,19 +82,18 @@ router.post('/send', async (req, res) => {
         if (!designImage || !designImage.imageUrl) {
             return res.status(404).json({ message: 'Design image URL not found in the database.' });
         }
-       console.log( "imageurl",designImage.imageUrl);
-        // Construct the absolute path to the image file based on the retrieved URL
-        const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
-     //  designPath=designImage.imageUrl;
+     
+       designPath=designImage.imageUrl;
+
        console.log('Design path:', designPath);
 
 
-        // Check if the design file exists
-        if (!fs.existsSync(designPath)) {
-            return res.status(404).json({ message: 'Design image file not found.' });
+        // Check if the design image path exists
+        if (!(designPath)) {
+            return res.status(404).json({ message: 'Design image path not found.' });
         }
 
-        
+            console.log('before creating account');
             let testAccount = await nodemailer.createTestAccount();
             console.log('Ethereal Account:', testAccount);
         

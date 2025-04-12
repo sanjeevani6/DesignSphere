@@ -5,12 +5,12 @@ import Login from './pages/Login';
 //import socket from './socket'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Design from './pages/Design';
-import EventPage from './pages/EventPage'; 
 import { UserProvider, UserContext, useUser } from './context/UserContext';
 import { useContext } from 'react';
 import Templates from './pages/Templates';
 import Landing from './pages/Landing';
 import PrintOrderPage from './pages/PrintOrderPage';
+import SharePage from './pages/SharePage';
 
   
  
@@ -58,21 +58,23 @@ function App() {
               }
             />
 
-            <Route
-              path="/event/:designId"
-              element={
-                <ProtectedRoutes>
-                  <EventPage />
-                </ProtectedRoutes>
-              }
-            />
+         <Route 
+         path="/share/:designId"
+          element={
+         
+           < SharePage />
+         
+         
+         }
+          />
+
 
             <Route
-              path="/event/teams/:teamCode"
+              path="/share/teams/:teamCode"
               element={
-                <ProtectedRoutes>
-                  <EventPage />
-                </ProtectedRoutes>
+              
+                  <SharePage />
+               
               }
             />
 

@@ -20,6 +20,7 @@ const templatesRoutes = require('./routes/templatesRoutes');
 //const projectRoutes = require('./routes/projectRoutes');
 const sendRoutes = require('./routes/sendRoutes');
 const designimageRoutes=require('./routes/designImageRoutes')
+const shareRoutes=require('./routes/shareRoutes')
 
 
 //config dot env file
@@ -97,6 +98,8 @@ canvasSocket(io);
 app.use('/api/v1/shop',sendRoutes);
 //upload design image in server
 app.use('/api/v1/store',designimageRoutes);
+//share
+app.use('/api/v1/share',shareRoutes);
 
 
 //port

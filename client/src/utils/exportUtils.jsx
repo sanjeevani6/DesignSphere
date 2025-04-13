@@ -123,7 +123,7 @@ export const exportToEvent = async (elements, backgroundColor, backgroundImage) 
     } catch (error) {
         console.error('Error exporting to Image:', error);
     }
-};
+};  
 export const exportToShare = async (elements, backgroundColor, backgroundImage,designId) => {
    
     try {

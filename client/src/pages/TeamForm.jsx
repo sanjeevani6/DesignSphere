@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
 import Header from '../components/Layouts/Header';
 import { useUser } from '../context/UserContext'; 
-import axiosInstance from "../services/axiosInstance";
+
 
 
 const TeamForm = () => {
@@ -33,7 +33,7 @@ const TeamForm = () => {
             return;
         }
                
-        // const userId=currentUser.userId
+        
         if (currentUser && currentUser.userId) {
             setIsAuthenticated(true);
         } else {

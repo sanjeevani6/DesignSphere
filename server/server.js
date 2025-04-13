@@ -53,13 +53,6 @@ app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`, req.body);
     next();
 });
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
 
 //routes
 
@@ -70,10 +63,9 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 
 // Serve static files from the 'uploads' directory
 app.use('/api/v1/uploads/images', express.static('server/uploads/images'));
-//app.use('/api/v1/uploads/templates', express.static('server/uploads/templates'));
-//app.use('/api/v1/uploads/stickers', express.static('server/uploads/stickers'));
+
 app.use('/api/v1/uploads/animations', express.static('server/uploads/animations'));
-//app.use('/api/v1/uploads/artelements', express.static('server/uploads/artelements'));
+
 app.use('/api/v1/uploads/designimage',express.static('server/uploads/designimage'));
 
 

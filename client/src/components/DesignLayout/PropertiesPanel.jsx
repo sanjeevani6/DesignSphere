@@ -9,7 +9,7 @@ const manualFonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New']; // F
 
 const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
     const [fontSize, setFontSize] = useState(selectedItem?.fontSize || 16);
-    // const [width, setWidth] = useState(selectedItem?.width || 16);
+    
     const [color, setColor] = useState(selectedItem?.color || '#000000');
     const [backgroundColor, setBackgroundColor] = useState(selectedItem?.backgroundColor || '#ffffff');
     const [fontFamily, setFontFamily] = useState(selectedItem?.fontType || 'Arial');

@@ -57,7 +57,7 @@ const elementSchema = new mongoose.Schema({
 
 // Define the schema for the collaborative team design
 const teamDesignSchema = new mongoose.Schema({
-    //_id: { type: String, required: true },
+    
     teamCode: { 
         type: String, 
         required: true, 

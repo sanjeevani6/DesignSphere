@@ -5,13 +5,13 @@ const nodemailer = require('nodemailer');
 const express = require('express');
 const router = express.Router();
 const DesignImage = require('../models/DesignImage');  // Import your design image model
-// const DesignImage = require('../models/DesignImage');  // Import your design image model
+
 const verifyToken = require('../middlewares/verifyToken');
 
 router.get('/events/:designId', async (req, res) => {
     const { designId } = req.params;
   console.log('design id',designId)
-//   console.log('team id',teamCode)
+
     try {
         // Check if the provided designId is a valid ObjectId (for designs)
         const isObjectId = mongoose.Types.ObjectId.isValid(designId);
@@ -32,7 +32,7 @@ router.get('/events/:designId', async (req, res) => {
         }
 
         // Construct the absolute path to the image file based on the retrieved URL
-        //const designPath = '/'+ designImage.imageUrl.replace(/\\/g, '/');
+       
         const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
         const reldesignPath =           '/'+ designImage.imageUrl.replace(/\\/g, '/');
         console.log('Design path:', designPath);
@@ -41,7 +41,7 @@ router.get('/events/:designId', async (req, res) => {
         if (!fs.existsSync(designPath)) {
             return res.status(404).json({ message: 'Design image file not found.' });
         }
-       // res.status(200).json({ imageUrl: `/uploads/designimage/${designImage.imageName}` });
+      
 
        res.status(200).json({
             relimageUrl:reldesignPath,

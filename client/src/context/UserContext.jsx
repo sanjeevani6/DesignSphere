@@ -16,7 +16,9 @@ export const UserProvider = ({ children }) => {
         const getUser = async () => {
             try {
                 const res = await axiosInstance.get("/users/me",{
-                    withCredentials: true,
+                    headers: {
+    "Cache-Control": "no-cache",
+  }
                 }); // backend verifies token from cookies
                 setCurrentUser(res.data.user || null); // e.g., { userId: ... }
             } catch (err) {

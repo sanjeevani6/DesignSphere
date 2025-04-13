@@ -23,13 +23,13 @@ const logincontroller = async (req, res) => {
         res.cookie("refreshToken",refreshToken, {
           httpOnly: true,   // JavaScript can't access
           secure: process.env.NODE_ENV === "production", // Secure in production
-          sameSite: "Strict", // Prevents CSRF
+          sameSite:process.env.NODE_ENV === "production"?"None":"Lax", // Prevents CSRF
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
         res.cookie("token", accessToken, {
           httpOnly: true,
           secure:process.env.NODE_ENV === "production",
-          sameSite: "Strict",
+          sameSite: process.env.NODE_ENV === "production"?"None":"Lax",
           maxAge: 15 * 60 * 1000, // 15 minutes
       });
        
@@ -97,14 +97,14 @@ const registercontroller = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
+          sameSite: process.env.NODE_ENV === "production"?"None":"Lax",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
       res.cookie("token", accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
+          sameSite: process.env.NODE_ENV === "production"?"None":"Lax",
           maxAge: 15 * 60 * 1000, // 15 minutes
       });
 

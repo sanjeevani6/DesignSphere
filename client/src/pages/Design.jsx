@@ -11,7 +11,7 @@ import { UserContext } from '../context/UserContext';
 import {  exportToShare } from '../utils/exportUtils';
 import socket from '../socket'
 import { message } from 'antd';
-import { Variants } from 'antd/es/config-provider';
+
 import axiosInstance from "../services/axiosInstance";
 
 
@@ -30,21 +30,16 @@ const Design = () => {
     var { currentUser } = useContext(UserContext); 
     
     
-    // if(! currentUser)
-        
-        //currentUser = JSON.parse(localStorage.getItem('user'));
+    
         console.log(`current user ${currentUser}`)
         
     useEffect(() => {
         if (templateUrl) {
             console.log('template URL selected:',templateUrl);
-            // const updatedImageUrl = templateUrl 
-            // ? `${templateUrl.replace(/\\/g, '/')}`  // Ensuring leading slash and replace backslashes in url
-            // : undefined; 
+             
             setBackgroundImage(templateUrl);
             if (teamCode) {
-                //socket.emit('updateDesignProperties', { teamCode, properties: { backgroundImage: templateUrl } });
-                // Emit the template selection event to the server
+                
                  const payload = { teamCode, properties: { backgroundImage: templateUrl } ,updatedBy: socket.id };
                  console.log('Emitting updateDesignProperties:', payload);
                  socket.emit('updateDesignProperties', payload);
@@ -113,7 +108,7 @@ const Design = () => {
                  setTitle(title);
                  setElements(updatedElements||[]);
                  setBackgroundColor(backgroundColor);
-                // setBackgroundImage(backgroundImage); 
+               
             }
               } catch (error) {
                  console.error('Error loading design:', error);
@@ -150,11 +145,7 @@ const Design = () => {
                 );
                 console.log("Deleted item with ID:", updatedData.deletedItemId);
             }
-             // Skip processing if this client already performed the update
-            //  if (updatedData.updatedBy === socket.id) {
-            //     console.log('Skipping update for performing client.');
-            //     return;
-            // }
+             
            
             // Update background properties if they are part of the update
             if (updatedData.backgroundColor) setBackgroundColor(updatedData.backgroundColor);
@@ -175,24 +166,8 @@ const Design = () => {
 
         });
 
-        // Listen for unlockItem event
-    socket.on('unlockItem', ({ teamCode,itemId }) => {
-        console.log(`Item ${itemId} unlocked`);
-        setElements((prevElements) =>
-            prevElements.map((item) =>
-                item.id === itemId ? { ...item, lockedBy: null } : item
-            )
-        );
-    });
-    
-        socket.on('lockItem', ({ teamCode,itemId, lockedBy }) => {
-        console.log(`Item ${itemId} locked by ${lockedBy}`);
-        setElements((prevElements) =>
-            prevElements.map((item) =>
-                item.id === itemId ? { ...item, lockedBy } : item
-            )
-        );
-    });
+        
+       
     
         }
         return () => {
@@ -201,7 +176,7 @@ const Design = () => {
                 socket.emit('leaveRoom', teamCode);
                 socket.off('receiveDesignUpdate');
                 socketJoinedRooms.current.delete(teamCode);
-                socket.off('lockItem');
+              ;
                
        
             }
@@ -278,11 +253,7 @@ const Design = () => {
     const updateItemProperties = (id, updatedProperties) => {
         if(teamCode){
         const item = elements.find((item) => item.id === id);
-        if (item.lockedBy && item.lockedBy !== socket.id) {
-            alert("This item is being edited by another user.");
-           
-          return;
-        }
+       
     }
         setElements((prevElements) =>
             prevElements.map((item) =>
@@ -339,12 +310,12 @@ const Design = () => {
             <CanvasArea teamCode={teamCode}
                         socket={socket}
                         elements={elements} 
-                        setElements={setElements}
-                        selectedItem={selectedItem}
+                         setElements={setElements}
+                       selectedItem={selectedItem}
                         setSelectedItem={setSelectedItem}
                         updateItemProperties={updateItemProperties}
                         backgroundColor={backgroundColor}
-                        backgroundImage={backgroundImage} 
+                         backgroundImage={backgroundImage} 
                         className="canvas-area" />
         </div>
     </div>

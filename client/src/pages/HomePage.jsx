@@ -8,28 +8,20 @@ import { FiUsers } from "react-icons/fi";
 import { UserContext } from '../context/UserContext'; 
 import axiosInstance from "../services/axiosInstance";
 
-//import { FiUsers } from 'react-icons/fi'; 
+ 
 import { exportToPDF, exportToImage, exportToGIF, designHasAnimatedText } from '../utils/exportUtils';
-//import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
+
 import {
     Button,
     Menu,
     MenuItem,
     Box,
-    Grid,
-    Card,
-    CardContent,
+   
     Typography,
   } from '@mui/material';
 
 
-  // Function to check for animated text
-//   const designHasAnimatedText = (elements) => {
-//     if (Array.isArray(elements)) {
-//         return elements.some(element => element.category && element.category.trim().toLowerCase() === 'animatedtext');
-//     }
-//     return false;
-// };
+  
 const Homepage = () => {
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const [designs, setDesigns] = useState([]);
@@ -51,7 +43,6 @@ const Homepage = () => {
        
     console.log(currentUser)
     console.log(userId)
-    //const userId = user ? user.userId : null;
     
 
     useEffect(() => {
@@ -59,10 +50,10 @@ const Homepage = () => {
           try{
           console.log("fetching designs")
            if (userId) {
-            // Otherwise, fetch user-specific designs
+           
           
           const userResponse = await axiosInstance.get(`/api/v1/designs/user/${userId}`);
-          //setDesigns(userResponse.data)
+          
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);
           console.log("ok",teamDesigns)
@@ -123,8 +114,7 @@ const Homepage = () => {
         console.error('Design ID or Team Code is missing');
         return;
     }
-        // if (isTeamDesign && !selectedteamCode) return;
-        // if (!isTeamDesign && !selectedDesignId) return;
+        
 
         let response;
         try {

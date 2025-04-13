@@ -1,9 +1,6 @@
 // sockets/canvasSocket.js
 const SidebarItem = require('../models/SidebarItem'); // Import the elements id model
-//const TeamDesign = require('../models/TeamDesign'); // Import the elements id model
 
-
-  
 let connections=[];
 const rooms={};
 module.exports = (io) => {
@@ -96,28 +93,7 @@ socket.on('leaveChat', (teamCode) => {
 
 
 
-  // Lock an item to prevent concurrent edits
-  socket.on('lockItem', ({ teamCode, itemId }) => {
-    if (!teamCode || !itemId) {
-        console.error('Invalid lockItem request:', { teamCode, itemId });
-        return;
-    }
-
-    console.log(`User ${socket.id} locked item ${itemId} in team ${teamCode}`);
-    socket.to(teamCode).emit('itemLocked', { itemId, lockedBy: socket.id });
-});
-
-// Release a lock on an item
-socket.on('unlockItem', ({ teamCode, itemId }) => {
-    if (!teamCode || !itemId) {
-        console.error('Invalid unlockItem request:', { teamCode, itemId });
-        return;
-    }
-
-    console.log(`User ${socket.id} unlocked item ${itemId} in team ${teamCode}`);
-    socket.to(teamCode).emit('itemUnlocked', { itemId });
-});
-
+  
 
 
 

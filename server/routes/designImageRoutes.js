@@ -4,7 +4,7 @@ const path = require('path');
 
 const express = require('express');
 const DesignImage = require('../models/DesignImage');
-
+const cloudinary = require('../config/cloudinary');
 // Create a router instance
 const router = express.Router();
 
@@ -29,46 +29,56 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST route to save uploaded images
-router.post('/designimage', upload.single('file'), async(req, res) => {
+router.post('/designimage', upload.single('file'), async (req, res) => {
     try {
-        const { designId,teamCode } = req.body;
-        const dId=teamCode?teamCode:designId
-       // const filePath = req.file.path;
-       const filePath = `/uploads/designimage/${req.file.filename}`;  // Relative Path
+        const { designId, teamCode } = req.body;
+        const dId = teamCode || designId;
 
+        const localPath = req.file.path;
+
+        // Upload to Cloudinary
+        const cloudinaryRes = await cloudinary.uploader.upload(localPath, {
+            folder: 'designimage'
+        });
+
+        // Clean up local file
+        fs.unlinkSync(localPath);
+
+        const imageUrl = cloudinaryRes.secure_url;
         const fileName = req.file.filename;
-        console.log('File uploaded:', fileName, 'Path:', filePath);
+
         const existingDesignImage = await DesignImage.findOne({ designId: dId });
         if (existingDesignImage) {
             await DesignImage.updateOne(
-                { designId: dId }, 
+                { designId: dId },
                 {
                     $set: {
-                        imageName: fileName,  
-                        imageUrl: filePath    
+                        imageName: fileName,
+                        imageUrl: imageUrl  // Cloudinary URL
                     }
                 }
             );
-            console.log('designimage updated');
+            console.log('Design image updated in DB');
+        } else {
+            const designImage = new DesignImage({
+                designId: dId,
+                imageName: fileName,
+                imageUrl: imageUrl
+            });
+            await designImage.save();
+            console.log('Design image saved in DB');
         }
-        else{
-        const designImage = new DesignImage({
-            designId: dId,
-            imageName: fileName,
-            imageUrl: filePath // Relative path to the uploaded image
+
+        res.status(200).json({
+            message: 'Design image uploaded and saved successfully!',
+            cloudinaryUrl: imageUrl
         });
-
-
-        // Save the image metadata
-        await designImage.save();
-    }
-
-        res.status(200).json({ message: 'designImage saved successfully!', filePath: req.file.path });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to save designimage' });
+        console.error('Upload error:', error);
+        res.status(500).json({ error: 'Failed to upload image' });
     }
 });
 
 
 
-module.exports = router;
+module.exports = router; 

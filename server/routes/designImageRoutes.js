@@ -1,6 +1,6 @@
  const multer = require('multer');
 const path = require('path');
-
+const fs=require('fs');
 
 const express = require('express');
 const DesignImage = require('../models/DesignImage');
@@ -33,19 +33,22 @@ router.post('/designimage', upload.single('file'), async (req, res) => {
     try {
         const { designId, teamCode } = req.body;
         const dId = teamCode || designId;
-
+         console.log("design id",dId);
         const localPath = req.file.path;
 
         // Upload to Cloudinary
         const cloudinaryRes = await cloudinary.uploader.upload(localPath, {
             folder: 'designimage'
         });
+        console.log("file uploaded in cloudinary");
+        
 
         // Clean up local file
         fs.unlinkSync(localPath);
 
         const imageUrl = cloudinaryRes.secure_url;
         const fileName = req.file.filename;
+        console.log("IMAGE URL FROM CLOUDINARY",imageUrl);
 
         const existingDesignImage = await DesignImage.findOne({ designId: dId });
         if (existingDesignImage) {

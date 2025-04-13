@@ -1,5 +1,4 @@
-// src/components/Header.js
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, useMediaQuery, Menu, MenuItem } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -8,32 +7,29 @@ import BrushIcon from "@mui/icons-material/Brush";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import MenuIcon from "@mui/icons-material/Menu"; // Icon for dropdown menu
 import { message } from "antd";
-import { UserContext, useUser } from '../../context/UserContext'; 
 import axios from 'axios';
 
-const Header = () => {
+const Header = ({ user }) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const isVerySmallScreen = useMediaQuery("(max-width: 400px)");
   const [loginUser, setLoginUser] = useState("");
   const [menuAnchor, setMenuAnchor] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  var { currentUser } = useUser(); 
-      
 
   useEffect(() => {
-    console.log("hehe",currentUser)
+    console.log("user prop", user);
     
-    if (currentUser) {
-      setLoginUser(currentUser);
+    if (user) {
+      setLoginUser(user);
     }
-  }, []);
+  }, [user]); // Ensure this effect runs whenever the user prop changes
 
   const teamCode = location.pathname.includes("/design/team/")
     ? location.pathname.split("/design/team/")[1]
     : null;
 
-  const logoutHandler = async() => {
+  const logoutHandler = async () => {
     try {
       await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
       localStorage.removeItem('user');
@@ -64,7 +60,6 @@ const Header = () => {
     <AppBar 
       position="sticky" 
       sx={{ 
-        // Updated gradient: dark edge with a moderately lighter tone towards the right
         background: "#f5c5b3",
         padding: "10px",
         color: "black" 
@@ -203,7 +198,6 @@ const Header = () => {
                   <Typography
                     variant="h6"
                     sx={{
-                     
                       letterSpacing: "2px",
                       color: "white",
                       textShadow: "2px 2px 5px rgba(0,0,0,0.5)",
@@ -225,3 +219,4 @@ const Header = () => {
 };
 
 export default Header;
+

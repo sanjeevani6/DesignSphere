@@ -1,152 +1,135 @@
-import { Routes, Route, Navigate, Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+// Pages
 import Homepage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
-//import socket from './socket'
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import Design from './pages/Design';
-import { UserProvider, UserContext, useUser } from './context/UserContext';
-import { useContext } from 'react';
 import Templates from './pages/Templates';
 import Landing from './pages/Landing';
 import PrintOrderPage from './pages/PrintOrderPage';
 import SharePage from './pages/SharePage';
-
-  
- 
 import TeamForm from './pages/TeamForm';
-// ✅ ProtectedRoutes component (inline)
-const ProtectedRoutes = ({ children }) => {
-  const { currentUser, loading } = useUser();
+import Design from "./pages/Design";
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}>
-        <p>Loading user info...</p>
-      </div>
-    );
-  }
-  if (!currentUser) {
-    console.warn("User not authenticated. Redirecting to login.");
-    return <Navigate to="/login" replace />;
-  }
-  
-
-  return children;
-};
-
+// Components
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
+  const location = useLocation();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const clientId = '272513661609-dlsg5lhebhojdk72qr40gk1itduhgk2i.apps.googleusercontent.com';
-  return (
-  <GoogleOAuthProvider clientId={clientId}>
-      <UserProvider>
-        
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoutes>
-                  <Homepage />
-                </ProtectedRoutes>
-              }
-            />
+  useEffect(() => {
+    const publicRoutes = ["/", "/login", "/register"];
 
-         <Route 
-         path="/share/:designId"
-          element={
-         
-           < SharePage />
-         
-         
-         }
-          />
+    if (!publicRoutes.includes(location.pathname)) {
+      axios
+        .get("/api/v1/users/check-auth", { withCredentials: true })
+        .then((res) => {
+          console.log("response of user in useEffect of app", res.data);
+          if (res.data.user) {
+            setUser(res.data.user); // Set the user if authenticated
+          } else {
+            setUser(null);
+          }
+        })
+        .catch((err) => {
+          console.error("Not authenticated", err);
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false); // don't show loading screen on public pages
+    }
+  }, [location.pathname]);
 
-
-            <Route
-              path="/share/teams/:teamCode"
-              element={
-              
-                  <SharePage />
-               
-              }
-            />
-
-            <Route
-              path="/print/:designId"
-              element={
-                <ProtectedRoutes>
-                  <PrintOrderPage />
-                </ProtectedRoutes>
-              }
-            />
-
-            <Route
-              path="/print/teams/:teamCode"
-              element={
-                <ProtectedRoutes>
-                  <PrintOrderPage />
-                </ProtectedRoutes>
-              }
-            />
-
-            <Route
-              path="/design"
-              element={
-                <ProtectedRoutes>
-                  <Design />
-                </ProtectedRoutes>
-              }
-            />
-
-            <Route
-              path="/design/:designId"
-              element={
-                <ProtectedRoutes>
-                  <Design />
-                </ProtectedRoutes>
-              }
-            />
-
-            <Route
-              path="/templates"
-              element={
-                <ProtectedRoutes>
-                  <Templates />
-                </ProtectedRoutes>
-              }
-            />
-
-<Route
-  path="/teams"
-  element={
-    <ProtectedRoutes>
-      <TeamForm />
-    </ProtectedRoutes>
+  if (loading) {
+    return <h1>Loading...</h1>;
   }
-/>
 
+  return (
+    <GoogleOAuthProvider clientId={clientId}>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/share/:designId" element={<SharePage />} />
+        <Route path="/share/teams/:teamCode" element={<SharePage />} />
 
-            <Route
-              path="/design/team/:teamCode"
-              element={
-                <ProtectedRoutes>
-                  <Design />
-                </ProtectedRoutes>
-              }
-            />
+        {/* Protected Routes */}
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute user={user}>
+              <Homepage user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/design"
+          element={
+            <PrivateRoute user={user}>
+              <Design user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/design/:designId"
+          element={
+            <PrivateRoute user={user}>
+              <Design user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/design/team/:teamCode"
+          element={
+            <PrivateRoute user={user}>
+              <Design user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/templates"
+          element={
+            <PrivateRoute user={user}>
+              <Templates user={user}/>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/print/:designId"
+          element={
+            <PrivateRoute user={user}>
+              <PrintOrderPage user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/print/teams/:teamCode"
+          element={
+            <PrivateRoute user={user}>
+              <PrintOrderPage user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/teams"
+          element={
+            <PrivateRoute user={user}>
+              <TeamForm user={user} />
+            </PrivateRoute>
+          }
+        />
 
-            {/* Catch-all: Redirect unknown routes */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-       
-      </UserProvider>
+        {/* Catch-all Route */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </GoogleOAuthProvider>
   );
 }

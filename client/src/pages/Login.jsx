@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState} from 'react';
 import { TextField, Button, Typography, Paper, Box } from '@mui/material';
 import { AppBar, Toolbar, Grid, Tooltip, IconButton,useMediaQuery } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BrushIcon from "@mui/icons-material/Brush";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../services/axiosInstance';
-import { useUser } from '../context/UserContext';
+import axios from '../services/axiosInstance';;
 import {message} from 'antd';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
@@ -73,29 +72,35 @@ const RightSection = styled(Box)({
   borderRadius: '0 10px 10px 0',
 });
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
-  const { login } = useUser();
 
-  const GITHUB_CLIENT_ID = 'your-github-client-id';
+   // Local state to manage user and loading
+   const [localUser, setLocalUser] = useState(null);
+   const [loading, setLoading] = useState(true);
+ 
 // Check if already logged in (via cookie)
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axios.get('/users/me', {
+        const res = await axios.get('/users/check-auth', {
           withCredentials: true,
         });
         if (res.data.user) {
-          login(res.data.user);
+          setUser(res.data.user);
+          setLocalUser(res.data.user);
           navigate('/home');
         }
       } catch (err) {
         console.log("🧪 Not logged in:", err?.response?.data?.message || err.message);
       }
+      finally {
+        setLoading(false);
+      }
     };
     checkLogin();
-  }, [navigate, login]);
+  }, [navigate,setUser]);
 
   const onGoogleLoginSuccess = async (res) => {
     try {
@@ -113,7 +118,7 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
   
-      login(response.data.user);
+      setUser(response.data.user);
       message.success('Login successful via Google');
       navigate('/home');
     } catch (error) {
@@ -127,9 +132,7 @@ const Login = () => {
     console.log('Google login failed', res);
     message.error('Google login failed');};
 
-  const handleGitHubLogin = () => {
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user:email`;
-  };
+ 
 
   
   const submitHandler = async (e) => {
@@ -144,19 +147,24 @@ const Login = () => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/users/login", values, {
+      const response = await axios.post("/api/v1/users/login", values, {
         withCredentials: true,
        
       });
-  
-      login(response.data.user);
+     console.log("response data in login:",response.data);
+      setUser(response.data.user); // Set parent user state
+      console.log("before message");
       message.success('Login successful');
+      console.log("after message");
       navigate('/home');
     } catch (error) {
       console.error("❌ Login error:", error);
       message.error("Invalid username or password");
     }
   };
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
   
   return (
     <> 

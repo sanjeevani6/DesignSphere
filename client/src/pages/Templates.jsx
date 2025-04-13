@@ -5,7 +5,7 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { Typography,Box } from '@mui/material';
 
-const Templates = () => {
+const Templates = ({user}) => {
   const [templates, setTemplates] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +31,7 @@ const Templates = () => {
 
   return (
     <>
-      <Header />
+      <Header user={user} />
       <div className="templates-page">
       <Box 
   sx={{

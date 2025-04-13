@@ -2,10 +2,10 @@ import React from 'react'
 import Footer from './Footer'
 import Header from './Header'
 
-const Layout=({children})=>{
+const Layout=({children,user})=>{
     return(
         <>
-            <Header/>
+            <Header user={user}/>
             <div className='content '>
            {children}
             </div>

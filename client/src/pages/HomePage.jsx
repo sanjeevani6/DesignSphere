@@ -5,7 +5,6 @@ import Layout from '../components/Layouts/Layout';
 import { useMediaQuery } from "@mui/material";
 import axios from 'axios';
 import { FiUsers } from "react-icons/fi";
-import { UserContext } from '../context/UserContext';
 import axiosInstance from "../services/axiosInstance";
 
 //import { FiUsers } from 'react-icons/fi'; 
@@ -30,7 +29,8 @@ import {
 //     }
 //     return false;
 // };
-const Homepage = () => {
+const Homepage = ({user}) => {
+  console.log("✅ user in Homepage:", user);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const [designs, setDesigns] = useState([]);
 
@@ -44,13 +44,13 @@ const Homepage = () => {
 
 
 
-  var { currentUser } = useContext(UserContext);
-  console.log(`current user ${currentUser}`)
+  var currentUser  = user;
+  console.log("current user ",currentUser);
 
-  const userId = currentUser.userId;
+  const userId = currentUser._id;
 
-  console.log(currentUser)
-  console.log(userId)
+ 
+  console.log("userid",userId)
   //const userId = user ? user.userId : null;
 
 
@@ -191,7 +191,7 @@ const Homepage = () => {
   };
 
   return (
-    <Layout>
+    <Layout user={user}>
       <div className="homepage-container options2  overflow-auto ">
         <div class="container-fluid  text-center   row d-flex align-items-stretch">
           {isSmallScreen ?

@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
 import Header from '../components/Layouts/Header';
-import { useUser } from '../context/UserContext'; 
-import axiosInstance from "../services/axiosInstance";
 
-
-const TeamForm = () => {
+const TeamForm = ({ user }) => {
     const navigate = useNavigate();
-    const { currentUser} = useUser();
 
     const [teamCode, setTeamCode] = useState('');
     const [isJoined, setIsJoined] = useState(false);
@@ -19,37 +15,39 @@ const TeamForm = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [teamName, setTeamName] = useState('');
-    console.log(`current user: ${currentUser}`)
-    const userId = currentUser?.userId || null;
-     console.log(userId)
-     useEffect(() => {
-        console.log("🧠 TeamForm: loading =", loading);
-        console.log("👤 TeamForm: currentUser =", currentUser);
-      }, [currentUser]);
+
+    const userId = user?._id || null;
+
+    // Initial auth check
     useEffect(() => {
-          console.log(`current user ${currentUser}`)
-          if (currentUser === undefined) {
-            // Still loading user from context — don't do anything yet
-            return;
-        }
-               
-        // const userId=currentUser.userId
-        if (currentUser && currentUser.userId) {
+        if (user === undefined) return; // Still loading
+
+        if (user && user._id) {
             setIsAuthenticated(true);
         } else {
             navigate('/login', { replace: true });
             return;
         }
         setLoading(false);
-    }, [navigate, currentUser]);
+    }, [navigate, user]);
 
-    
+    // Listen for socket events once
+    useEffect(() => {
+        const activeTeamCode = newTeamCode || teamCode;
+        if (activeTeamCode) {
+            socket.on(`design-updated-${activeTeamCode}`, (updatedDesign) => {
+                console.log('Design updated:', updatedDesign);
+            });
+
+            return () => {
+                socket.off(`design-updated-${activeTeamCode}`);
+            };
+        }
+    }, [teamCode, newTeamCode]);
 
     const createTeam = async () => {
-        if (!userId) {
-            console.error("User not logged in or userId is missing");
-            return;
-        }
+        if (!userId) return console.error("User not logged in or userId is missing");
+
         try {
             const response = await axios.post('/api/v1/teams/create-team', { teamName, userId });
             const { teamCode } = response.data;
@@ -63,17 +61,15 @@ const TeamForm = () => {
     };
 
     const joinTeam = async () => {
-        const userId = currentUser?.userId;
-        if (!userId) {
-            console.error("User not logged in or userId is missing");
-            return;
-        }
+        if (!userId) return console.error("User not logged in or userId is missing");
+
         try {
             const response = await axios.post('/api/v1/teams/join-team', { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
                 socket.emit('joinRoom', {
-                    teamCode, callback: (response) => {
+                    teamCode,
+                    callback: (response) => {
                         if (response.status === 'success') {
                             console.log(`Joined room successfully: ${response.room}`);
                         } else {
@@ -95,15 +91,13 @@ const TeamForm = () => {
         navigate(`/design/team/${newTeamCode}`);
     };
 
-    socket.on(`design-updated-${teamCode}`, (updatedDesign) => {
-        console.log('Design updated:', updatedDesign);
-    });
-
     if (loading) return <p>Loading...</p>;
+
+    const activeTeamCode = newTeamCode || teamCode;
 
     return (
         <>
-            <Header />
+            <Header  user={user}/>
             <div style={{
                 height: "91vh",
                 display: 'flex',
@@ -116,7 +110,13 @@ const TeamForm = () => {
                     <img
                         src="https://img.freepik.com/premium-photo/team-designing-scalable-ui-elements-that-adjust-different-screen-sizes_1314467-49185.jpg"
                         alt="Team Design Illustration"
-                        style={{ height: "91vh", width: "100%", objectFit: 'cover', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}
+                        style={{
+                            height: "91vh",
+                            width: "100%",
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                        }}
                     />
                 </div>
 
@@ -130,7 +130,10 @@ const TeamForm = () => {
                         borderRadius: '8px',
                         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                     }}>
-                        <h1 style={{ fontSize: "2.5rem", color: '#519bc5', fontWeight: 'bold' }}>Collaborate with Your Team</h1>
+                        <h1 style={{ fontSize: "2.5rem", color: '#519bc5', fontWeight: 'bold' }}>
+                            Collaborate with Your Team
+                        </h1>
+
                         <div style={{ marginTop: '5vh' }}>
                             <h3 style={{ color: '#e46064' }}>Create a Team</h3>
                             <input
@@ -160,11 +163,8 @@ const TeamForm = () => {
                                     width: '75%',
                                     fontWeight: 'bold',
                                     marginBottom: '2rem',
-                                    cursor: 'pointer',
-                                    transition: 'background-color 0.3s ease'
+                                    cursor: 'pointer'
                                 }}
-                                onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
-                                onMouseOut={e => e.target.style.backgroundColor = "#519bc5"}
                             >
                                 Create a New Team
                             </button>
@@ -197,11 +197,8 @@ const TeamForm = () => {
                                         padding: "12px",
                                         width: '75%',
                                         fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        transition: 'background-color 0.3s ease'
+                                        cursor: 'pointer'
                                     }}
-                                    onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
-                                    onMouseOut={e => e.target.style.backgroundColor = "#90b0e6"}
                                 >
                                     Join Team
                                 </button>
@@ -210,8 +207,8 @@ const TeamForm = () => {
                     </div>
                 ) : (
                     <div style={{ padding: '2rem', color: '#519bc5' }}>
-                        <h1>Welcome to Team <span style={{ color: '#e46064' }}>{teamCode || newTeamCode}</span></h1>
-                        <Canvas teamCode={teamCode || newTeamCode} />
+                        <h1>Welcome to Team <span style={{ color: '#e46064' }}>{activeTeamCode}</span></h1>
+                        <Canvas teamCode={activeTeamCode} />
                     </div>
                 )}
 
@@ -261,8 +258,6 @@ const TeamForm = () => {
                                     cursor: 'pointer',
                                     fontSize: '16px'
                                 }}
-                                onMouseOver={e => e.target.style.backgroundColor = "#004bbd"}
-                                onMouseOut={e => e.target.style.backgroundColor = "#0066ff"}
                             >
                                 Continue
                             </button>

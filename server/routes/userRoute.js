@@ -31,7 +31,7 @@ router.post('/register',registercontroller);
 router.post('/logout', logoutController);
 
 
-router.get('/me', verifyToken, async(req, res) => {
+router.get('/check-auth', verifyToken, async(req, res) => {
     //console.log("current user: ", req.user);
     try {
         const user = await User.findById(req.user.userId).select('-password');

@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useContext,useRef  } from 'react';
+import React, { useState,useEffect,useRef  } from 'react';
 import { useParams,useLocation } from 'react-router-dom';
 import Sidebar from '../components/DesignLayout/Sidebar';
 import CanvasArea from '../components/DesignLayout/CanvasArea';
@@ -7,7 +7,6 @@ import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { UserContext } from '../context/UserContext'; 
 import {  exportToShare } from '../utils/exportUtils';
 import socket from '../socket'
 import { message } from 'antd';
@@ -15,7 +14,7 @@ import { Variants } from 'antd/es/config-provider';
 import axiosInstance from "../services/axiosInstance";
 
 
-const Design = () => {
+const Design = ({user}) => {
     const { designId,teamCode } = useParams();
     const [elements, setElements] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -27,7 +26,7 @@ const Design = () => {
     const location = useLocation();
     const templateUrl = location.state?.templateUrl || ''; 
     
-    var { currentUser } = useContext(UserContext); 
+    var currentUser= user; 
     
     
     // if(! currentUser)
@@ -321,7 +320,7 @@ const Design = () => {
     return (
         <DndProvider backend={HTML5Backend}>
         <>
-            <Header/>
+            <Header user={user}/>
             <div className="editor-container">
    <div className="sidebar  "> <Sidebar setElements={setElements} /></div>
     <div className="main-content">

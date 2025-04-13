@@ -135,7 +135,7 @@ const Register = () => {
       });
   
       const user = { ...response.data.user, password: '' };
-      localStorage.setItem('user', JSON.stringify(user));
+      //localStorage.setItem('user', JSON.stringify(user));
       message.success('registration successful');
       navigate('/login');
     } catch (error) {

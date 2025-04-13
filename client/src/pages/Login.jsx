@@ -84,7 +84,7 @@ const Login = ({ setUser }) => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axios.get('/users/check-auth', {
+        const res = await axios.get('/api/v1/users/check-auth', {
           withCredentials: true,
         });
         if (res.data.user) {

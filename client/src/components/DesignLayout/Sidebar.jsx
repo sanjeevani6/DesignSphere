@@ -1,11 +1,10 @@
-// Sidebar.js
+// Sidebar.jsx
 import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
 import SidebarItem from './SidebarItem';
-//import axios from 'axios';
-//import socket from '../../socket';
+
 import axios from "../../services/axiosInstance";
-//import {teamCode} from "../../pages/Design"
+
 import Chat from './Chat';
 import {
     Box,
@@ -15,16 +14,15 @@ import {
     AccordionDetails,
     List,
     ListItem,
-    ListItemIcon,
-  ListItemText,
+    
     Button,
     
-    Divider,
+    
   } from '@mui/material';
   import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   import TextFieldsIcon from '@mui/icons-material/TextFields';
 import ShapesIcon from '@mui/icons-material/Category';
-import BrushIcon from '@mui/icons-material/Brush';
+
 import ImageIcon from '@mui/icons-material/Image';
 import StickerIcon from '@mui/icons-material/EmojiEmotions';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -43,8 +41,7 @@ const Sidebar = ({ setElements , socket}) => {
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            //const imageUrl = URL.createObjectURL(file);
-           // console.log(imageUrl); // Check this in the console
+            
             const formData = new FormData();
             formData.append('image', file);
     
@@ -57,8 +54,7 @@ const Sidebar = ({ setElements , socket}) => {
                     withCredentials: true,
                 });
                 console.log("URL",response.data.url);
-              // const imageUrl = '/' + (response.data.url).replace(/\\/g, '/');// Adjust according to your response structure
-               //console.log("URL updated",imageUrl);
+             
                 const newImageItem = {
                     name:'uploaded image',
                     id: generateId(),
@@ -99,19 +95,7 @@ const Sidebar = ({ setElements , socket}) => {
 
         fetchSidebarItems();
    
-     // Listen for new items added by other clients in the same team
-    //  socket.on('sidebarItemAdded', (newItem) => {
-    //     setElements((prevItems) => [...prevItems, newItem]); // Add new item to canvas
-    //     if (newItem.category === 'image') {
-    //         // Update sidebar if it's an image item
-    //         setSidebarItems((prevItems) => [...prevItems, newItem]);
-    //     }
-    // });
-
-    // Clean up socket listener on component unmount
-    // return () => {
-    //     socket.off('sidebarItemAdded');
-    // };
+   
 }, [setElements]);
 
     // Separate items by category

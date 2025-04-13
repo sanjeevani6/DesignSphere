@@ -19,7 +19,7 @@ exports.refreshToken = (req, res) => {
         res.cookie("token", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // HTTPS only in production
-            sameSite: "Strict",
+            sameSite: process.env.NODE_ENV === "production"?"None":"Lax",
             maxAge: 15 * 60 * 1000,
         });
 

@@ -3,9 +3,7 @@ const Design = require('../models/Design');
 // Adjust path and model name as necessary
 
 
-const fs = require('fs');
-const path = require('path');
-const DesignImage = require('../models/DesignImage');
+
 // Update an existing design
 const updateDesign = async (req, res) => {
     try {

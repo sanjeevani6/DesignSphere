@@ -7,19 +7,17 @@ import axios from 'axios';
 import { FiUsers } from "react-icons/fi";
 import axiosInstance from "../services/axiosInstance";
 
-//import { FiUsers } from 'react-icons/fi'; 
+ 
 import { exportToPDF, exportToImage, exportToGIF, designHasAnimatedText } from '../utils/exportUtils';
-//import { Button, Menu, MenuItem, Grid, Card, CardContent, Typography, } from '@mui/material';
+
 import {
-  Button,
-  Menu,
-  MenuItem,
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-} from '@mui/material';
+    Button,
+    Menu,
+    MenuItem,
+    Box,
+   
+    Typography,
+  } from '@mui/material';
 
 
 // Function to check for animated text
@@ -54,15 +52,17 @@ const Homepage = ({user}) => {
   //const userId = user ? user.userId : null;
 
 
-  useEffect(() => {
-    const fetchDesigns = async () => {
-      try {
-        console.log("fetching designs")
-        if (userId) {
-          // Otherwise, fetch user-specific designs
+  
 
+    useEffect(() => {
+        const fetchDesigns = async () => {
+          try{
+          console.log("fetching designs")
+           if (userId) {
+           
+          
           const userResponse = await axiosInstance.get(`/api/v1/designs/user/${userId}`);
-          //setDesigns(userResponse.data)
+          
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);
           console.log("ok", teamDesigns)

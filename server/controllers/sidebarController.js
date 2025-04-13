@@ -6,6 +6,7 @@ const cloudinary = require('../config/cloudinary');
 
 const getSidebarItems = async (req, res) => {
     try {
+
         const items = await SidebarItem.find();
         res.status(200).json(items);
     } catch (error) {
@@ -20,12 +21,6 @@ const getSidebarItems = async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        // Get file path and set up a public URL
-       // const filePath = path.join('uploads','images', req.file.filename); // Adjust path as needed
-        
-        // Here you may want to save the file path or move it to a permanent location
-        //console.log("filepath",filePath)
-        // Upload file to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: 'designsphere/uploads' // Cloudinary folder
         });

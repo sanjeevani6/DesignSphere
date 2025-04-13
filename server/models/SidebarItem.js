@@ -46,10 +46,6 @@ animationUrl: {
     type: String, // URL for animated text or GIFs if animated
 },
 
-lockedBy: {
-    type: String, // Will store the ID of the user locking the item, e.g., socket ID or user ID
-    default: null,
-},
 
 
 

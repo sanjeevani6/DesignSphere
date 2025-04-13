@@ -1,6 +1,5 @@
 const Team = require('../models/Team');
 const TeamDesign = require('../models/TeamDesign');
-const User = require('../models/userModel'); // Assuming you have a User model for user references
 
 
 // Create a new team and a new design associated with it
@@ -83,11 +82,7 @@ exports.joinTeam = async (req, res) => {
             return res.status(404).json({ error: 'Team not found.' });
         }
 
-        // Check if the user is already a member
-        // if (team.members.includes(userId)) {
-        //     console.log("showing")
-        //     return res.status(400).json({ error: 'User is already a team member.' });
-        // }
+        
 
         // Add the user to the team
         if (!team.members.includes(userId)) {

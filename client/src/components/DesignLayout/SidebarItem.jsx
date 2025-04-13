@@ -83,11 +83,7 @@ const SidebarItem = ({ item }) => {
                 return shapeStyle;
         }
     };
-     // Collaborative Dragging: Emit dragging information to other users in the same team
-     const handleDragStart = () => {
-        // Emit event when a user starts dragging an item
-        socket.emit('itemDragged', { teamCode, item });
-    };
+     
     useEffect(() => {
         socket.on('itemDragged', (draggedItem) => {
             if (draggedItem.teamCode === teamCode && draggedItem.item.id !== item.id) {

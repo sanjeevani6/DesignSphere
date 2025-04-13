@@ -1,6 +1,6 @@
  const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+
 
 const express = require('express');
 const DesignImage = require('../models/DesignImage');
@@ -80,7 +80,5 @@ router.post('/designimage', upload.single('file'), async (req, res) => {
 });
 
 
-// POST /design-image/save - Save design metadata
-//router.post('/save', saveDesignImage);
 
 module.exports = router; 

@@ -1,0 +1,10 @@
+[build]
+  base    = "client"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/api/v1/*"
+  to   = "https://designsphere-rhhj.onrender.com/api/v1/:splat"
+  status = 200
+  force = true

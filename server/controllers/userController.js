@@ -123,8 +123,17 @@ const registercontroller = async (req, res) => {
     
 
     const logoutController=async(req,res)=>{
-      res.clearCookie("token");
-      res.clearCookie("refreshToken");
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      });
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      });
+      
       console.log("cookie cleared");
       res.status(200).json({ success: true, message: "Logged out successfully" });
     

@@ -4,7 +4,7 @@ import axios from 'axios'
 import GIF from 'gif.js.optimized';
 
 
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const designHasAnimatedText = (elements) => {
     return elements.some(element => element.type === 'animatedText');
 };
@@ -138,7 +138,7 @@ export const exportToShare = async (elements, backgroundColor, backgroundImage,d
         formData.append('file', blob, 'design.png');
         formData.append('designId', designId);
         // Send to backend
-        await axios.post('/api/v1/store/designimage', formData, {
+        await axios.post('${BASE_URL}/store/designimage', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

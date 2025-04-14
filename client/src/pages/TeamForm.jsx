@@ -4,7 +4,7 @@ import axios from 'axios';
 import socket from '../socket';
 import Canvas from './Canvas';
 import Header from '../components/Layouts/Header';
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const TeamForm = ({ user }) => {
     const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const TeamForm = ({ user }) => {
         if (!userId) return console.error("User not logged in or userId is missing");
 
         try {
-            const response = await axios.post('/api/v1/teams/join-team', { teamCode, userId });
+            const response = await axios.post('${BASE_URL}/teams/join-team', { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
                 socket.emit('joinRoom', {

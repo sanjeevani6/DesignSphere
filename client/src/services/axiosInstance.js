@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "./authService"; // Function to refresh token
 
 const axiosInstance = axios.create({
-    baseURL:import.meta.env.VITE_API_URL ||"/",
+    baseURL:import.meta.env.VITE_API_BASE_URL ||"/",
     withCredentials: true, // Ensures cookies are sent
 });
 let isRefreshing = false;// Is refresh in progress?

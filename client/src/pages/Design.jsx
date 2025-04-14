@@ -12,7 +12,7 @@ import socket from '../socket'
 import { message } from 'antd';
 
 import axiosInstance from "../services/axiosInstance";
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Design = ({user}) => {
     const { designId,teamCode } = useParams();
@@ -59,13 +59,13 @@ const Design = ({user}) => {
                 let response;
                 if (teamCode) {
                     console.log("getting team design")
-                  response = await axiosInstance.get(`/api/v1/designs/team-designs/${teamCode}`,{
+                  response = await axiosInstance.get(`${BASE_URL}/designs/team-designs/${teamCode}`,{
                     withCredentials: true 
                   });
                 
                 } else if (designId) {
                     console.log("getting design")
-                    response = await axiosInstance.get(`/api/v1/designs/${designId}`,{
+                    response = await axiosInstance.get(`${BASE_URL}/designs/${designId}`,{
                         withCredentials: true 
                     });
                 }
@@ -207,7 +207,7 @@ const Design = ({user}) => {
             if (teamCode) {
                 console.log("saving")
                 await axiosInstance.put(
-                    `/api/v1/designs/team-designs/${teamCode}`, 
+                    `${BASE_URL}/designs/team-designs/${teamCode}`, 
                     payload, // Payload goes here
                  { withCredentials: true }
                     
@@ -218,14 +218,14 @@ const Design = ({user}) => {
                 console.log('New design saved:', payload);
             } else {
                 if (designId) {
-                    await axiosInstance.put(`/api/v1/designs/${designId}`,
+                    await axiosInstance.put(`${BASE_URL}/designs/${designId}`,
                         payload,{
                              withCredentials: true 
                     });
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {
-                    saveResponse=await axios.post('api/v1/designs/save', payload,{  withCredentials: true,});
+                    saveResponse=await axios.post('${BASE_URL}/designs/save', payload,{  withCredentials: true,});
                     message.success('New design saved successfully');
                     const designId = saveResponse.data.designId;
                     console.log("designid",designId )

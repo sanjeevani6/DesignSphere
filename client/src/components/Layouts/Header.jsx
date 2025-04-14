@@ -8,7 +8,7 @@ import CollectionsIcon from "@mui/icons-material/Collections";
 import MenuIcon from "@mui/icons-material/Menu"; // Icon for dropdown menu
 import { message } from "antd";
 import axios from 'axios';
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Header = ({ user }) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const isVerySmallScreen = useMediaQuery("(max-width: 400px)");
@@ -31,7 +31,7 @@ const Header = ({ user }) => {
 
   const logoutHandler = async () => {
     try {
-      await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
+      await axios.post('${BASE_URL}/users/logout', {}, { withCredentials: true });
       localStorage.removeItem('user');
       navigate('/login');
     } catch (error) {

@@ -31,7 +31,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 // Function to generate a unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Sidebar = ({ setElements , socket}) => {
     const [sidebarItems, setSidebarItems] = useState([]);
     const [isChatVisible, setIsChatVisible] = useState(false); // State to toggle chat visibility
@@ -47,7 +47,7 @@ const Sidebar = ({ setElements , socket}) => {
     
             try {
                 // Upload the image to the server and get the URL
-                 const response = await axios.post('/api/v1/designpage/upload-image', formData, {
+                 const response = await axios.post('${BASE_URL}/designpage/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
@@ -84,7 +84,7 @@ const Sidebar = ({ setElements , socket}) => {
     useEffect(() => {
         const fetchSidebarItems = async () => {
             try {
-                const response = await fetch('/api/v1/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
+                const response = await fetch('${BASE_URL}/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
                 const data = await response.json();
                 console.log('sidebar items:',data)
                 setSidebarItems(data);

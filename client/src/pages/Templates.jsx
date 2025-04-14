@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { Typography,Box } from '@mui/material';
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Templates = ({user}) => {
   const [templates, setTemplates] = useState([]);
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Templates = ({user}) => {
   const teamCode = location.state?.teamCode || '';
   
   useEffect(() => {
-    axios.get('/api/v1/templates/get-templates')
+    axios.get('${BASE_URL}/templates/get-templates')
       .then((response) => {
         console.log("response", response.data);
         setTemplates(response.data.templates);

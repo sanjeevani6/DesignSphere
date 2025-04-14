@@ -15,6 +15,8 @@ import img2 from '../assets/img2.png';
 import img3 from '../assets/img3.png';
 import img4 from '../assets/img4.png';
 import img5 from '../assets/img5.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 
 const Container = styled(Box)({
@@ -84,7 +86,7 @@ const Login = ({ setUser }) => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axios.get('/api/v1/users/check-auth', {
+        const res = await axios.get('${BASE_URL}/users/check-auth', {
           withCredentials: true,
         });
         if (res.data.user) {
@@ -113,7 +115,7 @@ const Login = ({ setUser }) => {
   
       console.log("📤 Google Login Data:", userData);
   
-      const response = await axios.post('/api/v1/users/google-login', userData, {
+      const response = await axios.post('${BASE_URL}/users/google-login', userData, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -147,7 +149,7 @@ const Login = ({ setUser }) => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post("/api/v1/users/login", values, {
+      const response = await axios.post("${BASE_URL}/users/login", values, {
         withCredentials: true,
        
       });

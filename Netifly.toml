@@ -1,13 +1,4 @@
-[build]
-  base = "."
-  command = "cd client && npm ci && npm run build"
-  publish = "client/dist"
 
-[[redirects]]
-  from = "/api/v1/*"
-  to   = "https://designsphere-rhhj.onrender.com/api/v1/:splat"
-  status = 200
-  force = true
 
 [[redirects]]
   from = "/*"

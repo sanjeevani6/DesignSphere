@@ -20,13 +20,8 @@ import {
   } from '@mui/material';
 
 
-// Function to check for animated text
-//   const designHasAnimatedText = (elements) => {
-//     if (Array.isArray(elements)) {
-//         return elements.some(element => element.category && element.category.trim().toLowerCase() === 'animatedtext');
-//     }
-//     return false;
-// };
+
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Homepage = ({user}) => {
   console.log("✅ user in Homepage:", user);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -61,7 +56,7 @@ const Homepage = ({user}) => {
            if (userId) {
            
           
-          const userResponse = await axiosInstance.get(`/api/v1/designs/user/${userId}`);
+          const userResponse = await axiosInstance.get(`${BASE_URL}/designs/user/${userId}`);
           
           setDesigns(userResponse.data.designs);
           setTeamDesigns(userResponse.data.TeamDesigns);
@@ -130,11 +125,11 @@ const Homepage = ({user}) => {
     try {
       if (isTeamDesign) {
         console.log(`Downloading for ${designId}`)
-        response = await axios.get(`/api/v1/designs/team-designs/${designId}`)
+        response = await axios.get(`${BASE_URL}/designs/team-designs/${designId}`)
       }
       else {
         console.log(`Downloading foe ${designId}}`)
-        response = await axios.get(`/api/v1/designs/${designId}`);
+        response = await axios.get(`${BASE_URL}/designs/${designId}`);
       }
       console.log(response.data.elements)
       const { elements, backgroundColor, backgroundImage } = response.data;
@@ -170,7 +165,7 @@ const Homepage = ({user}) => {
     try {
       if (isTeamDesign) {
         console.log(`Deleting:${designId}`)
-        const response = await axios.delete(`/api/v1/designs/delete/team/${designId}/${userId}`);
+        const response = await axios.delete(`${BASE_URL}/designs/delete/team/${designId}/${userId}`);
         if (response.status === 200) {
           // Update local state to remove the team design
           setTeamDesigns((prevDesigns) =>
@@ -181,7 +176,7 @@ const Homepage = ({user}) => {
         }
       }
       else {
-        await axios.delete(`/api/v1/designs/delete/${designId}`);
+        await axios.delete(`${BASE_URL}/designs/delete/${designId}`);
 
         setDesigns((prevDesigns) => prevDesigns.filter((design) => design._id !== designId));
       }

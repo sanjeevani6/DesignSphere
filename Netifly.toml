@@ -1,5 +1,16 @@
 
+[build]
+  base    = "client"
+  command = "npm run build"
+  publish = "dist"
 
+  [[redirects]]
+  # Proxy API requests to your backend (optional)
+  from = "/api/v1/*"
+  to = "https://designsphere-rhhj.onrender.com/api/v1/:splat"
+  status = 200
+  force = true
+  
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 import Lottie from 'lottie-react';
 import socket from '../../socket'
 import { useParams } from 'react-router-dom';
-  
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SidebarItem = ({ item }) => { 
     const teamCode=useParams()
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -23,7 +23,7 @@ const SidebarItem = ({ item }) => {
       
           // Check if the URL is relative (doesn't start with 'http' or 'https')
           if (!/^https?:\/\//.test(url)) {
-            url = `/api/v1${url}`; // Prepend '/api/v1' to relative URLs
+            url = `${BASE_URL}${url}`; // Prepend '/api/v1' to relative URLs
           }
       
           console.log("Fetching from URL:", url); // Log the full URL being fetched

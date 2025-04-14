@@ -15,7 +15,7 @@ import XIcon from '@mui/icons-material/X';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import axios from 'axios';
 import axiosInstance from "../services/axiosInstance";
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SharePage = () => {
   const { designId } = useParams();
   const [design, setDesign] = useState(null);
@@ -24,7 +24,7 @@ const SharePage = () => {
   useEffect(() => {
     const fetchDesign = async () => {
       try {
-        const res = await axiosInstance.get(`/api/v1/share/${designId}`,{
+        const res = await axiosInstance.get(`${BASE_URL}/share/${designId}`,{
           withCredentials: true,}
         );
         setDesign(res.data);

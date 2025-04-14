@@ -12,7 +12,7 @@ const Templates = ({user}) => {
   const teamCode = location.state?.teamCode || '';
   
   useEffect(() => {
-    axios.get('${BASE_URL}/templates/get-templates')
+    axios.get(`${BASE_URL}/templates/get-templates`)
       .then((response) => {
         console.log("response", response.data);
         setTemplates(response.data.templates);

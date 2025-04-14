@@ -57,7 +57,7 @@ const PrintOrderPage = ({ user }) => { // Accepting user prop
                 : { designId, userDetails };
 
             console.log('sending from frontend to backend for printing');
-            await axios.post('${BASE_URL}/shop/send', payload, { withCredentials: true });
+            await axios.post(`${BASE_URL}/shop/send`, payload, { withCredentials: true });
 
             alert('Design and details sent to local shop!');
         } catch (error) {

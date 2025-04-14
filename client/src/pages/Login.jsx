@@ -86,7 +86,7 @@ const Login = ({ setUser }) => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axios.get('${BASE_URL}/users/check-auth', {
+        const res = await axios.get(`${BASE_URL}/users/check-auth`, {
           withCredentials: true,
         });
         if (res.data.user) {
@@ -115,7 +115,7 @@ const Login = ({ setUser }) => {
   
       console.log("📤 Google Login Data:", userData);
   
-      const response = await axios.post('${BASE_URL}/users/google-login', userData, {
+      const response = await axios.post(`${BASE_URL}/users/google-login`, userData, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -149,7 +149,7 @@ const Login = ({ setUser }) => {
     console.log("📤 Sending Data to Backend:", values);
   
     try {
-      const response = await axios.post("${BASE_URL}/users/login", values, {
+      const response = await axios.post(`${BASE_URL}/users/login`, values, {
         withCredentials: true,
        
       });

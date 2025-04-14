@@ -40,7 +40,7 @@ const Homepage = ({user}) => {
   var currentUser  = user;
   console.log("current user ",currentUser);
 
-  const userId = currentUser._id;
+  const userId = currentUser.userId;
 
  
   console.log("userid",userId)

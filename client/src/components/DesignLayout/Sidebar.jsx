@@ -47,7 +47,7 @@ const Sidebar = ({ setElements , socket}) => {
     
             try {
                 // Upload the image to the server and get the URL
-                 const response = await axios.post('${BASE_URL}/designpage/upload-image', formData, {
+                 const response = await axios.post(`${BASE_URL}/designpage/upload-image`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
@@ -84,7 +84,7 @@ const Sidebar = ({ setElements , socket}) => {
     useEffect(() => {
         const fetchSidebarItems = async () => {
             try {
-                const response = await fetch('${BASE_URL}/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
+                const response = await fetch(`${BASE_URL}/designpage/get-sidebar-items`); // Adjust if your backend is on a different domain
                 const data = await response.json();
                 console.log('sidebar items:',data)
                 setSidebarItems(data);

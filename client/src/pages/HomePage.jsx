@@ -125,11 +125,11 @@ const Homepage = ({user}) => {
     try {
       if (isTeamDesign) {
         console.log(`Downloading for ${designId}`)
-        response = await axios.get(`${BASE_URL}/designs/team-designs/${designId}`)
+        response = await axiosInstance.get(`${BASE_URL}/designs/team-designs/${designId}`)
       }
       else {
         console.log(`Downloading foe ${designId}}`)
-        response = await axios.get(`${BASE_URL}/designs/${designId}`);
+        response = await axiosInstance.get(`${BASE_URL}/designs/${designId}`);
       }
       console.log(response.data.elements)
       const { elements, backgroundColor, backgroundImage } = response.data;

@@ -16,6 +16,7 @@ import Design from "./pages/Design";
 
 // Components
 import PrivateRoute from "./components/PrivateRoute";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const location = useLocation();
@@ -28,7 +29,7 @@ function App() {
 
     if (!publicRoutes.includes(location.pathname)) {
       axios
-        .get("/api/v1/users/check-auth", { withCredentials: true })
+        .get(`${BASE_URL}/users/check-auth`, { withCredentials: true })
         .then((res) => {
           console.log("response of user in useEffect of app", res.data);
           if (res.data.user) {

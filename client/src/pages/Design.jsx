@@ -225,7 +225,7 @@ const Design = ({user}) => {
                     message.success('Design updated successfully');
                     await exportToShare(elements, backgroundColor, backgroundImage,designId);
                 } else {
-                    saveResponse=await axios.post('${BASE_URL}/designs/save', payload,{  withCredentials: true,});
+                    saveResponse=await axios.post(`${BASE_URL}/designs/save`, payload,{  withCredentials: true,});
                     message.success('New design saved successfully');
                     const designId = saveResponse.data.designId;
                     console.log("designid",designId )

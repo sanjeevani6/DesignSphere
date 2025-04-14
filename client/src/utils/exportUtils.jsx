@@ -138,7 +138,7 @@ export const exportToShare = async (elements, backgroundColor, backgroundImage,d
         formData.append('file', blob, 'design.png');
         formData.append('designId', designId);
         // Send to backend
-        await axios.post('${BASE_URL}/store/designimage', formData, {
+        await axios.post(`${BASE_URL}/store/designimage`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

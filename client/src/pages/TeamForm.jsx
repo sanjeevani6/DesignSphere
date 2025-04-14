@@ -49,7 +49,7 @@ const TeamForm = ({ user }) => {
         if (!userId) return console.error("User not logged in or userId is missing");
 
         try {
-            const response = await axios.post('/api/v1/teams/create-team', { teamName, userId });
+            const response = await axios.post(`${BASE_URL}/teams/create-team`, { teamName, userId });
             const { teamCode } = response.data;
             setNewTeamCode(teamCode);
             setIsJoined(true);
@@ -64,7 +64,7 @@ const TeamForm = ({ user }) => {
         if (!userId) return console.error("User not logged in or userId is missing");
 
         try {
-            const response = await axios.post('${BASE_URL}/teams/join-team', { teamCode, userId });
+            const response = await axios.post(`${BASE_URL}/teams/join-team`, { teamCode, userId });
             if (response.data) {
                 setIsJoined(true);
                 socket.emit('joinRoom', {

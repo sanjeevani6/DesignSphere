@@ -30,7 +30,7 @@ dotenv.config();;
 connectDb();
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://warm-semolina-4b3f7f.netlify.app'
+  'https://designsphere27.netlify.app'
 ];
 
 //rest object
@@ -39,7 +39,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:3000",
-      'https://warm-semolina-4b3f7f.netlify.app',
+      'https://designsphere27.netlify.app',
       ], // Allow only your client origin
     //methods: ["GET", "POST","PUT"],
     credentials: true

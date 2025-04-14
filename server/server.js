@@ -28,13 +28,19 @@ const shareRoutes=require('./routes/shareRoutes')
 dotenv.config();;
 //database call
 connectDb();
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://warm-semolina-4b3f7f.netlify.app'
+];
 
 //rest object
 const app=express()
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",  // Allow only your client origin
+    origin: ["http://localhost:3000",
+      'https://warm-semolina-4b3f7f.netlify.app',
+      ], // Allow only your client origin
     //methods: ["GET", "POST","PUT"],
     credentials: true
   }
@@ -45,8 +51,15 @@ const io = new Server(server, {
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 }));
 
 //for testing only

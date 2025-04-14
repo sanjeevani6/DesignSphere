@@ -23,8 +23,13 @@ const SidebarItem = ({ item }) => {
       
           // Check if the URL is relative (doesn't start with 'http' or 'https')
           if (!/^https?:\/\//.test(url)) {
-            url = `${BASE_URL}${encodeURIComponent(url)}`; // Prepend '/api/v1' to relative URLs
+            // Split into path and filename
+            const parts = url.split('/');
+            const filename = encodeURIComponent(parts.pop()); // Encode only the filename
+            const path = parts.join('/');
+            url = `${BASE_URL}${path}/${filename}`;
           }
+          
       
           console.log("Fetching from URL:", url); // Log the full URL being fetched
       

@@ -27,6 +27,7 @@ const SidebarItem = ({ item }) => {
             const parts = url.split('/');
             const filename = encodeURIComponent(parts.pop()); // Encode only the filename
             const path = parts.join('/');
+            console.log(path);
             url = `${BASE_URL}${path}/${filename}`;
           }
           

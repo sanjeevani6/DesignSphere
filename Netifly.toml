@@ -1,5 +1,5 @@
 [build]
-  base    = "."  # root of your project
+  base = "."
   command = "cd client && npm ci && npm run build"
   publish = "client/dist"
 
@@ -8,7 +8,9 @@
   to   = "https://designsphere-rhhj.onrender.com/api/v1/:splat"
   status = 200
   force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true

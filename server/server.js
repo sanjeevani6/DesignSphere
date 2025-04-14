@@ -77,11 +77,11 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 //design page
 
 // Serve static files from the 'uploads' directory
-app.use('/api/v1/uploads/images', express.static(path.join(__dirname, 'uploads/animations')));
+app.use('/api/v1/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
 
 app.use('/api/v1/uploads/animations',  express.static(path.join(__dirname, 'uploads/animations')));
 
-app.use('/api/v1/uploads/designimage',express.static(path.join(__dirname, 'uploads/animations')));
+app.use('/api/v1/uploads/designimage',express.static(path.join(__dirname, 'uploads/designimage')));
 
 
 //sidebaritems and fileupload (images)

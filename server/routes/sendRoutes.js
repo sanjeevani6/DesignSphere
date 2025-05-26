@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const express = require('express');
 const router = express.Router();
 const DesignImage = require('../models/DesignImage');  // Import your design image model
+require('dotenv').config();
 
 const verifyToken = require('../middlewares/verifyToken');
 
@@ -95,27 +96,25 @@ router.post('/send', async (req, res) => {
         }
 
             console.log('before creating account');
-            let testAccount = await nodemailer.createTestAccount();
-            console.log('Ethereal Account:', testAccount);
+          
         
-        
+            // Nodemailer setup for Gmail shop account
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.GMAIL_USER,  // Replace with your dummy Gmail
+                    pass: process.env.GMAIL_PASS       // Use app password, not Gmail password
+                },
+            });
         
 
 
-        // Set up Nodemailer to send the image and details to the shop
-        const transporter = nodemailer.createTransport({
-            host: testAccount.smtp.host,
-            port: testAccount.smtp.port,
-            secure: testAccount.smtp.secure,
-            auth: {
-               user: testAccount.user,
-               pass: testAccount.pass
-            },
-        });
+
         // Email options with image attachment and user details
-        const mailOptions = {
-            from: testAccount.user,   // Replace with your email
-            to: 'shop-email@example.com',   // Replace with the local shop's email
+        const mailOptionsToShop = {
+            from: process.env.GMAIL_USER,
+            to: process.env.GMAIL_USER, // Shop's email (send to self)
+
             subject: 'New Print Order',
             text: `
                 Customer Details:
@@ -135,10 +134,32 @@ router.post('/send', async (req, res) => {
             ],
         };
 
+        
         // Send the email with the design and user details
        
-      const info=  await transporter.sendMail(mailOptions);
-      console.log('Preview URL:', nodemailer.getTestMessageUrl(info)); // Preview URL for testing
+      const shopEmailInfo=  await transporter.sendMail(mailOptionsToShop);
+      console.log('Email sent to shop:', shopEmailInfo.messageId);
+
+
+           // Auto-reply to customer with a confirmation
+           const mailOptionsToUser = {
+            from: process.env.GMAIL_USER,
+            to: userDetails.email,  // Customer's email
+            subject: 'Order Confirmation - Your Design is Being Processed',
+            text: `
+                Hello ${userDetails.name},
+
+                Thank you for placing your order! We have received your design and will start processing it soon.
+
+                If you have any questions, feel free to contact us.
+
+                Best regards,
+                The Print Shop Team
+            `,
+        };
+
+        const userEmailInfo = await transporter.sendMail(mailOptionsToUser);
+        console.log('Confirmation email sent to customer:', userEmailInfo.messageId);
        
         res.status(200).json({ message: 'Design and details sent to the shop successfully!' });
 

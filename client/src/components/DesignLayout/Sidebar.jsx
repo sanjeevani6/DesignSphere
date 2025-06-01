@@ -119,7 +119,7 @@ const Sidebar = ({ setElements , socket}) => {
         justifyContent: 'center',
         
         overflowX: 'hidden', // Prevent horizontal scrolling
-        overflowY: 'auto', // Enable vertical scrolling for overflow
+        //overflowY: 'auto', // Enable vertical scrolling for overflow
         boxSizing: 'border-box', // Prevent layout shifts due to padding
         padding: '8px',
           }}
@@ -149,7 +149,7 @@ const Sidebar = ({ setElements , socket}) => {
           </Typography>
     
           {/* Sidebar Content */}
-          <Box >
+          <Box sx={{ flex: 1, overflowY: 'auto' }}>
        
 
         <Accordion >

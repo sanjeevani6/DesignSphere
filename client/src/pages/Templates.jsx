@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Layouts/Header';
 import { Typography,Box } from '@mui/material';
+import { fetchTemplatesFromUnsplash } from '../services/unsplashService.js'; 
 
 const Templates = ({user}) => {
   const [templates, setTemplates] = useState([]);
@@ -13,9 +14,15 @@ const Templates = ({user}) => {
   
   useEffect(() => {
     axios.get('/api/v1/templates/get-templates')
-      .then((response) => {
+      .then(async (response) => {
         console.log("response", response.data);
+         const apiTemplates = await  fetchTemplatesFromUnsplash('colorful background');
+         console.log('🟢 Unsplash templates:', apiTemplates);
+        if (apiTemplates.length > 0) {
+          setTemplates(apiTemplates);}
         setTemplates(response.data.templates);
+        if (apiTemplates.length > 0) {
+          setTemplates(prev => [...prev, ...apiTemplates]);}
       })
       .catch(error => console.error('Error fetching templates:', error));
     console.log(teamCode);

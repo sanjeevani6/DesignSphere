@@ -110,7 +110,7 @@ const Sidebar = ({ setElements , socket}) => {
             width: { xs: '100%', sm: '240px' },
         height: '82vh',
        
-
+         
         backgroundColor: '#9eb7e1',
         boxShadow: 3,
         display: 'flex',
@@ -118,10 +118,11 @@ const Sidebar = ({ setElements , socket}) => {
        
         justifyContent: 'center',
         
-        overflowX: 'hidden', // Prevent horizontal scrolling
+        
         //overflowY: 'auto', // Enable vertical scrolling for overflow
         boxSizing: 'border-box', // Prevent layout shifts due to padding
         padding: '8px',
+         overflowX: 'hidden',
           }}
         >
           {/* Header */}
@@ -132,7 +133,7 @@ const Sidebar = ({ setElements , socket}) => {
                 textAlign: 'center',
                 padding: '16px',
                 backgroundColor: 'whitesmoke',      
-                
+                width: '100%', 
                 color: '#593125',
                  
           
@@ -149,8 +150,8 @@ const Sidebar = ({ setElements , socket}) => {
           </Typography>
     
           {/* Sidebar Content */}
-          <Box sx={{ flex: 1, overflowY: 'auto' }}>
-       
+          <Box sx={{ flex: 1, overflowY: 'auto',width: '100%',overflowX: 'hidden' }}>
+          
 
         <Accordion >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -216,11 +217,11 @@ const Sidebar = ({ setElements , socket}) => {
           </AccordionDetails>
         </Accordion>
 
-        <Box sx={{ padding: '16px', paddingTop:'30px', backgroundColor: 'whitesmoke',  }}>
+        <Box sx={{ padding: '16px', paddingTop:'30px', backgroundColor: 'whitesmoke', width: '100%',  }}>
           <Typography variant="subtitle1"  sx={{ 
                 textAlign: 'center',
                 padding: '16px',
-                   
+                   width: '100%', 
                 
                 color: '#593125',
                  
@@ -247,6 +248,7 @@ const Sidebar = ({ setElements , socket}) => {
           sx={{
             padding: '16px',
             borderTop: '1px solid #ccc',
+            width: '100%', 
           }}
         >
           <Button
@@ -271,6 +273,7 @@ const Sidebar = ({ setElements , socket}) => {
               height: isChatVisible ? '300px' : '0px', // Adjust height dynamically
               overflow: 'hidden', // Prevent overflow
               transition: 'height 0.3s ease', // Smooth height transition
+              width: '100%', 
             }}
           >
             {isChatVisible && <Chat teamCode={teamCode}  />}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Layouts/Header';
-import { Typography,Box } from '@mui/material';
+import { Typography,Box,Button } from '@mui/material';
 import { fetchTemplatesFromUnsplash } from '../services/unsplashService.js'; 
 
 const Templates = ({user}) => {
@@ -11,16 +11,18 @@ const Templates = ({user}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const teamCode = location.state?.teamCode || '';
-  
+  const [originalTemplates, setOriginalTemplates] = useState([]);
   useEffect(() => {
     axios.get('/api/v1/templates/get-templates')
       .then(async (response) => {
         console.log("response", response.data);
-         const apiTemplates = await  fetchTemplatesFromUnsplash('colorful background');
+         const apiTemplates = await  fetchTemplatesFromUnsplash('background');
          console.log('🟢 Unsplash templates:', apiTemplates);
         if (apiTemplates.length > 0) {
           setTemplates(apiTemplates);}
         setTemplates(response.data.templates);
+         const allTemplates = [...response.data.templates, ...apiTemplates];
+         setOriginalTemplates(allTemplates); // save origina
         if (apiTemplates.length > 0) {
           setTemplates(prev => [...prev, ...apiTemplates]);}
       })
@@ -35,6 +37,31 @@ const Templates = ({user}) => {
       navigate('/design', { state: { templateUrl } });
     }
   };
+
+
+
+const [inputValue, setInputValue] = useState('');
+const handleSearch = async () => {
+  try {
+    const keyword = inputValue.trim() || 'background';
+    
+   
+    const searchResults = await fetchTemplatesFromUnsplash(keyword, 1);
+    setTemplates(searchResults); // Replace old ones
+     setInputValue(''); // ⬅️ This clears the input box
+  } catch (error) {
+    console.error('Error during keyword search:', error);
+  }
+};
+
+const handleResetTemplates = () => {
+  setTemplates(originalTemplates);
+  setSearchKeyword('background');
+  setSearchPage(1);
+};
+
+
+
 
   return (
     <>
@@ -73,6 +100,16 @@ const Templates = ({user}) => {
     BACKGROUND TEMPLATES
   </Typography>
 </Box>
+      <Box display="flex" justifyContent="center" alignItems="center" gap={2} mt={3}>
+  <input 
+    type="text" 
+    placeholder="Search templates (e.g., nature, tech, campus)" 
+    value={inputValue} 
+    onChange={(e) => setInputValue(e.target.value)} 
+    style={{ padding: '8px', borderRadius: '5px', width: '250px' }}
+  />
+  <Button variant="contained" onClick={handleSearch}>Search</Button>
+</Box>
 
         <div className="template-grid">
           {templates.map((template, index) => (
@@ -99,6 +136,9 @@ const Templates = ({user}) => {
             </div>
           ))}
         </div>
+        <Button onClick={handleResetTemplates} variant="contained" color="secondary">
+    Back
+  </Button>
       </div>
     </>
   );

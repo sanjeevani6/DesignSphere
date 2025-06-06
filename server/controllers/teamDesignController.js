@@ -3,7 +3,7 @@ const TeamDesign = require('../models/TeamDesign');
 
 
 // Controller to get a team design by teamCode
-exports.getTeamDesign = async (req, res) => {
+const getTeamDesign = async (req, res) => {
     try {
         const { teamCode } = req.params;
         
@@ -23,7 +23,7 @@ exports.getTeamDesign = async (req, res) => {
 };
 
 // Controller to update a team design by teamCode
-exports.updateTeamDesign = async (req, res) => {
+const updateTeamDesign = async (req, res) => {
     try {
         const { teamCode } = req.params;
         const { elements, backgroundColor, backgroundImage, title } = req.body;
@@ -50,6 +50,7 @@ exports.updateTeamDesign = async (req, res) => {
         res.status(500).json({ message: 'Failed to update team design' });
     }
 };
+module.exports={getTeamDesign,updateTeamDesign};
 
 
         

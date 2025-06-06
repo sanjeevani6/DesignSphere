@@ -9,14 +9,6 @@ const router =express.Router();
 
 //routers
 
-
-
-
-
-router.get('/test', (req, res) => {
-    console.log("test route worked");
-    res.send('Test route works');
-});
 //post||google-login
 router.post('/google-login', googleLoginController);
 
@@ -28,13 +20,14 @@ router.post('/login',logincontroller);
 //post||register user
 router.post('/register',registercontroller);
 
+//post||logout
 router.post('/logout', logoutController);
 
-
+//for authentication
 router.get('/check-auth', verifyToken, async(req, res) => {
     //console.log("current user: ", req.user);
     try {
-      res.setHeader("Cache-Control", "no-store"); // ⛔ disable caching
+      res.setHeader("Cache-Control", "no-store"); //  disable caching
         const user = await User.findById(req.user.userId).select('-password');
         if (!user) {
           return res.status(404).json({ message: "User not found" });

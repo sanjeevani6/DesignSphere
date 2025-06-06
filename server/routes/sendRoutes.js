@@ -7,7 +7,7 @@ const router = express.Router();
 const DesignImage = require('../models/DesignImage');  // Import your design image model
 require('dotenv').config();
 
-const verifyToken = require('../middlewares/verifyToken');
+
 
 router.get('/events/:designId', async (req, res) => {
     const { designId } = req.params;
@@ -32,7 +32,7 @@ router.get('/events/:designId', async (req, res) => {
             return res.status(404).json({ message: 'Design image URL not found in the database.' });
         }
 
-        // Construct the absolute path to the image file based on the retrieved URL
+        // Construct the absolute path to the image file based on the retrieved URL,just for ensuring it is in right format
        
         const designPath = path.join(__dirname, '..', designImage.imageUrl).replace(/\\/g, '/');
         const reldesignPath =           '/'+ designImage.imageUrl.replace(/\\/g, '/');
@@ -57,7 +57,7 @@ router.get('/events/:designId', async (req, res) => {
 router.post('/send', async (req, res) => { 
     const { designId, userDetails,teamCode } = req.body;
     console.log('Print details:', req.body);
-    const effectiveDesignId = teamCode ? teamCode : designId; // ✅ Use a new variable
+    const effectiveDesignId = teamCode ? teamCode : designId; //  Use a new variable
     console.log(`Printing with ID: ${effectiveDesignId}`);console.log(`printing ${teamCode}`);
       
     try {

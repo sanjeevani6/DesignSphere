@@ -20,7 +20,7 @@ const designImageSchema = new mongoose.Schema({
         required: true, // Name of the image (e.g., 'designId.png')
     },
     imageUrl: {
-        type: String,   // Path to the saved image file
+        type: String,   // global image url
         required: true
     },
     createdAt: { 

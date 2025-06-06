@@ -3,10 +3,9 @@ const { saveDesign,updateDesign } = require('../controllers/savedesignController
 const router = express.Router();
 const { getDesignsByUserId } = require('../controllers/getdesignController');
 const { getDesignById } = require('../controllers/getdesignbyidController');
+const {getTeamDesign,updateTeamDesign}=require('../controllers/teamDesignController');
 const Design = require('../models/Design');
-const TeamDesign = require('../models/TeamDesign');
 const Teams = require('../models/Team');
-const teamDesignController=require('../controllers/teamDesignController')
 const {verifyToken} = require('../middlewares/verifyToken');
 
 
@@ -29,10 +28,10 @@ router.get('/:designId', verifyToken,(req, res) => {
 //for teams
 
 // Route to fetch a team design by teamCode
-router.get('/team-designs/:teamCode', verifyToken, teamDesignController.getTeamDesign);
+router.get('/team-designs/:teamCode', verifyToken, getTeamDesign);
 
 // Route to update a team design by teamCode
-router.put('/team-designs/:teamCode', verifyToken,  teamDesignController.updateTeamDesign);
+router.put('/team-designs/:teamCode', verifyToken, updateTeamDesign);
 
 
 //post||save design

@@ -94,9 +94,9 @@ const Landing = () => {
       <Container sx={{ marginTop: 5, textAlign: "center" }} id="features">
         <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: 4, color: "#e46064" }}>Why Choose Us?</Typography>
         <Grid container spacing={4}>
-          {[{ img: i1_1, title: "Easy-to-Use Editor", desc: "Drag, drop, and customize effortlessly." },
-            { img: i1_2, title: "Custom Templates", desc: "Choose from a variety of pre-made designs." },
-            { img: i1_3, title: "Export & Share", desc: "Download in high-quality formats instantly." }].map((feature, index) => (
+          {[{ img: i1_2, title: "Easy-to-Use Editor", desc: "Drag, drop, and customize effortlessly." },
+            { img: img1, title: "Custom Templates", desc: "Choose from a variety of pre-made designs." },
+            { img: img2, title: "Export & Share", desc: "Download in high-quality formats instantly." }].map((feature, index) => (
               <Grid item xs={12} sm={4} key={index}>
                 <Box>
                   <img src={feature.img} alt={feature.title} style={{ width: "80%", borderRadius: 10 }} />
@@ -112,8 +112,8 @@ const Landing = () => {
       <Container sx={{ marginTop: 8 }}>
         <Grid container spacing={4} justifyContent="center" alignItems="center">
           {[{ img: img3, title: "Print-Ready Designs", desc: "Convert your designs to print-ready formats." },
-            { img: img2, title: "Real-Time Collaboration", desc: "Work with your team anywhere, anytime." },
-            { img: img1, title: "Drag-and-Drop Functionality", desc: "Seamlessly customize your designs." }].map((feature, index) => (
+            { img: i1_3, title: "Real-Time Collaboration", desc: "Work with your team anywhere, anytime." },
+            { img: i1_1, title: "Drag-and-Drop Functionality", desc: "Seamlessly customize your designs." }].map((feature, index) => (
               <Grid item xs={12} sm={4} key={index} sx={{ textAlign: "center" }}>
                 <Box>
                   <img src={feature.img} alt={feature.title} style={{ width: "70%", borderRadius: 10 }} />

@@ -1,4 +1,4 @@
-// SidebarItem.js
+// SidebarItem.js 
 import React ,{useEffect,useState}from 'react';
 import { useDrag } from 'react-dnd';
 import Lottie from 'lottie-react';
@@ -19,12 +19,14 @@ const SidebarItem = ({ item }) => {
 
     useEffect(() => {
         if (item.type === 'animatedText') {
-          let url = item.animationUrl; // The URL you want to fetch
-      
-          // Check if the URL is relative (doesn't start with 'http' or 'https')
-          if (!/^https?:\/\//.test(url)) {
-            url = `/api/v1${url}`; // Prepend '/api/v1' to relative URLs
-          }
+            let url = item.animationUrl.trim();
+
+            // Ensure it starts with a single slash
+            if (!/^https?:\/\//.test(url)) {
+              if (!url.startsWith('/')) url = '/' + url;
+              url = `/api/v1${url}`;
+            }
+        
       
           console.log("Fetching from URL:", url); // Log the full URL being fetched
       
@@ -88,7 +90,7 @@ const SidebarItem = ({ item }) => {
         socket.on('itemDragged', (draggedItem) => {
             if (draggedItem.teamCode === teamCode && draggedItem.item.id !== item.id) {
                 // Update item state (or canvas) for other users
-                // You can modify this to update the canvas or trigger any other collaborative action
+                // modify this to update the canvas or trigger any other collaborative action
                 console.log('Item dragged by another user:', draggedItem.item);
             }
         });

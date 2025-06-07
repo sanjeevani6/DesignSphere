@@ -36,7 +36,7 @@ const Design = ({user}) => {
         if (templateUrl) {
             console.log('template URL selected:',templateUrl);
              
-            setBackgroundImage(templateUrl);
+           
             if (teamCode) {
                 
                  const payload = { teamCode, properties: { backgroundImage: templateUrl } ,updatedBy: socket.id };
@@ -84,7 +84,7 @@ const Design = ({user}) => {
                   
                  console.log("response",response.data);
                  if(response){
-                 const { title, elements, backgroundColor, backgroundImage} = response.data;
+                 const { title, elements, backgroundColor} = response.data;
                  console.log('oldelements',elements)
                  const updatedElements = elements.map(element => {
                     //  modifying imageUrl if it exists and the element is an image
@@ -296,7 +296,7 @@ const Design = ({user}) => {
    <div className="sidebar  "> <Sidebar setElements={setElements} /></div>
     <div className="main-content">
        <div  className="properties-panel" ><PropertiesPanel 
-       teamCode={teamCode}
+                               teamCode={teamCode}
                                selectedItem={selectedItem}
                                updateItemProperties={updateItemProperties}
                                onBackgroundColorChange={handleBackgroundColorChange}

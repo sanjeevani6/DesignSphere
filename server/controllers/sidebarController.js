@@ -15,7 +15,7 @@ const getSidebarItems = async (req, res) => {
 };
 
  const imageupload=async(req,res)=>{
-    console.log(req.file)
+    console.log("file path in server",req.file);
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });

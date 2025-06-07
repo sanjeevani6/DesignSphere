@@ -4,12 +4,11 @@ import {
    
     Typography
   } from '@mui/material';
-const manualFonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New']; // Fallback fonts
+const manualFonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New']; // Fallback font( incase google fonts api fails )
 
 
 const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgroundColorChange, deleteItem }) => {
     const [fontSize, setFontSize] = useState(selectedItem?.fontSize || 16);
-    
     const [color, setColor] = useState(selectedItem?.color || '#000000');
     const [backgroundColor, setBackgroundColor] = useState(selectedItem?.backgroundColor || '#ffffff');
     const [fontFamily, setFontFamily] = useState(selectedItem?.fontType || 'Arial');
@@ -19,7 +18,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
     // Fetch Google Fonts dynamically 
     useEffect(() => {
         const API_KEY =  import.meta.env.VITE_API_KEY;
-        console.log("API Key:", import.meta.env.VITE_API_KEY);
+      
  
         if (!API_KEY) {
             console.error("Google Fonts API key is missing in .env file");
@@ -517,6 +516,6 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
     );
 };
 
-export default PropertiesPanel;
+export default PropertiesPanel; 
 
 

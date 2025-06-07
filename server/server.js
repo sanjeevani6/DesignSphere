@@ -6,7 +6,7 @@ const dotenv= require('dotenv');
 const cookieParser = require("cookie-parser");
 const { Server } = require('socket.io');
 const connectDb = require('./config/connectDb')
-
+const path = require('path');
 // Import routes and socket handler
 const teamRoutes = require('./routes/projectRoutes');
 const canvasSocket = require('./sockets/canvasSocket');
@@ -59,7 +59,10 @@ app.use('/api/v1/users',require('./routes/userRoute'))
 // Serve static files from the 'uploads' directory
 app.use('/api/v1/uploads/images', express.static('server/uploads/images'));
 
-app.use('/api/v1/uploads/animations', express.static('server/uploads/animations'));
+app.use(
+  '/api/v1/uploads/animations',
+  express.static(path.join(__dirname, 'uploads', 'animations'))
+);
 
 app.use('/api/v1/uploads/designimage',express.static('server/uploads/designimage'));
 

@@ -84,7 +84,7 @@ const Sidebar = ({ setElements , socket}) => {
     useEffect(() => {
         const fetchSidebarItems = async () => {
             try {
-                const response = await fetch('/api/v1/designpage/get-sidebar-items'); // Adjust if your backend is on a different domain
+                const response = await fetch('/api/v1/designpage/get-sidebar-items'); // to get sidebar item
                 const data = await response.json();
                 console.log('sidebar items:',data)
                 setSidebarItems(data);
@@ -109,17 +109,11 @@ const Sidebar = ({ setElements , socket}) => {
           sx={{
             width: { xs: '100%', sm: '240px' },
         height: '82vh',
-       
-         
         backgroundColor: '#9eb7e1',
         boxShadow: 3,
         display: 'flex',
-        flexDirection: 'column',
-       
+        flexDirection: 'column',     
         justifyContent: 'center',
-        
-        
-        //overflowY: 'auto', // Enable vertical scrolling for overflow
         boxSizing: 'border-box', // Prevent layout shifts due to padding
         padding: '8px',
          overflowX: 'hidden',
@@ -284,4 +278,4 @@ const Sidebar = ({ setElements , socket}) => {
   );
 };
 
-export default Sidebar;
+export default Sidebar; 

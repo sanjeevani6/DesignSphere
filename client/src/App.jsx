@@ -59,9 +59,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/share/:designId" element={<SharePage />} />
-        <Route path="/share/teams/:teamCode" element={<SharePage />} />
-
+       
         {/* Protected Routes */}
         <Route
           path="/home"
@@ -116,6 +114,21 @@ function App() {
           element={
             <PrivateRoute user={user}>
               <PrintOrderPage user={user} />
+            </PrivateRoute>
+          }
+        /> <Route
+          path="/share/:designId"
+          element={
+            <PrivateRoute user={user}>
+              <SharePage user={user} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/share/teams/:teamCode"
+          element={
+            <PrivateRoute user={user}>
+              <SharePage user={user} />
             </PrivateRoute>
           }
         />

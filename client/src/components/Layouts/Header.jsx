@@ -32,7 +32,6 @@ const Header = ({ user }) => {
   const logoutHandler = async () => {
     try {
       await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
-      localStorage.removeItem('user');
       navigate('/login');
     } catch (error) {
       console.error("Logout error:", error);

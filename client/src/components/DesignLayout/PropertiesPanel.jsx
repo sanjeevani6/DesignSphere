@@ -270,7 +270,7 @@ const PropertiesPanel = ({ teamCode,selectedItem, updateItemProperties, onBackgr
                                 value={selectedItem.name}
                                 onChange={handleChange}
                                 style={{ width: "150px" }}
-                                /*If you wrote onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
+                                /*because of this onChange={handleChange()}, it would immediately call handleChange() when the component renders rather than waiting for an onChange even*/
                             /></label>
                             <label style={{ display: "flex", alignItems: "center", gap: "10px" }}><Typography 
                 variant="h7" 

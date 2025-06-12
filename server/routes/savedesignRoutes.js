@@ -21,7 +21,7 @@ router.get('/user/:userId',verifyToken, (req, res) => {
 //get||designbydesignId
 router.get('/:designId', verifyToken,(req, res) => {
     console.log("Fetching design ID:", req.params.designId);
-    // Your logic to fetch the design by ID
+    //  to fetch the design by ID
     getDesignById(req, res);
 });
 

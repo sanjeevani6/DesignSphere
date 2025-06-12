@@ -15,8 +15,6 @@ const PrintOrderPage = ({ user }) => { // Accepting user prop
         address: '', // No address available by default
     });
 
-    const designRef = useRef(null); // Reference to the design image for printing
-
     useEffect(() => {
         const fetchDesignDetails = async () => {
             let response;

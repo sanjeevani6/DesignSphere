@@ -304,7 +304,7 @@ const Homepage = ({user}) => {
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEventifyClick(design._id); // Navigate to event page
+                          handleEventifyClick(design._id); // Navigate to share page
                         }}
                       >
                         Share

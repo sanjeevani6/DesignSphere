@@ -14,7 +14,7 @@ import img1 from '../assets/img1.png';
 import img2 from '../assets/img2.png';
 import img3 from '../assets/img3.png';
 import img4 from '../assets/img4.png';
-import img5 from '../assets/img5.png';
+
 
 
 const Container = styled(Box)({
@@ -76,8 +76,7 @@ const Login = ({ setUser }) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
 
-   // Local state to manage user and loading
-   const [localUser, setLocalUser] = useState(null);
+   // Local state to manage loading
    const [loading, setLoading] = useState(true);
  
 // Check if already logged in (via cookie)
@@ -89,7 +88,6 @@ const Login = ({ setUser }) => {
         });
         if (res.data.user) {
           setUser(res.data.user);
-          setLocalUser(res.data.user);
           navigate('/home');
         }
       } catch (err) {
@@ -152,7 +150,7 @@ const Login = ({ setUser }) => {
        
       });
      console.log("response data in login:",response.data);
-      setUser(response.data.user); // Set parent user state
+      setUser(response.data.user); // Setting parent user state
       console.log("before message");
       message.success('Login successful');
       console.log("after message");

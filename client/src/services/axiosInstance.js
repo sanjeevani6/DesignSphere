@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
     withCredentials: true, // Ensures cookies are sent
 });
 let isRefreshing = false;// Is refresh in progress?
-//Ensures you don’t refresh token more than once simultaneously
+//Ensuring we don’t refresh token more than once simultaneously
 let failedQueue = [];  // Queue of waiting requests
 
 const processQueue = (error, token = null) => {

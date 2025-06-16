@@ -18,8 +18,7 @@ const Templates = ({user}) => {
         console.log("response", response.data);
          const apiTemplates = await  fetchTemplatesFromUnsplash('background');
          console.log('🟢 Unsplash templates:', apiTemplates);
-        if (apiTemplates.length > 0) {
-          setTemplates(apiTemplates);}
+     
         setTemplates(response.data.templates);
          const allTemplates = [...response.data.templates, ...apiTemplates];
          setOriginalTemplates(allTemplates); // save origina

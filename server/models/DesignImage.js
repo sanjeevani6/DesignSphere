@@ -11,6 +11,7 @@ const designImageSchema = new mongoose.Schema({
     },
     teamCode: {
         type: String,  // Team code for team projects
+       
         required: function() {
             return !this.designId;  // Only required if designId is not present
         }

@@ -76,8 +76,7 @@ const Login = ({ setUser }) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
 
-   // Local state to manage loading
-   const [loading, setLoading] = useState(true);
+ 
  
 // Check if already logged in (via cookie)
   useEffect(() => {
@@ -93,9 +92,7 @@ const Login = ({ setUser }) => {
       } catch (err) {
         console.log("🧪 Not logged in:", err?.response?.data?.message || err.message);
       }
-      finally {
-        setLoading(false);
-      }
+    
     };
     checkLogin();
   }, [navigate,setUser]);
@@ -160,9 +157,7 @@ const Login = ({ setUser }) => {
       message.error("Invalid username or password");
     }
   };
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
+ 
   
   return (
     <> 

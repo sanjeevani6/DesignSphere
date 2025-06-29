@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -18,14 +18,18 @@ import Header from '../components/Layouts/Header';
 
 const SharePage = ({ user }) => {
   console.log('SharePage user:', user);
-  const { designId } = useParams();
+  const [searchParams] = useSearchParams();
+  const designId = searchParams.get('designId');
+  const teamCode = searchParams.get('teamCode');
+
   const [design, setDesign] = useState(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchDesign = async () => {
       try {
-        const res = await axiosInstance.get(`/api/v1/share/${designId}`, {
+       const idToUse = designId || teamCode;
+        const res = await axiosInstance.get(`/api/v1/share/${idToUse}`, {
           withCredentials: true,
         });
         setDesign(res.data);
@@ -34,7 +38,7 @@ const SharePage = ({ user }) => {
       }
     };
     fetchDesign();
-  }, [designId]);
+  }, [designId, teamCode]);
 
   const handleCopy = () => {
     if (design?.imageUrl) {

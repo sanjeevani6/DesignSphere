@@ -32,8 +32,13 @@ const upload = multer({ storage });
 router.post('/designimage', upload.single('file'), async (req, res) => {
     try {
         const { designId, teamCode } = req.body;
-        const dId = teamCode || designId;
-         console.log("design id",dId);
+         if (!designId && !teamCode) {
+            return res.status(400).json({ error: 'Either designId or teamCode is required.' });
+        }
+
+          const dIdType = teamCode ? 'teamCode' : 'designId';
+        const dIdValue = teamCode || designId;
+         console.log("design id",dIdValue, dIdType);
         const localPath = req.file.path;
 
         // Upload to Cloudinary
@@ -49,28 +54,30 @@ router.post('/designimage', upload.single('file'), async (req, res) => {
         const imageUrl = cloudinaryRes.secure_url;
         const fileName = req.file.filename;
         console.log("IMAGE URL FROM CLOUDINARY",imageUrl);
+        // Prepare query & update objects
+     const query = { [dIdType]: dIdValue };
+        const update = {
+            imageName: fileName,
+            imageUrl: imageUrl
+        };
 
-        const existingDesignImage = await DesignImage.findOne({ designId: dId });
-        if (existingDesignImage) {
-            await DesignImage.updateOne(
-                { designId: dId },
-                {
-                    $set: {
-                        imageName: fileName,
-                        imageUrl: imageUrl  // Cloudinary URL
-                    }
-                }
-            );
+
+
+       
+        const existing = await DesignImage.findOne(query);
+        if (existing) {
+            await DesignImage.updateOne(query, { $set: update });
             console.log('Design image updated in DB');
         } else {
-            const designImage = new DesignImage({
-                designId: dId,
-                imageName: fileName,
-                imageUrl: imageUrl
+            const newEntry = new DesignImage({
+                ...query,
+                ...update
             });
-            await designImage.save();
+            await newEntry.save();
             console.log('Design image saved in DB');
         }
+
+   
 
         res.status(200).json({
             message: 'Design image uploaded and saved successfully!',

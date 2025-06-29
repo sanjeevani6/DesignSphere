@@ -124,8 +124,8 @@ export const exportToEvent = async (elements, backgroundColor, backgroundImage) 
         console.error('Error exporting to Image:', error);
     }
 };  
-export const exportToShare = async (elements, backgroundColor, backgroundImage,designId) => {
-   
+export const exportToShare = async (elements, backgroundColor, backgroundImage,designId,teamCode) => {
+    console.log("in export to share", designId, teamCode)
     try {
         const canvas = await generateCanvas(elements, backgroundColor, backgroundImage);
         const imgData = canvas.toDataURL('image/png'); // Get the image data
@@ -136,8 +136,14 @@ export const exportToShare = async (elements, backgroundColor, backgroundImage,d
 
         const formData = new FormData();
         formData.append('file', blob, 'design.png');
-        formData.append('designId', designId);
-        // Send to backend
+        if (teamCode) {
+            formData.append('teamCode', teamCode);
+        } else if (designId) {
+            formData.append('designId', designId);
+        } else {
+            console.error("Neither designId nor teamCode provided");
+            return;
+        }        // Send to backend
         await axios.post('/api/v1/store/designimage', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'

@@ -117,7 +117,7 @@ function App() {
             </PrivateRoute>
           }
         /> <Route
-          path="/share/:designId"
+          path="/share"
           element={
             <PrivateRoute user={user}>
               <SharePage user={user} />

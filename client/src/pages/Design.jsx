@@ -212,7 +212,8 @@ const Design = ({user}) => {
                  { withCredentials: true }
                     
                   );
-                  
+                 await exportToShare(elements, backgroundColor, backgroundImage,null,teamCode);
+
                 socket.emit('updateDesign', { teamCode, ...payload });
                 message.success('Team design updated successfully');
                 console.log('New design saved:', payload);
@@ -223,14 +224,14 @@ const Design = ({user}) => {
                              withCredentials: true 
                     });
                     message.success('Design updated successfully');
-                    await exportToShare(elements, backgroundColor, backgroundImage,designId);
+                    await exportToShare(elements, backgroundColor, backgroundImage,designId,null);
                 } else {
                     saveResponse=await axios.post('api/v1/designs/save', payload,{  withCredentials: true,});
                     message.success('New design saved successfully');
                     const designId = saveResponse.data.designId;
                     console.log("designid",designId )
                     console.log('New design saved:', payload);
-                    await exportToShare(elements, backgroundColor, backgroundImage,designId);
+                    await exportToShare(elements, backgroundColor, backgroundImage,designId,null);
                 }
             }
             setTitle(inputTitle);

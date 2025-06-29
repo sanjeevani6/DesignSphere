@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const DesignImage = require('../models/DesignImage');  // Import your design image model
+const DesignImage = require('../models/DesignImage');
 require('dotenv').config();
 
 
@@ -47,7 +47,9 @@ const printController= async (req, res) => {
     
                 console.log('before creating account');
               
-            
+             console.log('GMAIL_USER:', process.env.GMAIL_USER);
+             console.log('GMAIL_PASS:', process.env.GMAIL_PASS ? 'Provided' : 'Missing');
+
                 // Nodemailer setup for Gmail shop account
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',

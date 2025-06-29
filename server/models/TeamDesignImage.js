@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const designImageSchema = new mongoose.Schema({
     teamCode: { 
-        type: mongoose.Schema.Types.ObjectId, 
+        type: String, 
         ref: 'Design,TeamDesign',  // Reference to the Design model
         required: true 
     },

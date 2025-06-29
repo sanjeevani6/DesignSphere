@@ -74,7 +74,7 @@ const RightSection = styled(Box)({
   borderRadius: '0 10px 10px 0',
 });
 
-const Register = (setUser) => {
+const Register = ({setUser}) => {
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
   

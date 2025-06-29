@@ -6,7 +6,7 @@ import { AppBar, Toolbar, Grid, Tooltip, IconButton } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BrushIcon from "@mui/icons-material/Brush";
-
+import { useState } from 'react';
 import {message} from 'antd';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
@@ -75,6 +75,7 @@ const RightSection = styled(Box)({
 });
 
 const Register = ({setUser}) => {
+  const [loading, setLoading] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width: 700px)");
   const navigate = useNavigate();
   
@@ -103,6 +104,9 @@ const Register = ({setUser}) => {
     } catch (error) {
       console.error('❌ Google login failed:', error);
       message.error('Google login failed. Please try again.');
+    }
+    finally {
+      setLoading(false);
     }
   };
   
@@ -143,6 +147,9 @@ const Register = ({setUser}) => {
       console.error("❌ Registration error:", error);
       message.error("Invalid username or password");
     }
+    finally {
+      setLoading(false);
+    }
   };
   
       
@@ -151,112 +158,129 @@ const Register = ({setUser}) => {
   return (
     <>
       <AppBar position="sticky" sx={{ backgroundColor: '#f5c5b3' }}>
-            <Toolbar>
-            <Typography
-          variant={isSmallScreen ? "h6" : "h4"}
-          sx={{
-            flexGrow: 1,
-            fontWeight: "bold",
-            fontFamily: "'Chewy', cursive",
-            letterSpacing: "2px",
-            color: "#593125",
-            textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
-          }}
-        >
-          <Link
-            to="/home"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              display: "flex",
-              alignItems: "center",
+        <Toolbar>
+          <Typography
+            variant={isSmallScreen ? "h6" : "h4"}
+            sx={{
+              flexGrow: 1,
+              fontWeight: "bold",
+              fontFamily: "'Chewy', cursive",
+              letterSpacing: "2px",
+              color: "#593125",
+              textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
             }}
           >
-            <BrushIcon sx={{ marginRight: 0.2 }} /> {!isSmallScreen && "DesignSphere"}
-          </Link>
-        </Typography>
-
-              <Grid container spacing={2} justifyContent="flex-end">
-              <Grid item>
-                
-                  <Grid item>
-                <Tooltip title="Register">
-                    <Link className="nav-link active" to="/">
-                    <Button sx={{ color: 'black' }} > HOME</Button>
-                    
-                  </Link>
-                  </Tooltip>
-                </Grid>
-                </Grid>
-                <Grid item>
-                  <Button sx={{ color: 'black' }} href="#features">Features</Button>
-                </Grid>
-                <Grid item>
-                  <Button sx={{ color: 'black' }} href="#contact">Contact</Button>
-                </Grid>
-                <Grid item>
-                {/* Replace href with Link */}
-                <Tooltip title="Login">
+            <Link
+              to="/home"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <BrushIcon sx={{ marginRight: 0.2 }} /> {!isSmallScreen && "DesignSphere"}
+            </Link>
+          </Typography>
+  
+          <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+              <Tooltip title="Register">
+                <Link className="nav-link active" to="/">
+                  <Button sx={{ color: 'black' }}> HOME</Button>
+                </Link>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Button sx={{ color: 'black' }} href="#features">Features</Button>
+            </Grid>
+            <Grid item>
+              <Button sx={{ color: 'black' }} href="#contact">Contact</Button>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Login">
                 <Link to="/login">
                   <IconButton sx={{ color: 'black' }}>
                     <LoginIcon />
                   </IconButton>
-    
                 </Link>
-                </Tooltip>
-              </Grid>
-                <Grid item>
-                <Tooltip title="Register">
-                    <Link className="nav-link active" to="/register">
-                  <IconButton sx={{ color: 'black' }}  >
-                    <AccountCircleIcon/>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Register">
+                <Link className="nav-link active" to="/register">
+                  <IconButton sx={{ color: 'black' }}>
+                    <AccountCircleIcon />
                   </IconButton>
-                  </Link>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </Toolbar>
-          </AppBar>
-<Container>
-      <RegisterBox>
-        <LeftSection>
-          <ImageBox>
-            <Box><Image src={img1} alt="Image 1" /></Box>
-            <Box><Image src={img2} alt="Image 2" /></Box>
-            <Box><Image src={img3} alt="Image 3" /></Box>
-            <Box><Image src={img4} alt="Image 4" /></Box>
-         
-         
-          </ImageBox>
-        </LeftSection>
-        <RightSection>
-          <Typography variant="h5" gutterBottom color="#e46064">
-            Register for DesignSphere
-          </Typography>
-          <Box component="form" onSubmit={submitHandler} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField label="Name" name="name" fullWidth required sx={{ backgroundColor: '#f6bea9', borderRadius: 1 }} />
-            <TextField label="Email" name="email" type="email" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
-            <TextField label="Password" name="password" type="password" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
-            <Button variant="contained" sx={{ backgroundColor: '#90b0e6', color: '#fffdf0' }} type="submit" fullWidth>
-              Register
-            </Button>
-          </Box>
-          <Typography variant="body2" sx={{ marginTop: 2 }}>
-            Already have an account? <Link to="/login" style={{ color: '#519bc5' }}>Login</Link>
-          </Typography>
-           <Typography variant="body2" sx={{ marginTop: 2, color: '#e46064' }}>OR</Typography>
-                    <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <GoogleLogin onSuccess={onGoogleRegisterSuccess} onError={onGoogleRegisterError} />
-                     
-                    </Box>
-         
-         
-        </RightSection>
-      </RegisterBox>
-    </Container>
+                </Link>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+  
+      <Container>
+        <RegisterBox>
+          <LeftSection>
+            <ImageBox>
+              <Box><Image src={img1} alt="Image 1" /></Box>
+              <Box><Image src={img2} alt="Image 2" /></Box>
+              <Box><Image src={img3} alt="Image 3" /></Box>
+              <Box><Image src={img4} alt="Image 4" /></Box>
+            </ImageBox>
+          </LeftSection>
+  
+          <RightSection>
+            <Typography variant="h5" gutterBottom color="#e46064">
+              Register for DesignSphere
+            </Typography>
+  
+            {loading && (
+              <Box
+                sx={{
+                  backgroundColor: "#fff3cd",
+                  border: "1px solid #ffeeba",
+                  padding: 2,
+                  borderRadius: 1,
+                  color: "#856404",
+                  marginBottom: 2,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Registering... Please wait. This may take a few seconds due to server cold start.
+              </Box>
+            )}
+  
+            <Box component="form" onSubmit={submitHandler} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField label="Name" name="name" fullWidth required sx={{ backgroundColor: '#f6bea9', borderRadius: 1 }} />
+              <TextField label="Email" name="email" type="email" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
+              <TextField label="Password" name="password" type="password" fullWidth required sx={{ backgroundColor: '#ffb8b8', borderRadius: 1 }} />
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: '#90b0e6', color: '#fffdf0' }}
+                type="submit"
+                fullWidth
+                disabled={loading}
+              >
+                {loading ? 'Registering...' : 'Register'}
+              </Button>
+            </Box>
+  
+            <Typography variant="body2" sx={{ marginTop: 2 }}>
+              Already have an account? <Link to="/login" style={{ color: '#519bc5' }}>Login</Link>
+            </Typography>
+  
+            <Typography variant="body2" sx={{ marginTop: 2, color: '#e46064' }}>OR</Typography>
+  
+            <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <GoogleLogin onSuccess={onGoogleRegisterSuccess} onError={onGoogleRegisterError} />
+            </Box>
+          </RightSection>
+        </RegisterBox>
+      </Container>
     </>
-    
   );
+  
 };
-
 export default Register;
